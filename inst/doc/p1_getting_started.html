@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Johannes Signer" />
+
+<meta name="date" content="2018-02-08" />
+
+<title>Getting started with amt</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Getting started with <code>amt</code></h1>
+<h4 class="author"><em>Johannes Signer</em></h4>
+<h4 class="date"><em>2018-02-08</em></h4>
+
+
+
+<div id="basics" class="section level2">
+<h2>Basics</h2>
+<div id="creating-a-track" class="section level3">
+<h3>Creating a track</h3>
+<p>The basic building blocks of <code>amt</code> are tracks. Tracks are <code>data_frame</code>s with at least two columns that contain the coordinates: <code>x_</code> and <code>y_</code>. A track behaves exactly like a <code>data_frame</code> (the only difference being that we added an other S3 class).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(amt)
+df1 &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">y =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)
+<span class="kw">is.data.frame</span>(df1)</code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df1</code></pre></div>
+<pre><code>## # A tibble: 3 x 2
+##       x     y
+##   &lt;int&gt; &lt;int&gt;
+## 1     1     1
+## 2     2     2
+## 3     3     3</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Now we can create a track</span>
+tr1 &lt;-<span class="st"> </span><span class="kw">mk_track</span>(df1, x, y)
+<span class="kw">is.data.frame</span>(tr1)</code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tr1</code></pre></div>
+<pre><code>## # A tibble: 3 x 2
+##      x_    y_
+##   &lt;int&gt; &lt;int&gt;
+## 1     1     1
+## 2     2     2
+## 3     3     3</code></pre>
+<p>At the moment there are two types of tracks:</p>
+<ul>
+<li><code>track_xy</code> is a track that only has coordinates, and</li>
+<li><code>track_xyt</code> is a track that has a timestamp associated to each coordinate pair.</li>
+</ul>
+<p>Whether a <code>track_xy</code> or <code>track_xyt</code> is created is determined whether or not a timestamp is passed to the function <code>mk_track</code>. In the previous example we only passed <code>x</code> and <code>y</code> coordinates. Hence a <code>track_xy</code> was created.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(tr1)</code></pre></div>
+<pre><code>## [1] &quot;track_xy&quot;   &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
+<p>To create a <code>track_xyt</code> we could do the following</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df1 &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">y =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">t =</span> lubridate<span class="op">::</span><span class="kw">ymd</span>(<span class="st">&quot;2017-01-01&quot;</span>) <span class="op">+</span><span class="st"> </span>lubridate<span class="op">::</span><span class="kw">days</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">2</span>))
+tr2 &lt;-<span class="st"> </span><span class="kw">mk_track</span>(df1, x, y, t)</code></pre></div>
+<pre><code>## .t found, creating `track_xyt`.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(tr2)</code></pre></div>
+<pre><code>## [1] &quot;track_xyt&quot;  &quot;track_xy&quot;   &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
+<p>From the output above we see that a <code>track_xyt</code> is also a <code>track_xy</code>. This means that all methods for <code>track_xy</code> also work for a <code>track_xyt</code> (but not the reverse).</p>
+</div>
+<div id="adding-additional-information" class="section level3">
+<h3>Adding additional information</h3>
+<p>We can also add additional information for each relocation (e.g., the id of the animal, or some other sensor information such as the DOP). Any number of additional named columns can be passed to <code>mk_track</code>. By named we mean, that columns should always be passed in the form of <code>col_name = content</code> to avoid confusion with coordinates and time stamp. We will extend the dummy example from above, by passing 2 more columns (the id of animal and the age).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df1 &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">y =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">t =</span> lubridate<span class="op">::</span><span class="kw">ymd</span>(<span class="st">&quot;2017-01-01&quot;</span>) <span class="op">+</span><span class="st"> </span>lubridate<span class="op">::</span><span class="kw">days</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">2</span>), 
+                  <span class="dt">id =</span> <span class="dv">1</span>, <span class="dt">age =</span> <span class="dv">4</span>)
+
+<span class="co"># first we only create a track_xy</span>
+tr3 &lt;-<span class="st"> </span><span class="kw">mk_track</span>(df1, x, y, <span class="dt">id =</span> id, <span class="dt">age =</span> age)</code></pre></div>
+<pre><code>## .t missing, creating `track_xy`.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tr3</code></pre></div>
+<pre><code>## # A tibble: 3 x 4
+##      x_    y_    id   age
+##   &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     1  1.00  4.00
+## 2     2     2  1.00  4.00
+## 3     3     3  1.00  4.00</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># now lets create a track_xyt</span>
+tr4 &lt;-<span class="st"> </span><span class="kw">mk_track</span>(df1, x, y, t, <span class="dt">id =</span> id, <span class="dt">age =</span> age)</code></pre></div>
+<pre><code>## .t found, creating `track_xyt`.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tr4</code></pre></div>
+<pre><code>## # A tibble: 3 x 5
+##      x_    y_ t_            id   age
+##   &lt;int&gt; &lt;int&gt; &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     1 2017-01-01  1.00  4.00
+## 2     2     2 2017-01-02  1.00  4.00
+## 3     3     3 2017-01-03  1.00  4.00</code></pre>
+</div>
+<div id="coordinate-refenece-system" class="section level3">
+<h3>Coordinate refenece system</h3>
+<p><code>mk_track</code> has one further optional argument (<code>crs</code>), which allows the user to set a coordinate reference system (CRS) of the track. The CRS needs to be provided as valid <code>proj4string</code>, see the documentation of <code>sp::CRS</code> for further details.</p>
+</div>
+<div id="an-example-with-real-data" class="section level3">
+<h3>An example with real data</h3>
+<p>In the <code>amt</code> relocation data of one red deer from northern Germany is included. We will use this data set to to illustrate how to create a track.</p>
+<p>We benign with loading and inspecting the data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(sh)
+<span class="kw">head</span>(sh)</code></pre></div>
+<pre><code>##   x_epsg31467 y_epsg31467        day     time
+## 1     3558403     5999400 2009-02-13 00:02:23
+## 2     3558548     5999099 2009-02-13 06:02:21
+## 3     3558541     5999019 2009-02-13 12:01:51
+## 4     3558453     5999026 2009-02-13 18:00:55
+## 5     3558566     5999365 2009-02-14 00:01:36
+## 6     3557836     5999185 2009-02-14 06:02:24</code></pre>
+<p>Before creating a track, we have to do some data cleaning:</p>
+<ol style="list-style-type: decimal">
+<li>check if any coordinates are missing (and if so, remove the relocation),</li>
+<li>parse the date and time,</li>
+<li>create a time stamp,</li>
+<li>check for duplicated time stamps, and</li>
+<li>create two new columns for the id and month of the year.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># check if all observations are complete</span>
+<span class="kw">all</span>(<span class="kw">complete.cases</span>(sh)) <span class="co"># no action required</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># parse date and time</span>
+sh<span class="op">$</span>day &lt;-<span class="st"> </span>lubridate<span class="op">::</span><span class="kw">ymd</span>(sh<span class="op">$</span>day)
+sh<span class="op">$</span>time &lt;-<span class="st"> </span>lubridate<span class="op">::</span><span class="kw">hms</span>(sh<span class="op">$</span>time)
+
+<span class="co"># create a time stamp</span>
+sh<span class="op">$</span>ts &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(sh<span class="op">$</span>day <span class="op">+</span><span class="st"> </span>sh<span class="op">$</span>time)
+
+<span class="co"># check for duplicated time stamps</span>
+<span class="kw">any</span>(<span class="kw">duplicated</span>(sh<span class="op">$</span>ts))</code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We have some duplicated time stamps, these need to be removed prior to</span>
+<span class="co"># creating a track.</span>
+sh &lt;-<span class="st"> </span>sh[<span class="op">!</span><span class="kw">duplicated</span>(sh<span class="op">$</span>ts), ]
+
+<span class="co"># create new columns</span>
+sh<span class="op">$</span>id &lt;-<span class="st"> &quot;Animal 1&quot;</span>
+sh<span class="op">$</span>month &lt;-<span class="st"> </span>lubridate<span class="op">::</span><span class="kw">month</span>(sh<span class="op">$</span>ts)</code></pre></div>
+<p>Now we can create a track.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tr1 &lt;-<span class="st"> </span><span class="kw">mk_track</span>(sh, x_epsg31467, y_epsg31467, ts, <span class="dt">id =</span> id, <span class="dt">month =</span> month)</code></pre></div>
+<pre><code>## .t found, creating `track_xyt`.</code></pre>
+<p>The column names of the data set already indicate the CRS of the data. We can add this information when creating a track.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tr1 &lt;-<span class="st"> </span><span class="kw">mk_track</span>(sh, x_epsg31467, y_epsg31467, ts, <span class="dt">id =</span> id, <span class="dt">month =</span> month, 
+                <span class="dt">crs =</span> sp<span class="op">::</span><span class="kw">CRS</span>(<span class="st">&quot;+init=epsg:31467&quot;</span>))</code></pre></div>
+<pre><code>## .t found, creating `track_xyt`.</code></pre>
+</div>
+<div id="a-note-on-pipes" class="section level3">
+<h3>A note on pipes (<code>%&gt;%</code>)</h3>
+<p><code>amt</code> was heavily inspired through workflows suggested by the popular packages from the <code>tidyverse</code>. The above steps could easily be connected using pipes. Note that result will be exactly the same.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(sh)
+tr2 &lt;-<span class="st"> </span>sh <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="kw">complete.cases</span>(.)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">day =</span> lubridate<span class="op">::</span><span class="kw">ymd</span>(day), 
+    <span class="dt">time =</span> lubridate<span class="op">::</span><span class="kw">hms</span>(.<span class="op">$</span>time), 
+    <span class="dt">ts =</span> <span class="kw">as.POSIXct</span>(day <span class="op">+</span><span class="st"> </span>time), 
+    <span class="dt">id =</span> <span class="st">&quot;Animal 1&quot;</span>, 
+    <span class="dt">month =</span> lubridate<span class="op">::</span><span class="kw">month</span>(ts)
+  ) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">duplicated</span>(ts)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mk_track</span>(x_epsg31467, y_epsg31467, ts, <span class="dt">id =</span> id, <span class="dt">month =</span> month, 
+           <span class="dt">crs =</span> sp<span class="op">::</span><span class="kw">CRS</span>(<span class="st">&quot;+init=epsg:31467&quot;</span>))</code></pre></div>
+<pre><code>## .t found, creating `track_xyt`.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tr2</code></pre></div>
+<pre><code>## # A tibble: 1,493 x 5
+##         x_      y_ t_                  id       month
+##  *   &lt;int&gt;   &lt;int&gt; &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;
+##  1 3558528 5999094 2008-03-30 00:01:47 Animal 1  3.00
+##  2 3558513 5999055 2008-03-30 06:00:54 Animal 1  3.00
+##  3 3558564 5999146 2008-03-30 12:01:47 Animal 1  3.00
+##  4 3558504 5999072 2008-03-30 18:01:24 Animal 1  3.00
+##  5 3558495 5999051 2008-03-30 18:25:56 Animal 1  3.00
+##  6 3558493 5999052 2008-03-30 18:26:05 Animal 1  3.00
+##  7 3558489 5999051 2008-03-30 18:26:14 Animal 1  3.00
+##  8 3558486 5999046 2008-03-30 18:26:24 Animal 1  3.00
+##  9 3558484 5999052 2008-03-30 18:26:33 Animal 1  3.00
+## 10 3558317 5998989 2008-03-30 18:38:01 Animal 1  3.00
+## # ... with 1,483 more rows</code></pre>
+</div>
+</div>
+<div id="working-with-tracks" class="section level2">
+<h2>Working with tracks</h2>
+<div id="utility-functions" class="section level3">
+<h3>Utility functions</h3>
+<div id="basic-manipulation" class="section level4">
+<h4>Basic manipulation</h4>
+<p>Remember, that <code>tracks_xy*</code> behave like regular <code>data.frames</code>. This means that we can use all data manipulation verbs that we are used from <code>base</code> R or <code>tidyverse</code>. For example we an filter a track based on some characteristic. As an example we extract all relocations from May.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tr3 &lt;-<span class="st"> </span>tr2 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(month <span class="op">==</span><span class="st"> </span><span class="dv">5</span>)
+
+<span class="co"># we are left with a track</span>
+<span class="kw">class</span>(tr3)</code></pre></div>
+<pre><code>## [1] &quot;track_xyt&quot;  &quot;track_xy&quot;   &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
+</div>
+<div id="transforming-crs" class="section level4">
+<h4>Transforming CRS</h4>
+<p>If we set the CRS when creating a track (we can verify this with <code>has_crs</code>), we can transform the CRS of the coordinates with the function <code>transform_coords</code> (a wrapper around <code>sp::spTransform</code>). For illustration we will transform the CRS of <code>tr2</code> to geographical coordinates (EPSG:4326).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">transform_coords</span>(tr2, sp<span class="op">::</span><span class="kw">CRS</span>(<span class="st">&quot;+init=epsg:4326&quot;</span>))</code></pre></div>
+<pre><code>## # A tibble: 1,493 x 5
+##       x_    y_ t_                  id       month
+##  * &lt;dbl&gt; &lt;dbl&gt; &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;
+##  1  9.89  54.1 2008-03-30 00:01:47 Animal 1  3.00
+##  2  9.89  54.1 2008-03-30 06:00:54 Animal 1  3.00
+##  3  9.89  54.1 2008-03-30 12:01:47 Animal 1  3.00
+##  4  9.89  54.1 2008-03-30 18:01:24 Animal 1  3.00
+##  5  9.89  54.1 2008-03-30 18:25:56 Animal 1  3.00
+##  6  9.89  54.1 2008-03-30 18:26:05 Animal 1  3.00
+##  7  9.89  54.1 2008-03-30 18:26:14 Animal 1  3.00
+##  8  9.89  54.1 2008-03-30 18:26:24 Animal 1  3.00
+##  9  9.89  54.1 2008-03-30 18:26:33 Animal 1  3.00
+## 10  9.89  54.1 2008-03-30 18:38:01 Animal 1  3.00
+## # ... with 1,483 more rows</code></pre>
+</div>
+</div>
+<div id="some-initial-data-exploration" class="section level3">
+<h3>Some initial data exploration</h3>
+<p>Several functions for calculating derived quantities are available. We will start with looking at step length. The function <code>step_lengths</code> can be used for this.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tr2 &lt;-<span class="st"> </span>tr2 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">sl_ =</span> <span class="kw">step_lengths</span>(.))</code></pre></div>
+<p>If we look at a summary of <code>sl_</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(tr2<span class="op">$</span>sl_)</code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##    0.00   35.01  105.33  249.07  297.75 4727.86       1</code></pre>
+<p>Note, 1) there is one <code>NA</code> for step lengths, this is expected, because we are still in a point representation (i.e., there is no step length for the last relocation). 2) the range is quiet large from 0 to almost 5km. Before looking at step lengths in any further detail, we will have to make sure the sampling rate is more or less regular.</p>
+<p>The function <code>summarize_sampling_rate</code> provides an easy way to look at the sampling rate.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarize_sampling_rate</span>(tr2)</code></pre></div>
+<pre><code>## # A tibble: 1 x 9
+##   min         q1               median  mean  q3    max      sd     n unit 
+##   &lt;S3: table&gt; &lt;S3: table&gt;      &lt;S3: t&gt; &lt;S3:&gt; &lt;S3:&gt; &lt;S3:&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;
+## 1 0.0025      1.99694444444444 2.0055… 6.33… 6.00… 3923…   102  1492 hour</code></pre>
+</div>
+<div id="from-tracks-to-steps" class="section level3">
+<h3>From tracks to steps</h3>
+<p>todo</p>
+</div>
+</div>
+<div id="how-to-deal-with-several-animals" class="section level2">
+<h2>How to deal with several animals</h2>
+<p>todo</p>
+</div>
+<div id="session" class="section level2">
+<h2>Session</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
+<pre><code>## R version 3.4.3 (2017-11-30)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 16.04.3 LTS
+## 
+## Matrix products: default
+## BLAS: /usr/lib/libblas/libblas.so.3.6.0
+## LAPACK: /usr/lib/lapack/liblapack.so.3.6.0
+## 
+## locale:
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+##  [3] LC_TIME=de_DE.UTF-8        LC_COLLATE=C              
+##  [5] LC_MONETARY=de_DE.UTF-8    LC_MESSAGES=en_US.UTF-8   
+##  [7] LC_PAPER=de_DE.UTF-8       LC_NAME=C                 
+##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+## [11] LC_MEASUREMENT=de_DE.UTF-8 LC_IDENTIFICATION=C       
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] bindrcpp_0.2    amt_0.0.2.0     survival_2.41-3 forcats_0.2.0  
+##  [5] stringr_1.2.0   dplyr_0.7.4     purrr_0.2.4     readr_1.1.1    
+##  [9] tidyr_0.8.0     tibble_1.4.2    ggplot2_2.2.1   tidyverse_1.2.1
+## 
+## loaded via a namespace (and not attached):
+##  [1] progress_1.1.2.9002    reshape2_1.4.3         rematch2_2.0.1        
+##  [4] splines_3.4.3          haven_1.1.1            lattice_0.20-35       
+##  [7] colorspace_1.3-2       htmltools_0.3.6        yaml_2.1.16           
+## [10] utf8_1.1.3             XML_3.98-1.9           rlang_0.1.6.9003      
+## [13] pillar_1.1.0           withr_2.1.1            foreign_0.8-69        
+## [16] glue_1.2.0             selectr_0.3-1          sp_1.2-7              
+## [19] modelr_0.1.1           readxl_1.0.0           bindr_0.1             
+## [22] plyr_1.8.4             munsell_0.4.3          gtable_0.2.0          
+## [25] cellranger_1.1.0       rvest_0.3.2            psych_1.7.8           
+## [28] evaluate_0.10.1        knitr_1.19             ansistrings_1.0.0.9000
+## [31] parallel_3.4.3         broom_0.4.3            Rcpp_0.12.15          
+## [34] scales_0.5.0           backports_1.1.2        jsonlite_1.5          
+## [37] mnormt_1.5-5           hms_0.4.1              digest_0.6.15         
+## [40] stringi_1.1.6          grid_3.4.3             rprojroot_1.3-2       
+## [43] rgdal_1.2-16           cli_1.0.0.9001         tools_3.4.3           
+## [46] magrittr_1.5           lazyeval_0.2.1         crayon_1.3.4          
+## [49] pkgconfig_2.0.1        Matrix_1.2-12          xml2_1.2.0            
+## [52] prettyunits_1.0.2      lubridate_1.7.2        assertthat_0.2.0      
+## [55] rmarkdown_1.8          httr_1.3.1             rstudioapi_0.7        
+## [58] R6_2.2.2               nlme_3.1-131           compiler_3.4.3</code></pre>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
