@@ -12,7 +12,7 @@
 
 <meta name="author" content="Johannes Signer" />
 
-<meta name="date" content="2018-02-08" />
+<meta name="date" content="2018-03-22" />
 
 <title>Getting started with amt</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Getting started with <code>amt</code></h1>
 <h4 class="author"><em>Johannes Signer</em></h4>
-<h4 class="date"><em>2018-02-08</em></h4>
+<h4 class="date"><em>2018-03-22</em></h4>
 
 
 
@@ -130,9 +130,9 @@ tr3 &lt;-<span class="st"> </span><span class="kw">mk_track</span>(df1, x, y, <s
 <pre><code>## # A tibble: 3 x 4
 ##      x_    y_    id   age
 ##   &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1     1     1  1.00  4.00
-## 2     2     2  1.00  4.00
-## 3     3     3  1.00  4.00</code></pre>
+## 1     1     1    1.    4.
+## 2     2     2    1.    4.
+## 3     3     3    1.    4.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># now lets create a track_xyt</span>
 tr4 &lt;-<span class="st"> </span><span class="kw">mk_track</span>(df1, x, y, t, <span class="dt">id =</span> id, <span class="dt">age =</span> age)</code></pre></div>
 <pre><code>## .t found, creating `track_xyt`.</code></pre>
@@ -140,9 +140,9 @@ tr4 &lt;-<span class="st"> </span><span class="kw">mk_track</span>(df1, x, y, t,
 <pre><code>## # A tibble: 3 x 5
 ##      x_    y_ t_            id   age
 ##   &lt;int&gt; &lt;int&gt; &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1     1     1 2017-01-01  1.00  4.00
-## 2     2     2 2017-01-02  1.00  4.00
-## 3     3     3 2017-01-03  1.00  4.00</code></pre>
+## 1     1     1 2017-01-01    1.    4.
+## 2     2     2 2017-01-02    1.    4.
+## 3     3     3 2017-01-03    1.    4.</code></pre>
 </div>
 <div id="coordinate-refenece-system" class="section level3">
 <h3>Coordinate refenece system</h3>
@@ -217,16 +217,16 @@ tr2 &lt;-<span class="st"> </span>sh <span class="op">%&gt;%</span><span class="
 <pre><code>## # A tibble: 1,493 x 5
 ##         x_      y_ t_                  id       month
 ##  *   &lt;int&gt;   &lt;int&gt; &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;
-##  1 3558528 5999094 2008-03-30 00:01:47 Animal 1  3.00
-##  2 3558513 5999055 2008-03-30 06:00:54 Animal 1  3.00
-##  3 3558564 5999146 2008-03-30 12:01:47 Animal 1  3.00
-##  4 3558504 5999072 2008-03-30 18:01:24 Animal 1  3.00
-##  5 3558495 5999051 2008-03-30 18:25:56 Animal 1  3.00
-##  6 3558493 5999052 2008-03-30 18:26:05 Animal 1  3.00
-##  7 3558489 5999051 2008-03-30 18:26:14 Animal 1  3.00
-##  8 3558486 5999046 2008-03-30 18:26:24 Animal 1  3.00
-##  9 3558484 5999052 2008-03-30 18:26:33 Animal 1  3.00
-## 10 3558317 5998989 2008-03-30 18:38:01 Animal 1  3.00
+##  1 3558528 5999094 2008-03-30 00:01:47 Animal 1    3.
+##  2 3558513 5999055 2008-03-30 06:00:54 Animal 1    3.
+##  3 3558564 5999146 2008-03-30 12:01:47 Animal 1    3.
+##  4 3558504 5999072 2008-03-30 18:01:24 Animal 1    3.
+##  5 3558495 5999051 2008-03-30 18:25:56 Animal 1    3.
+##  6 3558493 5999052 2008-03-30 18:26:05 Animal 1    3.
+##  7 3558489 5999051 2008-03-30 18:26:14 Animal 1    3.
+##  8 3558486 5999046 2008-03-30 18:26:24 Animal 1    3.
+##  9 3558484 5999052 2008-03-30 18:26:33 Animal 1    3.
+## 10 3558317 5998989 2008-03-30 18:38:01 Animal 1    3.
 ## # ... with 1,483 more rows</code></pre>
 </div>
 </div>
@@ -250,16 +250,16 @@ tr2 &lt;-<span class="st"> </span>sh <span class="op">%&gt;%</span><span class="
 <pre><code>## # A tibble: 1,493 x 5
 ##       x_    y_ t_                  id       month
 ##  * &lt;dbl&gt; &lt;dbl&gt; &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;
-##  1  9.89  54.1 2008-03-30 00:01:47 Animal 1  3.00
-##  2  9.89  54.1 2008-03-30 06:00:54 Animal 1  3.00
-##  3  9.89  54.1 2008-03-30 12:01:47 Animal 1  3.00
-##  4  9.89  54.1 2008-03-30 18:01:24 Animal 1  3.00
-##  5  9.89  54.1 2008-03-30 18:25:56 Animal 1  3.00
-##  6  9.89  54.1 2008-03-30 18:26:05 Animal 1  3.00
-##  7  9.89  54.1 2008-03-30 18:26:14 Animal 1  3.00
-##  8  9.89  54.1 2008-03-30 18:26:24 Animal 1  3.00
-##  9  9.89  54.1 2008-03-30 18:26:33 Animal 1  3.00
-## 10  9.89  54.1 2008-03-30 18:38:01 Animal 1  3.00
+##  1  9.89  54.1 2008-03-30 00:01:47 Animal 1    3.
+##  2  9.89  54.1 2008-03-30 06:00:54 Animal 1    3.
+##  3  9.89  54.1 2008-03-30 12:01:47 Animal 1    3.
+##  4  9.89  54.1 2008-03-30 18:01:24 Animal 1    3.
+##  5  9.89  54.1 2008-03-30 18:25:56 Animal 1    3.
+##  6  9.89  54.1 2008-03-30 18:26:05 Animal 1    3.
+##  7  9.89  54.1 2008-03-30 18:26:14 Animal 1    3.
+##  8  9.89  54.1 2008-03-30 18:26:24 Animal 1    3.
+##  9  9.89  54.1 2008-03-30 18:26:33 Animal 1    3.
+## 10  9.89  54.1 2008-03-30 18:38:01 Animal 1    3.
 ## # ... with 1,483 more rows</code></pre>
 </div>
 </div>
@@ -277,7 +277,7 @@ tr2 &lt;-<span class="st"> </span>sh <span class="op">%&gt;%</span><span class="
 <pre><code>## # A tibble: 1 x 9
 ##   min         q1               median  mean  q3    max      sd     n unit 
 ##   &lt;S3: table&gt; &lt;S3: table&gt;      &lt;S3: t&gt; &lt;S3:&gt; &lt;S3:&gt; &lt;S3:&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;
-## 1 0.0025      1.99694444444444 2.0055… 6.33… 6.00… 3923…   102  1492 hour</code></pre>
+## 1 0.0025      1.99694444444444 2.0055… 6.33… 6.00… 3923…  102.  1492 hour</code></pre>
 </div>
 <div id="from-tracks-to-steps" class="section level3">
 <h3>From tracks to steps</h3>
@@ -311,31 +311,32 @@ tr2 &lt;-<span class="st"> </span>sh <span class="op">%&gt;%</span><span class="
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2    amt_0.0.2.0     survival_2.41-3 forcats_0.2.0  
-##  [5] stringr_1.2.0   dplyr_0.7.4     purrr_0.2.4     readr_1.1.1    
-##  [9] tidyr_0.8.0     tibble_1.4.2    ggplot2_2.2.1   tidyverse_1.2.1
+##  [1] bindrcpp_0.2       amt_0.0.3.0        survival_2.41-3   
+##  [4] forcats_0.3.0      stringr_1.3.0      dplyr_0.7.4       
+##  [7] purrr_0.2.4        readr_1.1.1        tidyr_0.8.0       
+## [10] tibble_1.4.2       ggplot2_2.2.1.9000 tidyverse_1.2.1   
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] progress_1.1.2.9002    reshape2_1.4.3         rematch2_2.0.1        
 ##  [4] splines_3.4.3          haven_1.1.1            lattice_0.20-35       
-##  [7] colorspace_1.3-2       htmltools_0.3.6        yaml_2.1.16           
-## [10] utf8_1.1.3             XML_3.98-1.9           rlang_0.1.6.9003      
-## [13] pillar_1.1.0           withr_2.1.1            foreign_0.8-69        
-## [16] glue_1.2.0             selectr_0.3-1          sp_1.2-7              
-## [19] modelr_0.1.1           readxl_1.0.0           bindr_0.1             
-## [22] plyr_1.8.4             munsell_0.4.3          gtable_0.2.0          
-## [25] cellranger_1.1.0       rvest_0.3.2            psych_1.7.8           
-## [28] evaluate_0.10.1        knitr_1.19             ansistrings_1.0.0.9000
-## [31] parallel_3.4.3         broom_0.4.3            Rcpp_0.12.15          
-## [34] scales_0.5.0           backports_1.1.2        jsonlite_1.5          
-## [37] mnormt_1.5-5           hms_0.4.1              digest_0.6.15         
-## [40] stringi_1.1.6          grid_3.4.3             rprojroot_1.3-2       
-## [43] rgdal_1.2-16           cli_1.0.0.9001         tools_3.4.3           
-## [46] magrittr_1.5           lazyeval_0.2.1         crayon_1.3.4          
-## [49] pkgconfig_2.0.1        Matrix_1.2-12          xml2_1.2.0            
-## [52] prettyunits_1.0.2      lubridate_1.7.2        assertthat_0.2.0      
-## [55] rmarkdown_1.8          httr_1.3.1             rstudioapi_0.7        
-## [58] R6_2.2.2               nlme_3.1-131           compiler_3.4.3</code></pre>
+##  [7] colorspace_1.3-2       htmltools_0.3.6        yaml_2.1.18           
+## [10] utf8_1.1.3             rlang_0.2.0.9000       pillar_1.2.1          
+## [13] withr_2.1.2            foreign_0.8-69         glue_1.2.0            
+## [16] selectr_0.3-2          sp_1.2-7               modelr_0.1.1          
+## [19] readxl_1.0.0           bindr_0.1.1            plyr_1.8.4            
+## [22] munsell_0.4.3          gtable_0.2.0           cellranger_1.1.0      
+## [25] rvest_0.3.2            psych_1.7.8            evaluate_0.10.1       
+## [28] knitr_1.20             ansistrings_1.0.0.9000 parallel_3.4.3        
+## [31] broom_0.4.3            Rcpp_0.12.16           scales_0.5.0.9000     
+## [34] backports_1.1.2        jsonlite_1.5           mnormt_1.5-5          
+## [37] hms_0.4.2              digest_0.6.15          stringi_1.1.7         
+## [40] grid_3.4.3             rprojroot_1.3-2        rgdal_1.2-18          
+## [43] cli_1.0.0.9001         tools_3.4.3            magrittr_1.5          
+## [46] lazyeval_0.2.1         crayon_1.3.4           pkgconfig_2.0.1       
+## [49] Matrix_1.2-12          xml2_1.2.0             prettyunits_1.0.2     
+## [52] lubridate_1.7.3        assertthat_0.2.0       rmarkdown_1.9         
+## [55] httr_1.3.1             rstudioapi_0.7         R6_2.2.2              
+## [58] nlme_3.1-131.1         compiler_3.4.3</code></pre>
 </div>
 
 

@@ -1,5 +1,6 @@
-3a591f01d46c457cabbf621d345a3953 *DESCRIPTION
+f7c146084bafd01df837042ab08b9660 *DESCRIPTION
 cf1018077493e0d1e141769150d06eab *NAMESPACE
+7c14ee01ee94a13c0c1921ababe458da *NEWS.md
 c7c663a8d2303fa6e32fd664e4f7118b *R/Aaaaa.R
 f575b0bc7b021e8255ee7974a9bcc44f *R/RcppExports.R
 e98ff2c121145fdb1de1423d94d12eeb *R/adjust_parameters.R
@@ -32,8 +33,8 @@ c9658fe260aa92cb1804226078001594 *R/movement_kernel.R
 22365ac05d8f3005cef6fcea8c601671 *R/screen_relocations.R
 96381b9e69861fe21146ed4cf267e02f *R/simulate_ud.R
 6e28e98c0eeb3c4f304d95602bfbea25 *R/speed.R
-836a313eb82c2c8f8eb893f0d8b1c98b *R/steps.R
-f92dd86e4675d8ac20ae8e42527a40ba *R/time_of_day.R
+54595381726a4c5e1b125ebbe1c2f2bf *R/steps.R
+39167cc3772760abb594f2c74069afe9 *R/time_of_day.R
 d17102d946de39be68d450158188903a *R/track.R
 217349509d83d513b17084bd9c770129 *R/track_align.R
 c03dd2af252d4c6c0b4b7293c9a80456 *R/track_as.R
@@ -44,9 +45,9 @@ e5629385cd6271514c44a3a354892765 *R/track_immobile.R
 08f70532d79488d69f647920d42a44d7 *R/track_methods.R
 a4fdfaeb6c3141d4c9b3462d83cf846e *R/track_resample.R
 ee290810cbae5c13545029a80e71629c *R/track_transform_crs.R
-dd6548919bdd588302411478eb41b57a *README.md
-938282ace9b70b19f1bed13982cd8656 *build/partial.rdb
-c5eda3c98be6615871c409b4a564fe52 *build/vignette.rds
+63170387b33a8a0df0ab4dde6a682391 *README.md
+7a6c90f3231d29ff07739f2fbbd06f0f *build/partial.rdb
+5127b60bc0a3df09771d46b789e66f70 *build/vignette.rds
 87dbad8dbbc731599a2291d93e22cdb0 *data/animal_sim.rda
 4a89fcd40e69fed605cdd6aa544b4ac4 *data/deer.rda
 7c1d1b9b84cdfbef9fe385eb411481de *data/habitat.rda
@@ -54,11 +55,11 @@ c5eda3c98be6615871c409b4a564fe52 *build/vignette.rds
 cad92b00f32afe08d81b7c45ca657d47 *data/sh_forest.rda
 060ea317fade1b8002e89e6549dd384a *inst/REFERENCES.bib
 105c59d98f99e3af9d200e48e7749c5f *inst/doc/p1_getting_started.R
-3e575482e4f87833edda8e9aed36f9a5 *inst/doc/p1_getting_started.Rmd
-7919ecf8622926ee435fbc0ec2098191 *inst/doc/p1_getting_started.html
+f7ea23124d3d1f82c03b00e7d31fbaa9 *inst/doc/p1_getting_started.Rmd
+e1a1e2e6d4fdd9d09a91f09ae3315224 *inst/doc/p1_getting_started.html
 53e1f6d788358f16cee40c0d803d72fe *inst/doc/p4_SSF.R
-56b09a850a53dc4164c79713b508ab73 *inst/doc/p4_SSF.Rmd
-0e593191a7533a9db42a910b6ffad4f1 *inst/doc/p4_SSF.html
+5045f89af80ee4bf8b613cfd8c772662 *inst/doc/p4_SSF.Rmd
+5003e5c1718872b790b46a67d70f61a0 *inst/doc/p4_SSF.html
 de6084dc40b1dbd41d928eb6c9b3bc92 *man/adjust_param.Rd
 f50d161ab340c8b55a507d5f6d55d755 *man/animal_sim.Rd
 d2e5b74d039576fc8ae5d810602510bf *man/as_rad.Rd
@@ -110,5 +111,5 @@ f4336cc52b520fbd4d7179c7c77a368c *src/simulate.cpp
 f351d04d0cc53641f203332ae2db7a5b *tests/testthat.R
 e0aca14d7b423c7627ff0581433cf154 *tests/testthat/test.fitdistr.R
 3ee0106240ae5ee29842056773246ca6 *tests/testthat/test.track.R
-3e575482e4f87833edda8e9aed36f9a5 *vignettes/p1_getting_started.Rmd
-56b09a850a53dc4164c79713b508ab73 *vignettes/p4_SSF.Rmd
+f7ea23124d3d1f82c03b00e7d31fbaa9 *vignettes/p1_getting_started.Rmd
+5045f89af80ee4bf8b613cfd8c772662 *vignettes/p4_SSF.Rmd
