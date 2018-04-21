@@ -3,10 +3,15 @@
 \name{track}
 \alias{track}
 \alias{mk_track}
+\alias{make_track}
 \alias{track}
 \title{Create a \code{track_*}}
 \usage{
-mk_track(tbl, .x, .y, .t, ..., crs = NULL, order_by_ts = TRUE)
+mk_track(tbl, .x, .y, .t, ..., crs = NULL, order_by_ts = TRUE,
+  check_duplicates = FALSE, all_cols = FALSE)
+
+make_track(tbl, .x, .y, .t, ..., crs = NULL, order_by_ts = TRUE,
+  check_duplicates = FALSE, all_cols = FALSE)
 
 track(x, y, t, ..., crs = NULL)
 }
@@ -28,6 +33,11 @@ points.}
 \item{order_by_ts}{\code{[logical(1)]} \cr Should relocations be ordered by time
 stamp, default is \code{TRUE}.}
 
+\item{check_duplicates}{\code{[logical(1)=FALSE]} \cr Should it be checked if there are
+duplicated time stamp, default is \code{FALSE}.}
+
+\item{all_cols}{\code{[logical(1)=FALSE]} \cr Should all columns be carried over to the track object, default is \code{FALSE}.}
+
 \item{x, y}{\code{[numeric]} \cr The x and y coordinates.}
 
 \item{t}{\code{[POSIXct]} \cr The time stamp.}
@@ -40,16 +50,4 @@ otherwise a \code{track_xy}.
 Constructor to crate a track, the basic building block of the \code{amt} package. A
 \code{track} is usually created from a set of \code{x} and \code{y} coordinates, possibly
 time stamps, and any number of optional columns, such as id, sex, age, etc.
-}
-\examples{
-df1 <- data_frame(x = 1:3, y = 1:3, t = lubridate::ymd("2017-01-01") + lubridate::days(0:2),
-                  id = 1, age = 4)
-
-# first we only create a track_xy
-tr1 <- mk_track(df1, x, y, id = id, age = age)
-tr1
-
-# now lets create a track_xyt
-tr1 <- mk_track(df1, x, y, t, id = id, age = age)
-tr1
 }

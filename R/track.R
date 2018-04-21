@@ -16,25 +16,18 @@
 #'   points.
 #' @param order_by_ts `[logical(1)]` \cr Should relocations be ordered by time
 #'   stamp, default is `TRUE`.
+#' @param check_duplicates `[logical(1)=FALSE]` \cr Should it be checked if there are
+#'   duplicated time stamp, default is `FALSE`.
+#' @param all_cols `[logical(1)=FALSE]` \cr Should all columns be carried over to the track object, default is `FALSE`.
 #' @param x,y `[numeric]` \cr The x and y coordinates.
 #' @param t `[POSIXct]` \cr The time stamp.
 #' @return If `t` was provided an object of class `track_xyt` is returned
 #'   otherwise a `track_xy`.
 #' @export
 #' @name track
-#' @examples
-#' df1 <- data_frame(x = 1:3, y = 1:3, t = lubridate::ymd("2017-01-01") + lubridate::days(0:2),
-#'                   id = 1, age = 4)
-#'
-#' # first we only create a track_xy
-#' tr1 <- mk_track(df1, x, y, id = id, age = age)
-#' tr1
-#'
-#' # now lets create a track_xyt
-#' tr1 <- mk_track(df1, x, y, t, id = id, age = age)
-#' tr1
 
-mk_track <- function(tbl, .x, .y, .t, ..., crs = NULL, order_by_ts = TRUE) {
+mk_track <- function(tbl, .x, .y, .t, ..., crs = NULL, order_by_ts = TRUE,
+                     check_duplicates = FALSE, all_cols = FALSE) {
 
 
   if (missing(.x) | missing(.y)) {
@@ -68,11 +61,11 @@ mk_track <- function(tbl, .x, .y, .t, ..., crs = NULL, order_by_ts = TRUE) {
 
     .t <- enquo(.t)
     if (order_by_ts) {
-      tbl <- arrange(tbl, !!.t)
+      tbl <- arrange(tbl, !!(.t))
     }
     tt <- dplyr::select(tbl, t = !!.t) %>% pull(t)
 
-    if (any(duplicated(tt))) {
+    if (check_duplicates & any(duplicated(tt))) {
       stop("duplicated time stamps.")
     }
 
@@ -80,7 +73,7 @@ mk_track <- function(tbl, .x, .y, .t, ..., crs = NULL, order_by_ts = TRUE) {
       stop("NA in time stamps.")
     }
 
-    if (any(diff(tt) <= 0)) {
+    if (any(diff(tt) < 0)) {
       stop("negative time diffs.")
     }
 
@@ -92,6 +85,17 @@ mk_track <- function(tbl, .x, .y, .t, ..., crs = NULL, order_by_ts = TRUE) {
     class(out) <- c("track_xyt", "track_xy", class(out))
   }
 
+  if (all_cols) {
+    # cont here
+    rest <- setdiff(names(tbl),
+                    c(quo_name(.x), quo_name(.y), if (!missing(.t)) quo_name(.t)))
+    rest <- rlang::parse_quosures(rest)
+    out <- dplyr::bind_cols(
+      out,
+      dplyr::select(tbl, !!!rest)
+    )
+  }
+
   if (!is.null(crs)) {
     if (!is(crs, "CRS")) {
       stop("crs is no instance of class CRS")
@@ -101,6 +105,10 @@ mk_track <- function(tbl, .x, .y, .t, ..., crs = NULL, order_by_ts = TRUE) {
 
   out
 }
+
+#' @export
+#' @rdname track
+make_track <- mk_track
 
 #' @rdname track
 #' @export
