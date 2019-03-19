@@ -41,6 +41,17 @@ distance_to_center.track_xy <- function(x, trast, square = TRUE, ...) {
 
 #' @export
 #' @rdname dist_cent
+distance_to_center.numeric <- function(x, trast, square = TRUE, ...) {
+  if (missing(trast)) {
+    stop("trast required")
+  }
+  r <- raster::distanceFromPoints(trast, x)^if(square) 2 else 1
+  names(r) <- "dist_cent"
+  r
+}
+
+#' @export
+#' @rdname dist_cent
 distance_to_centers <- function(x, ...) {
   UseMethod("distance_to_centers", x)
 }

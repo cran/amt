@@ -12,6 +12,8 @@
 \alias{as_ltraj.track_xyt}
 \alias{as_bcpa}
 \alias{as_bcpa.track_xyt}
+\alias{as_telemetry}
+\alias{as_telemetry.track_xyt}
 \alias{as_moveHMM}
 \alias{as_moveHMM.track_xy}
 \title{Coerce a track to other formats.}
@@ -36,12 +38,16 @@ as_bcpa(x, ...)
 
 \method{as_bcpa}{track_xyt}(x, ...)
 
+as_telemetry(x, ...)
+
+\method{as_telemetry}{track_xyt}(x, ...)
+
 as_moveHMM(x, ...)
 
 \method{as_moveHMM}{track_xy}(x, ...)
 }
 \arguments{
-\item{x}{\code{[track_xy, track_xyt]} \cr A track created with \code{mk_track} or \code{track}.}
+\item{x}{\code{[track_xy, track_xyt]} \cr A track created with \code{make_track}.}
 
 \item{...}{Further arguments, none implemented.}
 
@@ -61,23 +67,9 @@ as_ltraj(deer)
 as_ltraj(deer, id = "animal_3")
 data(deer)
 d <- as_bcpa(deer)
-\dontrun{
-bcpa1 <- bcpa::WindowSweep(d, "Theta", K = 2, windowsize = 50)
-plot(bcpa1, type = "flat", clusterwidth = 1)
-}
+data(deer)
+as_telemetry(deer)
 # Fit HMM with two states
 data(deer)
 dm <- as_moveHMM(deer)
-\dontrun{
-mu0 <- rep(mean(dm$step, na.rm = TRUE), 2) # step mean (two parameters: one for each state)
-sigma0 <- rep(sd(dm$step, na.rm = TRUE), 2) # step SD
-zeromass0 <- c(0.1, 0.05) # step zero-mass
-stepPar0 <- c(mu0, sigma0, zeromass0)
-angleMean0 <- c(pi, pi) # angle mean
-kappa0 <- c(1, 1) # angle concentration
-anglePar0 <- c(angleMean0, kappa0) ## call to fitting function
-m1 <- fitHMM(data = dm, nbStates = 2,
-       stepPar0 = stepPar0, anglePar0 = anglePar0, formula = ~ 1)
-}
-
 }

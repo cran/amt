@@ -1,6 +1,5 @@
 #' Returns a summary of sampling rates
 #'
-#'
 #' @param x A `track_xyt`.
 #' @param time_unit A character. The time unit in which the sampling rate is
 #'   calculated. Acceptable values are `sec`, `min`, `hour`, `day`, and `auto`.
@@ -26,6 +25,10 @@ summarize_sampling_rate <- function(x, ...) {
 #' @rdname summarize_sampling_rate
 #' @export
 summarize_sampling_rate.track_xyt <- function(x, time_unit = "auto", summarize = TRUE, as_tibble = TRUE, ...) {
+
+  if (nrow(x) < 2) {
+    stop("summarize_sampling_rate: at least 2 relocations per unit are needed.")
+  }
 
   t_diff <- diff(as.numeric(x$t_))
   m_t_diff <- median(t_diff)
@@ -66,7 +69,7 @@ summarize_sampling_rate.track_xyt <- function(x, time_unit = "auto", summarize =
   if (summarize) {
     t_diff_s <- summary(t_diff)
     if (as_tibble) {
-      data_frame(
+      tibble(
         min = t_diff_s[1],
         q1 = t_diff_s[2],
         median = t_diff_s[3],
@@ -82,4 +85,19 @@ summarize_sampling_rate.track_xyt <- function(x, time_unit = "auto", summarize =
     t_diff
   }
 
+}
+
+
+#' @rdname summarize_sampling_rate
+#' @export
+summarize_sampling_rate_many <- function(x, ...) {
+  UseMethod("summarize_sampling_rate_many", x)
+}
+
+#' @rdname summarize_sampling_rate
+#' @export
+summarize_sampling_rate_many.track_xyt <- function(x, ...) {
+  ids <- rlang::enquos(...)
+  x %>% group_by(!!!ids) %>% nest() %>% mutate(ts = map(data, summarize_sampling_rate)) %>%
+    select(!!!ids, ts) %>% unnest()
 }

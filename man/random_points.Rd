@@ -3,7 +3,7 @@
 \name{random_points}
 \alias{random_points}
 \alias{random_points.mcp}
-\alias{random_points.kde}
+\alias{random_points.SpatialPolygons}
 \alias{random_points.track_xy}
 \title{Generate random points}
 \usage{
@@ -11,13 +11,14 @@ random_points(x, ...)
 
 \method{random_points}{mcp}(x, n = 100, type = "random", ...)
 
-\method{random_points}{kde}(x, n = 100, type = "random", ...)
+\method{random_points}{SpatialPolygons}(x, n = 100, type = "random",
+  ...)
 
-\method{random_points}{track_xy}(x, level = 1, hr = "mcp", factor = 10,
-  type = "random", ...)
+\method{random_points}{track_xy}(x, level = 1, hr = "mcp",
+  factor = 10, type = "random", ...)
 }
 \arguments{
-\item{x}{\code{[track_xy, track_xyt]} \cr A track created with \code{mk_track} or \code{track}.}
+\item{x}{\code{[track_xy, track_xyt]} \cr A track created with \code{make_track}.}
 
 \item{...}{\code{[any]}\cr None implemented.}
 
@@ -44,20 +45,15 @@ data(deer)
 # track_xyt ---------------------------------------------------------------
 # Default settings
 rp1 <- random_points(deer)
-rp2 <- random_points(deer, hr = "kde") # we need a larger template raster for kde
 
 \dontrun{
 plot(rp1)
-plot(rp2)
 }
 
-# rp2 does not make sense, because the `trast` is to small.
-# this can be overcome by increasing the trast manually.
-trast <- raster(bbox(deer, buffer = 2000), res = 30)
+trast <- raster(bbox(deer, buffer = 5000), res = 30)
 rp3 <- random_points(deer, hr = "kde", trast = trast) # we need a larger template raster
 
  \dontrun{
-plot(rp2)
 plot(rp3)
 }
 

@@ -143,26 +143,6 @@ sl_distr.random_steps <- function (x, ...) {
   sl_distr(attributes(x)$sl_)
 }
 
-#' Plot step-length distribution
-#'
-#' @param x `[fit_clogit]` \cr A fitted step selection.
-#' @template dots_none
-#' @export
-plot_sl <- function(x, ...) {
-  UseMethod("plot_sl", x)
-}
-
-#' @export
-plot_sl.fit_clogit <- function(x, n = 1000, ...) {
-  xx <- sl_params(x)
-  to <- qgamma(0.99, shape = xx[1], scale = xx[2])
-  xs <- seq(0, to, length.out = n)
-  plot(xs, ys <- dgamma(xs, shape = xx[1], scale = xx[2]), type = "l",
-       ylab = "Probablility",
-       xlab = "Distance")
-
-  invisible(data.frame(sl = xs, d = ys))
-}
 
 # turning angles ----------------------------------------------------------
 #' Fit a statistical distribution to the turn angles of a track
@@ -195,7 +175,7 @@ fit_ta_dist_base <- function(x, na.rm = TRUE, distr = "vonmises", ...) {
   if (na.rm) x <- x[!is.na(x)]
 
   if (distr == "vonmises") {
-    x <- circular::as.circular(x, type = "angles", units = "degrees", template = "none",
+    x <- circular::as.circular(x, type = "angles", units = "radians", template = "none",
                                modulo = "asis", zero = 0, rotation = "counter")
     fit <- circular::mle.vonmises(x, ...)
     list(

@@ -25,8 +25,8 @@ cpp_simulate_ssf <- function(n_steps, start, nc, nr, mk, hk) {
     .Call('_amt_cpp_simulate_ssf', PACKAGE = 'amt', n_steps, start, nc, nr, mk, hk)
 }
 
-track_align <- function(t1, nt, time_tol, type) {
-    .Call('_amt_track_align', PACKAGE = 'amt', t1, nt, time_tol, type)
+track_align_cpp <- function(t1, nt, time_tol, type) {
+    .Call('_amt_track_align_cpp', PACKAGE = 'amt', t1, nt, time_tol, type)
 }
 
 mk_reg <- function(t1, time_dist, time_tol, start) {
@@ -35,10 +35,6 @@ mk_reg <- function(t1, time_dist, time_tol, start) {
 
 mk_reg_old <- function(relocs_time, time_dist, time_tol, start) {
     .Call('_amt_mk_reg_old', PACKAGE = 'amt', relocs_time, time_dist, time_tol, start)
-}
-
-duration_acuracy <- function(x_, y_, t_, dop, dim, duration_accuracy) {
-    .Call('_amt_duration_acuracy', PACKAGE = 'amt', x_, y_, t_, dop, dim, duration_accuracy)
 }
 
 track_immobility <- function(t, x, y, period, tol) {

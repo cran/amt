@@ -4,6 +4,7 @@
 \alias{dist_cent}
 \alias{distance_to_center}
 \alias{distance_to_center.track_xy}
+\alias{distance_to_center.numeric}
 \alias{distance_to_centers}
 \alias{distance_to_centers.track_xy}
 \title{Distance to center}
@@ -12,13 +13,15 @@ distance_to_center(x, ...)
 
 \method{distance_to_center}{track_xy}(x, trast, square = TRUE, ...)
 
+\method{distance_to_center}{numeric}(x, trast, square = TRUE, ...)
+
 distance_to_centers(x, ...)
 
-\method{distance_to_centers}{track_xy}(x, trast, top_n = 10, square = TRUE,
-  ...)
+\method{distance_to_centers}{track_xy}(x, trast, top_n = 10,
+  square = TRUE, ...)
 }
 \arguments{
-\item{x}{\code{[track_xy, track_xyt]} \cr A track created with \code{mk_track} or \code{track}.}
+\item{x}{\code{[track_xy, track_xyt]} \cr A track created with \code{make_track}.}
 
 \item{...}{Further arguments, none implemented.}
 

@@ -81,43 +81,12 @@ centroid <- function(x, ...) {
 centroid.track_xy <- function(x, spatial = FALSE, ...) {
   xx <- colMeans(x[, c("x_", "y_")])
   if (spatial) {
-    sp::SpatialPoints(cbind(xx$x_, xx$y_))
+    sp::SpatialPoints(cbind(xx["x_"], xx["y_"]))
   } else {
     xx
   }
 }
 
-
-
-#' Get bounding box of a track.
-#' @template track_xy_star
-#' @param spatial `[logical(1)=FALSE]` \cr Whether or not to return a `SpatialPolygons`-object or not.
-#' @param buffer `[numeric(0)=NULL]{NULL, >0}` \cr An optional buffer of the bounding box.
-#' @template dots_none
-#' @name bbox
-#' @export
-#' @examples
-#' data(deer)
-#' bbox(deer)
-#' bbox(deer, buffer = 100)
-
-bbox <- function(x, ...) {
-  UseMethod("bbox", x)
-}
-
-#' @export
-#' @rdname bbox
-bbox.track_xy <- function(x, spatial = TRUE, buffer = NULL, ...) {
-  bbx <- rgeos::gEnvelope(as_sp(x))
-  if (!is.null(buffer)) {
-    bbx <- rgeos::gEnvelope(rgeos::gBuffer(bbx, width = buffer))
-  }
-  if (spatial) {
-    bbx
-  } else {
-    sp::bbox(bbx)
-  }
-}
 
 
 #' @export
@@ -131,7 +100,7 @@ points.track_xy <- function(x, ...) {
 #'
 #' @template track_xy_star
 #' @template dots_none
-#' @return `[data_frame]` \cr The coordinates.
+#' @return `[tibble]` \cr The coordinates.
 #' @export
 #' @examples
 #' data(deer)

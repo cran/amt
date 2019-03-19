@@ -10,47 +10,44 @@
 \alias{step_lengths.track_xy}
 \alias{steps_by_burst}
 \alias{steps_by_burst.track_xyt}
-\alias{steps}
 \alias{steps.track_xy}
 \alias{steps.track_xyt}
 \title{Functions to create and work with steps}
 \usage{
 direction_abs(x, ...)
 
-\method{direction_abs}{track_xy}(x, degrees = TRUE, full_circle = FALSE,
-  zero_dir = "E", clockwise = FALSE, append_last = TRUE, lonlat = FALSE,
-  ...)
+\method{direction_abs}{track_xy}(x, full_circle = FALSE,
+  zero_dir = "E", clockwise = FALSE, append_last = TRUE,
+  lonlat = FALSE, ...)
 
 direction_rel(x, ...)
 
-\method{direction_rel}{track_xy}(x, lonlat = FALSE, degrees = TRUE,
-  append_last = TRUE, zero_dir = "E", ...)
+\method{direction_rel}{track_xy}(x, lonlat = FALSE, append_last = TRUE,
+  zero_dir = "E", ...)
 
 step_lengths(x, ...)
 
-\method{step_lengths}{track_xy}(x, lonlat = FALSE, append_last = TRUE, ...)
+\method{step_lengths}{track_xy}(x, lonlat = FALSE, append_last = TRUE,
+  ...)
 
 steps_by_burst(x, ...)
 
-\method{steps_by_burst}{track_xyt}(x, lonlat = FALSE, degrees = TRUE,
-  keep_cols = NULL, ...)
+\method{steps_by_burst}{track_xyt}(x, lonlat = FALSE, keep_cols = NULL,
+  ...)
 
 steps(x, ...)
 
-\method{steps}{track_xy}(x, lonlat = FALSE, keep_cols = NULL,
-  degrees = TRUE, ...)
+\method{steps}{track_xy}(x, lonlat = FALSE, keep_cols = NULL, ...)
 
-\method{steps}{track_xyt}(x, lonlat = FALSE, degrees = TRUE,
-  keep_cols = NULL, diff_time_units = "auto", ...)
+\method{steps}{track_xyt}(x, lonlat = FALSE, keep_cols = NULL,
+  diff_time_units = "auto", ...)
 }
 \arguments{
-\item{x}{\code{[track_xy, track_xyt]} \cr A track created with \code{mk_track} or \code{track}.}
+\item{x}{\code{[track_xy, track_xyt]} \cr A track created with \code{make_track}.}
 
 \item{...}{Further arguments, none implemented}
 
-\item{degrees}{\code{[logical(1)=TRUE]} \cr Should turn angles be calculated in degrees or radians? If \code{TRUE} angles are returned in degrees, otherwise in radians.}
-
-\item{full_circle}{\code{[logical(1)=FALSE]} \cr If \code{TRUE} angles are returned between 0 and 360 degrees or 0 and $2pi$ (depending on the value of \code{degrees}), otherwise angles are between -180 and 180 or $-pi$ and $pi$.}
+\item{full_circle}{\code{[logical(1)=FALSE]} \cr If \code{TRUE} angles are returned between 0 and $2pi$, otherwise angles are between $-pi$ and $pi$.}
 
 \item{zero_dir}{\code{[character(1)='E']} \cr Indicating the zero direction. Must be either \code{N}, \code{E}, \code{S}, or \code{W}.}
 
@@ -76,25 +73,23 @@ steps(x, ...)
 }
 \examples{
 
-
-# Absolute directions
-
-xy <- data_frame(
+xy <- tibble(
   x = c(1, 4, 8, 8, 12, 8, 0, 0, 4, 2),
   y = c(0, 0, 0, 8, 12, 12, 12, 8, 4, 2))
-trk <- mk_track(xy, x, y)
+trk <- make_track(xy, x, y)
 
 # append last
 direction_abs(trk, append_last = TRUE)
 direction_abs(trk, append_last = FALSE)
 
 # degrees
-direction_abs(trk, degrees = FALSE)
-direction_abs(trk, degrees = TRUE)
+direction_abs(trk) \%>\% as_degree
 
-# full circle or not
-direction_abs(trk, degrees = TRUE, full_circle = TRUE)
-direction_abs(trk, degrees = TRUE, full_circle = FALSE)
+# full circle or not: check
+direction_abs(trk, full_circle = TRUE)
+direction_abs(trk, full_circle = FALSE)
+direction_abs(trk, full_circle = TRUE) \%>\% as_degree()
+direction_abs(trk, full_circle = FALSE) \%>\% as_degree()
 
 # direction of 0
 direction_abs(trk, full_circle = TRUE, zero_dir = "N")
@@ -114,19 +109,18 @@ direction_abs(trk, full_circle = FALSE, zero_dir = "N", lonlat = TRUE, clockwise
 # adehabitatLT
 df <- adehabitatLT::as.ltraj(data.frame(x = xy$x, y = xy$y), typeII = FALSE, id = 1)
 df[[1]]$abs.angle
-amt::direction_abs(trk, degrees = FALSE, full_circle = FALSE)
+amt::direction_abs(trk)
 
 # bcpa
 df <- bcpa::MakeTrack(xy$x, xy$y, lubridate::now() +  lubridate::hours(1:10))
 bcpa::GetVT(df)$Phi
-direction_abs(trk, degrees = FALSE, full_circle = FALSE, append_last = FALSE)
+direction_abs(trk, full_circle = FALSE, append_last = FALSE)
 
 # move
 m <- move::move(xy$x, xy$y, lubridate::now() + lubridate::hours(1:10),
  proj = sp::CRS("+init=epsg:4326"))
 move::angle(m)
-direction_abs(trk, degrees = TRUE, full_circle = FALSE, zero_dir = "N",
-  clockwise = TRUE, append_na = FALSE, lonlat = TRUE)
+direction_abs(trk, lonlat = TRUE, zero_dir = "E") \%>\% as_degree()
 
 # trajectories
 t1 <- trajectories::Track(
@@ -134,14 +128,15 @@ t1 <- trajectories::Track(
   lubridate::now(tzone = "UTC") + lubridate::hours(1:10), data = data.frame(1:10)))
 
 t1[["direction"]]
-direction_abs(trk, degrees = TRUE, full_circle = TRUE, zero_dir = "N",
-  clockwise = TRUE, append_last = FALSE)
+direction_abs(trk, full_circle = TRUE, zero_dir = "N",
+  clockwise = TRUE, append_last = FALSE) \%>\% as_degree
 
 # moveHMM (only rel. ta)
 df <- data.frame(ID = 1, x = xy$x, y = xy$y)
-moveHMM::prepData(df, type = "UTM")
+moveHMM::prepData(df, type = "UTM")$angle
+direction_rel(trk)
 # How do results compare to other packages
-xy <- data_frame(
+xy <- tibble(
   x = c(1, 4, 8, 8, 12, 8, 0, 0, 4, 2),
   y = c(0, 0, 0, 8, 12, 12, 12, 8, 4, 2))
 trk <- mk_track(xy, x, y)
@@ -166,7 +161,7 @@ moveHMM::prepData(df, type = "UTM")
 trk
 
 # step_lengths ------------------------------------------------------------
-xy <- data_frame(
+xy <- tibble(
   x = c(0, 1, 2),
   y = c(0, 1, 2)
 )
@@ -175,31 +170,5 @@ xy <- mk_track(xy, x, y)
 step_lengths(xy, lonlat = FALSE)
 step_lengths(xy, lonlat = TRUE) # in m, but coords are assumed in degrees
 
-
-# creating steps ----------------------------------------------------------
-
-# Create some dummy data
-library(lubridate)
-df <- data_frame(
-  x = runif(10),
-  y = runif(10),
-  a = runif(10),
-  t = now() + hours(c(1:2, 5:6, 9:10, 14:17)),
-  b = 3,
-  c = a + 30
-)
-
-library(amt)
-make_track(df, x, y, t, a, b, c) \%>\% steps(keep_cols = "start")
-
-make_track(df, x, y, a = a, b = b, c = c) \%>\% steps(keep_cols = "end")
-
-make_track(df, x, y, t, a, b, c) \%>\%
-  track_resample(rate = hours(1), tolerance = minutes(5)) \%>\%
-  steps_by_burst(keep_cols = "start")
-
-make_track(df, x, y, t, a, b, c) \%>\%
-  track_resample(rate = hours(1), tolerance = minutes(5)) \%>\%
-  steps_by_burst(keep_cols = NULL)
 
 }

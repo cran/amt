@@ -1,14 +1,15 @@
 ## ---- warning=FALSE, message=FALSE---------------------------------------
+library(dplyr)
+library(ggplot2)
 library(amt)
 df1 <- data_frame(x = 1:3, y = 1:3)
 is.data.frame(df1)
 df1
 
 # Now we can create a track
-tr1 <- mk_track(df1, x, y)
+tr1 <- make_track(df1, x, y)
 is.data.frame(tr1)
 tr1
-
 
 ## ------------------------------------------------------------------------
 class(tr1)
@@ -54,7 +55,7 @@ sh$id <- "Animal 1"
 sh$month <- lubridate::month(sh$ts)
 
 ## ------------------------------------------------------------------------
-tr1 <- mk_track(sh, x_epsg31467, y_epsg31467, ts, id = id, month = month)
+tr1 <- make_track(sh, x_epsg31467, y_epsg31467, ts, id = id, month = month)
 
 ## ------------------------------------------------------------------------
 tr1 <- mk_track(sh, x_epsg31467, y_epsg31467, ts, id = id, month = month, 
@@ -90,6 +91,36 @@ summary(tr2$sl_)
 
 ## ------------------------------------------------------------------------
 summarize_sampling_rate(tr2)
+
+## ------------------------------------------------------------------------
+tr3 <- tr2 %>% track_resample(rate = hours(6), tolerance = minutes(20))
+tr3
+
+## ------------------------------------------------------------------------
+data("amt_fisher")
+trk <- amt_fisher %>% make_track(x_, y_, t_, id = id)
+
+## ------------------------------------------------------------------------
+trk1 <- trk %>% group_by(id) %>% nest()
+trk1
+
+## ------------------------------------------------------------------------
+# get the data for the first animal
+x <- trk1$data[[1]]
+
+# apply the data analysis
+x %>% track_resample(rate = minutes(30), tolerance = minutes(5)) %>% steps_by_burst()
+
+## ------------------------------------------------------------------------
+trk2 <- trk1 %>% 
+  mutate(steps = map(data, function(x) 
+    x %>% track_resample(rate = minutes(30), tolerance = minutes(5)) %>% steps_by_burst()))
+
+trk2
+
+## ------------------------------------------------------------------------
+trk2 %>% select(id, steps) %>% unnest %>% 
+  ggplot(aes(sl_, fill = factor(id))) + geom_density(alpha = 0.4)
 
 ## ------------------------------------------------------------------------
 sessionInfo()

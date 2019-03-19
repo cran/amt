@@ -21,8 +21,8 @@ hr_isopleths(x, ...)
 
 hr_kde(x, ...)
 
-\method{hr_kde}{track_xy}(x, h = hr_kde_ref(x), trast = raster(as_sp(x),
-  nrow = 100, ncol = 100), ...)
+\method{hr_kde}{track_xy}(x, h = hr_kde_ref(x),
+  trast = raster(as_sp(x), nrow = 100, ncol = 100), ...)
 
 hr_kde_ref(x, ...)
 
@@ -38,7 +38,7 @@ hr_mcp(x, ...)
 \method{hr_mcp}{track_xy}(x, levels = 0.95, ...)
 }
 \arguments{
-\item{x}{\code{[track_xy, track_xyt]} \cr A track created with \code{mk_track} or \code{track}.}
+\item{x}{\code{[track_xy, track_xyt]} \cr A track created with \code{make_track}.}
 
 \item{...}{Further arguments, none implemented.}
 

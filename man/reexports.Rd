@@ -4,57 +4,29 @@
 \name{reexports}
 \alias{reexports}
 \alias{arrange}
-\alias{reexports}
 \alias{filter}
-\alias{reexports}
 \alias{group_by}
-\alias{reexports}
 \alias{select}
-\alias{reexports}
 \alias{summarise}
-\alias{reexports}
 \alias{summarize}
-\alias{reexports}
 \alias{ungroup}
-\alias{reexports}
 \alias{distinct}
-\alias{reexports}
-\alias{ungroup}
-\alias{reexports}
 \alias{mutate}
-\alias{reexports}
 \alias{pull}
-\alias{reexports}
 \alias{CRS}
-\alias{reexports}
 \alias{hours}
-\alias{reexports}
 \alias{minutes}
-\alias{reexports}
 \alias{seconds}
-\alias{reexports}
 \alias{days}
-\alias{reexports}
 \alias{weeks}
-\alias{reexports}
 \alias{map}
-\alias{reexports}
 \alias{clogit}
-\alias{reexports}
 \alias{strata}
-\alias{reexports}
 \alias{nest}
-\alias{reexports}
 \alias{unnest}
-\alias{reexports}
-\alias{data_frame}
-\alias{reexports}
 \alias{tibble}
-\alias{reexports}
 \alias{\%>\%}
-\alias{reexports}
 \alias{Surv}
-\alias{reexports}
 \alias{raster}
 \title{Objects exported from other packages}
 \keyword{internal}
@@ -77,7 +49,7 @@ below to see their documentation.
 
   \item{survival}{\code{\link[survival]{clogit}}, \code{\link[survival]{strata}}, \code{\link[survival]{Surv}}}
 
-  \item{tibble}{\code{\link[tibble]{data_frame}}, \code{\link[tibble]{tibble}}}
+  \item{tibble}{\code{\link[tibble]{tibble}}}
 
   \item{tidyr}{\code{\link[tidyr]{nest}}, \code{\link[tidyr]{unnest}}}
 }}
