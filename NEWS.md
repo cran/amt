@@ -1,5 +1,18 @@
-# amt 0.0.6.0
+# amt 0.0.7
 
+## new features
+- Added a dplyr count method for track, steps, random_steps and random_points
+- Added a AIC method for `fit_(i)ssf`.
+- Added for KDE: pi and lscv for bandwidth estimation
+
+
+## major changes
+- `hr_locoh_k` id deprecated and will be part of `hr_locoh`. Specifically `type = "k"`. 
+- All home range methods now return `sf` objects.
+
+
+
+# amt 0.0.6.0
 ## major changes
 - random_points with kde home ranges now work with different home range levels. 
 - random_steps now uses `units` to be explicit about the turning angle.

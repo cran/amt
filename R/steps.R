@@ -372,6 +372,10 @@ arrange.steps_xy <- function(.data, ..., .dots) {
   steps_transfer_attr(.data, xx)
 }
 
+count.steps_xy <- function(.data, ..., .dots) {
+  NextMethod()
+}
+
 #' @export
 filter.steps_xy <- function(.data, ..., .dots) {
   xx <- NextMethod()
@@ -388,6 +392,11 @@ group_by.steps_xy <- function(.data, ..., .dots) {
 mutate.steps_xy <- function(.data, ..., .dots) {
   xx <- NextMethod()
   steps_transfer_attr(.data, xx)
+}
+
+#' @export
+nest.steps_xy <- function(.data, ..., .dots) {
+  NextMethod()
 }
 
 #' @export

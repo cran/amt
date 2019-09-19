@@ -2,7 +2,7 @@
 library(dplyr)
 library(ggplot2)
 library(amt)
-df1 <- data_frame(x = 1:3, y = 1:3)
+df1 <- tibble(x = 1:3, y = 1:3)
 is.data.frame(df1)
 df1
 
@@ -15,20 +15,20 @@ tr1
 class(tr1)
 
 ## ------------------------------------------------------------------------
-df1 <- data_frame(x = 1:3, y = 1:3, t = lubridate::ymd("2017-01-01") + lubridate::days(0:2))
-tr2 <- mk_track(df1, x, y, t)
+df1 <- tibble(x = 1:3, y = 1:3, t = lubridate::ymd("2017-01-01") + lubridate::days(0:2))
+tr2 <- make_track(df1, x, y, t)
 class(tr2)
 
 ## ------------------------------------------------------------------------
-df1 <- data_frame(x = 1:3, y = 1:3, t = lubridate::ymd("2017-01-01") + lubridate::days(0:2), 
+df1 <- tibble(x = 1:3, y = 1:3, t = lubridate::ymd("2017-01-01") + lubridate::days(0:2), 
                   id = 1, age = 4)
 
 # first we only create a track_xy
-tr3 <- mk_track(df1, x, y, id = id, age = age)
+tr3 <- make_track(df1, x, y, id = id, age = age)
 tr3
 
 # now lets create a track_xyt
-tr4 <- mk_track(df1, x, y, t, id = id, age = age)
+tr4 <- make_track(df1, x, y, t, id = id, age = age)
 tr4
 
 ## ------------------------------------------------------------------------
@@ -58,7 +58,7 @@ sh$month <- lubridate::month(sh$ts)
 tr1 <- make_track(sh, x_epsg31467, y_epsg31467, ts, id = id, month = month)
 
 ## ------------------------------------------------------------------------
-tr1 <- mk_track(sh, x_epsg31467, y_epsg31467, ts, id = id, month = month, 
+tr1 <- make_track(sh, x_epsg31467, y_epsg31467, ts, id = id, month = month, 
                 crs = sp::CRS("+init=epsg:31467"))
 
 ## ------------------------------------------------------------------------
@@ -70,7 +70,7 @@ tr2 <- sh %>% filter(complete.cases(.)) %>%
     month = lubridate::month(ts)
   ) %>% 
   filter(!duplicated(ts)) %>% 
-  mk_track(x_epsg31467, y_epsg31467, ts, id = id, month = month, 
+  make_track(x_epsg31467, y_epsg31467, ts, id = id, month = month, 
            crs = sp::CRS("+init=epsg:31467"))
 tr2
 
@@ -101,7 +101,7 @@ data("amt_fisher")
 trk <- amt_fisher %>% make_track(x_, y_, t_, id = id)
 
 ## ------------------------------------------------------------------------
-trk1 <- trk %>% group_by(id) %>% nest()
+trk1 <- trk %>% nest(data = -"id")
 trk1
 
 ## ------------------------------------------------------------------------
@@ -119,9 +119,9 @@ trk2 <- trk1 %>%
 trk2
 
 ## ------------------------------------------------------------------------
-trk2 %>% select(id, steps) %>% unnest %>% 
+trk2 %>% select(id, steps) %>% unnest(cols = "steps") %>% 
   ggplot(aes(sl_, fill = factor(id))) + geom_density(alpha = 0.4)
 
 ## ------------------------------------------------------------------------
-sessionInfo()
+sessioninfo::session_info()
 

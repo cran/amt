@@ -33,8 +33,10 @@ utils::globalVariables(c("burst_", "step_id_", "t_", ".data", "ts")) # to omit C
 
 #' @export
 dplyr::arrange
+
 #' @export
 dplyr::filter
+
 #' @export
 dplyr::group_by
 #' @export
@@ -45,60 +47,41 @@ dplyr::summarise
 dplyr::summarize
 #' @export
 dplyr::ungroup
-
 #' @export
 dplyr::distinct
-
 #' @export
 dplyr::ungroup
-
 #' @export
 dplyr::mutate
-
 #' @export
 dplyr::pull
-
 #' @export
 sp::CRS
-
 #' @export
 lubridate::hours
-
 #' @export
 lubridate::minutes
-
 #' @export
 lubridate::seconds
-
 #' @export
 lubridate::days
-
 #' @export
 lubridate::weeks
-
 #' @export
 purrr::map
-
 #' @export
 survival::clogit
-
 #' @export
 survival::strata
-
 #' @export
 tidyr::nest
-
 #' @export
 tidyr::unnest
-
 #' @export
 tibble::tibble
-
 #' @export
 magrittr::`%>%`
-
 #' @export
 survival::Surv
-
 #' @export
 raster::raster
