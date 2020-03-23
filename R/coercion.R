@@ -63,21 +63,47 @@ as_move <- function(x, ...) {
 
 #' @export
 #' @rdname coercion
-as_move.track_xy <- function(x, ...) {
-  if (is.null(get_crs(x))) {
-    stop("move requires a projected track.")
+as_move.track_xyt <- function(x, id = "id", ...){
+
+  # is a grouping present
+  has_id = TRUE
+
+  # Check if id is present
+  if (!id %in% names(x)) {
+    id <- "unnamed"
+    has_id <- FALSE
   }
-  move::move(x = x$x_, y = x$y_, proj = get_crs(x), ...)
+
+  # Check for duplicates (group by id)
+  any_duplicates <- if (has_id) {
+    any(sapply(split(x, x[[id]]), function(y) any(duplicated(y$t_))))
+  } else {
+    any(duplicated(x$t_))
+  }
+
+  if (any_duplicates) {
+    warning("data contains duplicates. By default 1st entery is kept, and subsequent duplicates are removed. If this is not wanted, please remove duplicates from original input object")
+
+    x <- if (has_id) {
+      do.call(rbind, lapply(split(x, x$t_), function(y)
+        y[!duplicated(y$t_), ]))
+
+    } else {
+      x[!duplicated(x$t_), ]
+    }
+  }
+
+  # Create a move object
+  move::move(
+    x = x$x_,
+    y= x$y_,
+    time = x$t_,
+    data= data.frame(x[!names(x) %in% c("x_","y_","t_")]),
+    proj= if(has_crs(x)) get_crs(x) else as.character(NA),
+    animal = if (has_id) as.character(x[[id]]) else "unnamed")
 }
 
-#' @export
-#' @rdname coercion
-as_move.track_xyt <- function(x, ...) {
-  if (is.null(get_crs(x))) {
-    stop("move requires a projected track.")
-  }
-  move::move(x = x$x_, y = x$y_, time = x$t_, proj = get_crs(x), ...)
-}
+
 
 # as_ltraj ----------------------------------------------------------------
 
@@ -144,7 +170,7 @@ as_telemetry <- function(x, ...) {
 #' @rdname coercion
 as_telemetry.track_xyt <- function(x, ...) {
   if (!amt::has_crs(x)) {
-    stop("track needs to havea CRS.")
+    stop("track needs to have a CRS.")
   }
   x <- transform_coords(x, sp::CRS("+init=epsg:4326"))
   ctmm::as.telemetry(data.frame(lon = x$x_, lat = x$y_, timestamp = x$t_))

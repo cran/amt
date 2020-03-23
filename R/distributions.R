@@ -3,7 +3,7 @@ valid_ta_distr <- function(...) {
 }
 
 valid_sl_distr <- function(...) {
-  c("exp", "gamma")
+  c("exp", "gamma", "unif")
 }
 
 valid_distr <- function(...) {
@@ -13,7 +13,7 @@ valid_distr <- function(...) {
 
 valid_distr_params <- function(dist_name, params) {
   if (dist_name == "vonmises") {
-    return(c("kappa", "mu") %in% names(params))
+    return(all(c("kappa", "mu") %in% names(params)))
   } else if (dist_name == "unif") {
     return(all(c("min", "max") %in% names(params)))
   } else if (dist_name == "exp") {
@@ -138,11 +138,13 @@ random_numbers <- function(x, n = 100, ...) {
 #' @param n `[integer(1)=100]{>0}` \cr The number of random draws.
 #' @rdname distributions
 random_numbers.vonmises_distr <- function(x, n = 100, ...) {
-  mu <- circular::as.circular(
-    x$mu, type = "angles", units = "radians",  template = "none",
-    modulo = "asis", zero = 0, rotation = "counter")
 
-  x <- do.call(circular::rvonmises, c(list(n = n), x$params))
+  # mu <- circular::as.circular(
+  #   x$params$mu, type = "angles", units = "radians",  template = "none",
+  #   modulo = "asis", zero = 0, rotation = "counter")
+
+  suppressWarnings(
+    x <- do.call(circular::rvonmises, c(list(n = n), x$params)))
 
   # turn angles for new stps
   x <- x %% (2 * pi)
@@ -166,7 +168,7 @@ random_numbers.amt_distr <- function(x, n = 100, ...) {
 #' and the von Mises distribution (`vonmises`).
 #'
 #' @param x `[numeric(>1)]` \cr The observed data.
-#' @param name `[character(1)]{"exp", "gamma", "vonmises"}` \cr The name of the
+#' @param dist_name `[character(1)]{"exp", "gamma", "unif", "vonmises"}` \cr The name of the
 #'   distribution.
 #' @param na.rm `[logical(1)=TRUE]` \cr Indicating whether `NA` should be
 #'   removed before fitting the distribution.
@@ -179,18 +181,20 @@ random_numbers.amt_distr <- function(x, n = 100, ...) {
 #' set.seed(123)
 #' dat <- rexp(1e3, 2)
 #' fit_distr(dat, "exp")
-fit_distr <- function(x, name, na.rm = TRUE) {
+fit_distr <- function(x, dist_name, na.rm = TRUE) {
 
   checkmate::check_numeric(x)
-  checkmate::check_character(name, len = 1)
-  stopifnot(name %in% valid_distr())
+  checkmate::check_character(dist_name, len = 1)
+  if(!dist_name %in% valid_distr()) {
+    stop("Distribution is currently not supported.")
+  }
 
   if (na.rm) {
     x <- x[!is.na(x)]
   }
 
   # TODO: also save SE?
-  switch(name,
+  switch(dist_name,
     gamma = {
       fit <- fitdistrplus::fitdist(x, "gamma", keepdata = FALSE, lower = 0)
       make_gamma_distr(shape = fit$estimate["shape"], scale = 1 / fit$estimate["rate"])
@@ -198,6 +202,10 @@ fit_distr <- function(x, name, na.rm = TRUE) {
     exp = {
       fit <- fitdistrplus::fitdist(x, "exp", keepdata = FALSE)
       make_exp_distr(rate = fit$estimate["rate"])
+    },
+    unif = {
+      fit <- fitdistrplus::fitdist(x, "unif", keepdata = FALSE)
+      make_unif_distr(min = min(x), max = max(x))
     },
     vonmises = {
       xx <- circular::as.circular(
@@ -207,4 +215,99 @@ fit_distr <- function(x, name, na.rm = TRUE) {
       make_vonmises_distr(kappa = fit$kappa)
     }
   )
+}
+
+
+
+
+# Utility functions -------------------------------------------------------
+
+#' Name of step-length distribution and turn-angle distribution
+#'
+#' @param x Random steps or fitted model
+#' @param ... None implemented.
+#'
+#' @export
+#' @name distr_name
+sl_distr_name <- function(x, ...) {
+  UseMethod("sl_distr_name")
+}
+
+
+#' @export
+#' @rdname distr_name
+sl_distr_name.random_steps <- function(x, ...) {
+  attr(x, "sl_")$name
+}
+
+#' @export
+#' @rdname distr_name
+sl_distr_name.fit_clogit <- function(x, ...) {
+  x$sl_$name
+}
+
+#' @export
+#' @rdname distr_name
+ta_distr_name <- function(x, ...) {
+  UseMethod("ta_distr_name")
+}
+
+#' @export
+#' @rdname distr_name
+ta_distr_name <- function(x, ...) {
+  UseMethod("ta_distr_name")
+}
+
+#' @export
+#' @rdname distr_name
+ta_distr_name.random_steps <- function(x, ...) {
+  attr(x, "ta_")$name
+}
+
+#' @export
+#' @rdname distr_name
+ta_distr_name.fit_clogit <- function(x, ...) {
+  x$ta_$name
+}
+
+#' Get parameters from a (fitted) distribution
+#'
+#' @param x `[amt_distr]`\cr A (fitted) distribution
+#' @param ... None
+#'
+#' @name params
+#' @export
+#'
+sl_distr_params <- function(x, ...) {
+  UseMethod("sl_distr_params")
+}
+
+#' @rdname params
+#' @export
+sl_distr_params.random_steps <- function(x, ...) {
+  attr(x, "sl_")$params
+}
+
+#' @rdname params
+#' @export
+sl_distr_params.fit_clogit <- function(x, ...) {
+  x$sl_$params
+}
+
+#' @rdname params
+#' @export
+ta_distr_params <- function(x, ...) {
+  UseMethod("ta_distr_params")
+}
+
+#' @rdname params
+#' @export
+ta_distr_params.random_steps <- function(x, ...) {
+  attr(x, "ta_")$params
+}
+
+#' @rdname params
+#' @export
+ta_distr_params.fit_clogit <- function(x, ...) {
+  x$ta_$params
 }

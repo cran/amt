@@ -29,6 +29,42 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// random_steps_cpp
+NumericMatrix random_steps_cpp(const int n_rand_steps, const NumericVector start_x, const NumericVector start_y, const NumericVector end_x, const NumericVector end_y, const NumericVector rand_sl, const NumericVector rand_ta, const int include_obs, const NumericVector sl_obs, const NumericVector ta_obs);
+RcppExport SEXP _amt_random_steps_cpp(SEXP n_rand_stepsSEXP, SEXP start_xSEXP, SEXP start_ySEXP, SEXP end_xSEXP, SEXP end_ySEXP, SEXP rand_slSEXP, SEXP rand_taSEXP, SEXP include_obsSEXP, SEXP sl_obsSEXP, SEXP ta_obsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int >::type n_rand_steps(n_rand_stepsSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type start_x(start_xSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type start_y(start_ySEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type end_x(end_xSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type end_y(end_ySEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type rand_sl(rand_slSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type rand_ta(rand_taSEXP);
+    Rcpp::traits::input_parameter< const int >::type include_obs(include_obsSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type sl_obs(sl_obsSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type ta_obs(ta_obsSEXP);
+    rcpp_result_gen = Rcpp::wrap(random_steps_cpp(n_rand_steps, start_x, start_y, end_x, end_y, rand_sl, rand_ta, include_obs, sl_obs, ta_obs));
+    return rcpp_result_gen;
+END_RCPP
+}
+// random_steps_cpp_one_step
+NumericMatrix random_steps_cpp_one_step(const int n_rand_steps, const double start_x, const double start_y, const double rel_angle, const NumericVector rand_sl, const NumericVector rand_ta);
+RcppExport SEXP _amt_random_steps_cpp_one_step(SEXP n_rand_stepsSEXP, SEXP start_xSEXP, SEXP start_ySEXP, SEXP rel_angleSEXP, SEXP rand_slSEXP, SEXP rand_taSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int >::type n_rand_steps(n_rand_stepsSEXP);
+    Rcpp::traits::input_parameter< const double >::type start_x(start_xSEXP);
+    Rcpp::traits::input_parameter< const double >::type start_y(start_ySEXP);
+    Rcpp::traits::input_parameter< const double >::type rel_angle(rel_angleSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type rand_sl(rand_slSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type rand_ta(rand_taSEXP);
+    rcpp_result_gen = Rcpp::wrap(random_steps_cpp_one_step(n_rand_steps, start_x, start_y, rel_angle, rand_sl, rand_ta));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rolling_mean
 NumericVector rolling_mean(NumericVector x, int win);
 RcppExport SEXP _amt_rolling_mean(SEXP xSEXP, SEXP winSEXP) {
@@ -82,6 +118,77 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericMatrix >::type mk(mkSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type hk(hkSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_simulate_ssf(n_steps, start, nc, nr, mk, hk));
+    return rcpp_result_gen;
+END_RCPP
+}
+// dispersal_kernel_cpp
+NumericMatrix dispersal_kernel_cpp(int cur_x, int cur_y, int nc, int nr, NumericMatrix dk, NumericVector coefs, int standardize, IntegerVector first_order_terms, IntegerVector second_order_terms, NumericMatrix hab, NumericMatrix other_covars, IntegerVector other_covars_indicator, int stop);
+RcppExport SEXP _amt_dispersal_kernel_cpp(SEXP cur_xSEXP, SEXP cur_ySEXP, SEXP ncSEXP, SEXP nrSEXP, SEXP dkSEXP, SEXP coefsSEXP, SEXP standardizeSEXP, SEXP first_order_termsSEXP, SEXP second_order_termsSEXP, SEXP habSEXP, SEXP other_covarsSEXP, SEXP other_covars_indicatorSEXP, SEXP stopSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type cur_x(cur_xSEXP);
+    Rcpp::traits::input_parameter< int >::type cur_y(cur_ySEXP);
+    Rcpp::traits::input_parameter< int >::type nc(ncSEXP);
+    Rcpp::traits::input_parameter< int >::type nr(nrSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type dk(dkSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type coefs(coefsSEXP);
+    Rcpp::traits::input_parameter< int >::type standardize(standardizeSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type first_order_terms(first_order_termsSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type second_order_terms(second_order_termsSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type hab(habSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type other_covars(other_covarsSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type other_covars_indicator(other_covars_indicatorSEXP);
+    Rcpp::traits::input_parameter< int >::type stop(stopSEXP);
+    rcpp_result_gen = Rcpp::wrap(dispersal_kernel_cpp(cur_x, cur_y, nc, nr, dk, coefs, standardize, first_order_terms, second_order_terms, hab, other_covars, other_covars_indicator, stop));
+    return rcpp_result_gen;
+END_RCPP
+}
+// atan2_north_cpp
+double atan2_north_cpp(double y, double x);
+RcppExport SEXP _amt_atan2_north_cpp(SEXP ySEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type y(ySEXP);
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(atan2_north_cpp(y, x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_angle_cpp
+NumericVector get_angle_cpp(NumericMatrix xy, double dir);
+RcppExport SEXP _amt_get_angle_cpp(SEXP xySEXP, SEXP dirSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type xy(xySEXP);
+    Rcpp::traits::input_parameter< double >::type dir(dirSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_angle_cpp(xy, dir));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_angle_cpp1
+NumericVector get_angle_cpp1(NumericMatrix xy, double dir);
+RcppExport SEXP _amt_get_angle_cpp1(SEXP xySEXP, SEXP dirSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type xy(xySEXP);
+    Rcpp::traits::input_parameter< double >::type dir(dirSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_angle_cpp1(xy, dir));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_angle_cpp2
+NumericVector get_angle_cpp2(NumericMatrix xy, double dir);
+RcppExport SEXP _amt_get_angle_cpp2(SEXP xySEXP, SEXP dirSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type xy(xySEXP);
+    Rcpp::traits::input_parameter< double >::type dir(dirSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_angle_cpp2(xy, dir));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -146,10 +253,17 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_amt_diff_rcpp", (DL_FUNC) &_amt_diff_rcpp, 1},
     {"_amt_within_rcpp", (DL_FUNC) &_amt_within_rcpp, 3},
+    {"_amt_random_steps_cpp", (DL_FUNC) &_amt_random_steps_cpp, 10},
+    {"_amt_random_steps_cpp_one_step", (DL_FUNC) &_amt_random_steps_cpp_one_step, 6},
     {"_amt_rolling_mean", (DL_FUNC) &_amt_rolling_mean, 2},
     {"_amt_rolling_median", (DL_FUNC) &_amt_rolling_median, 2},
     {"_amt_simulate_udf", (DL_FUNC) &_amt_simulate_udf, 6},
     {"_amt_cpp_simulate_ssf", (DL_FUNC) &_amt_cpp_simulate_ssf, 6},
+    {"_amt_dispersal_kernel_cpp", (DL_FUNC) &_amt_dispersal_kernel_cpp, 13},
+    {"_amt_atan2_north_cpp", (DL_FUNC) &_amt_atan2_north_cpp, 2},
+    {"_amt_get_angle_cpp", (DL_FUNC) &_amt_get_angle_cpp, 2},
+    {"_amt_get_angle_cpp1", (DL_FUNC) &_amt_get_angle_cpp1, 2},
+    {"_amt_get_angle_cpp2", (DL_FUNC) &_amt_get_angle_cpp2, 2},
     {"_amt_track_align_cpp", (DL_FUNC) &_amt_track_align_cpp, 4},
     {"_amt_mk_reg", (DL_FUNC) &_amt_mk_reg, 4},
     {"_amt_mk_reg_old", (DL_FUNC) &_amt_mk_reg_old, 4},

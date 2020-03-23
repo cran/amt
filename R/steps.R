@@ -352,7 +352,8 @@ steps_base <- function(x, n, lonlat, zero_dir, keep_cols) {
 
 steps_transfer_attr <- function(from, to) {
   from <- attributes(from)
-  attributes(to)$class <- from$class
+ # attributes(to)$class <- from$class
+   attributes(to)$class <- c(setdiff(from$class, class(to)), class(to))
   attributes(to)$sl_ <- from$sl_
   attributes(to)$ta_ <- from$ta_
   attributes(to)$crs_ <- from$crs_
@@ -385,7 +386,13 @@ filter.steps_xy <- function(.data, ..., .dots) {
 #' @export
 group_by.steps_xy <- function(.data, ..., .dots) {
   xx <- NextMethod()
-  steps_transfer_attr(.data, xx)
+  xx <- steps_transfer_attr(.data, xx)
+
+  # Add grouped_df
+#  cl <- class(xx)
+#  lcl <- length(cl)
+#  class(xx) <- c(cl[1:(lcl - 3)], "grouped_df", cl[(lcl - 3):lcl])
+  xx
 }
 
 #' @export
@@ -407,14 +414,12 @@ select.steps_xy <- function(.data, ..., .dots) {
 
 #' @export
 summarise.steps_xy <- function(.data, ..., .dots) {
-  xx <- NextMethod()
-  steps_transfer_attr(.data, xx)
+  NextMethod()
 }
 
 
 #' @export
 summarize.steps_xy <- function(.data, ..., .dots) {
-  xx <- NextMethod()
-  steps_transfer_attr(.data, xx)
+  NextMethod()
 }
 

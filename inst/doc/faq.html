@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Johannes Signer" />
+
+<meta name="date" content="2020-03-22" />
+
+<title>Frequently Asked Questions</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Frequently Asked Questions</h1>
+<h4 class="author">Johannes Signer</h4>
+<h4 class="date">2020-03-22</h4>
+
+
+
+<div id="working-with-tracks" class="section level2">
+<h2>Working with tracks</h2>
+<div id="q1-how-to-work-with-extract_covariates_var_time-with-multiple-animals" class="section level3">
+<h3>Q1: How to work with <code>extract_covariates_var_time()</code> with multiple animals:</h3>
+<p>Simulate some data: 10 animals over a year with monhtly covariates. Note the covariates do not influence movement during the simulaitons. This purely for illustration.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(raster)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(lubridate)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">library</span>(amt)</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">set.seed</span>(<span class="dv">123</span>)</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">trks &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">  <span class="dt">id =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, </a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">  <span class="dt">trk =</span> <span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="op">~</span><span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">cumsum</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>)), <span class="dt">y =</span> <span class="kw">cumsum</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>)), </a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">                           <span class="dt">ts =</span> <span class="kw">ymd_hm</span>(<span class="st">&quot;2019-01-01 00:00&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">hours</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">99</span>)))</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">)</a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb1-13" data-line-number="13">dat &lt;-<span class="st"> </span><span class="kw">unnest</span>(trks, <span class="dt">cols =</span> trk)</a></code></pre></div>
+<p>Next lets create some covariates.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">r &lt;-<span class="st"> </span><span class="kw">stack</span>(<span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">15</span>, </a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">    <span class="op">~</span><span class="st"> </span><span class="kw">raster</span>(<span class="dt">xmn =</span> <span class="dv">-100</span>, <span class="dt">xmx =</span> <span class="dv">100</span>, <span class="dt">ymn =</span> <span class="dv">-100</span>, <span class="dt">ymx =</span> <span class="dv">100</span>, </a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">             <span class="dt">res =</span> <span class="dv">1</span>, <span class="dt">vals =</span> <span class="kw">runif</span>(<span class="fl">4e4</span>, ., . <span class="op">+</span><span class="st"> </span><span class="dv">1</span>))))</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">r &lt;-<span class="st"> </span><span class="kw">setZ</span>(r, <span class="kw">ymd_hm</span>(<span class="st">&quot;2019-01-01 00:00&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">hours</span>(<span class="kw">seq</span>(<span class="dv">0</span>, <span class="dt">by =</span> <span class="dv">10</span>, <span class="dt">len =</span> <span class="dv">15</span>)))</a></code></pre></div>
+<p>We have now 10 animals, each with 100 relocations (one per hour) and one env covariate which changes every 10 hours. Now we can extract the covariates at the end of each step within an time window (specified with <code>max_time</code>).</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">trk &lt;-<span class="st"> </span><span class="kw">make_track</span>(dat, x, y, ts, <span class="dt">id =</span> id)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co"># For one animal</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">trk <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(id <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="st">  </span><span class="kw">extract_covariates_var_time</span>(r, <span class="dt">max_time =</span> <span class="kw">hours</span>(<span class="dv">10</span> <span class="op">*</span><span class="st"> </span><span class="dv">24</span>)) -&gt;<span class="st"> </span>t1</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">t1<span class="op">$</span>time_var_covar</a></code></pre></div>
+<pre><code>##   [1]  1.859966  1.859966  1.207689  1.205935  1.205935  1.081416  2.504437
+##   [8]  2.759418  2.759418  2.064030  2.759418  2.554582  2.772285  2.772285
+##  [15]  2.772285  2.466056  3.992470  3.231361  3.957009  3.271404  3.695507
+##  [22]  3.250728  3.637535  3.013321  3.445043  3.792285  4.032129  4.032129
+##  [29]  4.439059  4.026711  4.932416  4.686803  4.932416  4.292410  4.460516
+##  [36]  4.097073  5.089216  5.862778  5.717599  5.191560  5.191560  5.810020
+##  [43]  5.136051  5.821677  5.982182  5.708564  6.729128  6.279375  6.011149
+##  [50]  6.460835  6.011149  6.011149  6.922410  6.441271  6.441271  6.134686
+##  [57]  7.128916  7.994925  7.128916  7.128916  7.438483  7.128916  7.994925
+##  [64]  7.754318  7.971250  7.971250  8.249095  8.240756  8.787252  8.219207
+##  [71]  8.129793  8.249095  8.787252  8.327917  8.444819  8.787252  9.549586
+##  [78]  9.271491  9.026545  9.271491  9.950249  9.026545  9.271491  9.925456
+##  [85]  9.950249  9.925456 10.003776 10.003776 10.206241 10.296934 10.404394
+##  [92] 10.398105 10.398105 10.671474 10.119090 10.398105 11.319751 11.707586
+##  [99] 11.531466 11.301397</code></pre>
+<p>Now lets do the the same for an animal at once:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">trk <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="st">  </span><span class="kw">nest</span>(<span class="dt">data =</span> <span class="op">-</span><span class="kw">c</span>(id)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">data =</span> <span class="kw">map</span>(data, <span class="op">~</span><span class="st"> </span>.x <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">extract_covariates_var_time</span>(r, <span class="dt">max_time =</span> <span class="kw">hours</span>(<span class="dv">10</span> <span class="op">*</span><span class="st"> </span><span class="dv">24</span>)))) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="st">  </span><span class="kw">unnest</span>(<span class="dt">cols =</span> data) -&gt;<span class="st"> </span>trk2</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">trk2</a></code></pre></div>
+<pre><code>## # A tibble: 1,000 x 5
+##       id     x_     y_ t_                  time_var_covar
+##    &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dttm&gt;                       &lt;dbl&gt;
+##  1     1 -0.560 -0.710 2019-01-01 00:00:00           1.86
+##  2     1 -0.791 -0.454 2019-01-01 01:00:00           1.86
+##  3     1  0.768 -0.700 2019-01-01 02:00:00           1.21
+##  4     1  0.839 -1.05  2019-01-01 03:00:00           1.21
+##  5     1  0.968 -2.00  2019-01-01 04:00:00           1.21
+##  6     1  2.68  -2.04  2019-01-01 05:00:00           1.08
+##  7     1  3.14  -2.83  2019-01-01 06:00:00           2.50
+##  8     1  1.88  -4.50  2019-01-01 07:00:00           2.76
+##  9     1  1.19  -4.88  2019-01-01 08:00:00           2.76
+## 10     1  0.746 -3.96  2019-01-01 09:00:00           2.06
+## # … with 990 more rows</code></pre>
+</div>
+</div>
+<div id="session" class="section level2">
+<h2>Session</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">sessionInfo</span>()</a></code></pre></div>
+<pre><code>## R version 3.6.3 (2020-02-29)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 18.04.4 LTS
+## 
+## Matrix products: default
+## BLAS:   /usr/lib/x86_64-linux-gnu/openblas/libblas.so.3
+## LAPACK: /usr/lib/x86_64-linux-gnu/libopenblasp-r0.2.20.so
+## 
+## locale:
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+##  [3] LC_TIME=de_DE.UTF-8        LC_COLLATE=C              
+##  [5] LC_MONETARY=de_DE.UTF-8    LC_MESSAGES=en_US.UTF-8   
+##  [7] LC_PAPER=de_DE.UTF-8       LC_NAME=C                 
+##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+## [11] LC_MEASUREMENT=de_DE.UTF-8 LC_IDENTIFICATION=C       
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] amt_0.0.8       lubridate_1.7.4 raster_3.0-12   sp_1.4-1       
+## [5] knitr_1.25     
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.4          compiler_3.6.3      pillar_1.4.3       
+##  [4] tools_3.6.3         digest_0.6.25       evaluate_0.14      
+##  [7] tibble_2.99.99.9014 lifecycle_0.2.0     lattice_0.20-40    
+## [10] pkgconfig_2.0.3     rlang_0.4.5         Matrix_1.2-17      
+## [13] cli_2.0.2           yaml_2.2.1          xfun_0.12          
+## [16] dplyr_0.8.5         stringr_1.4.0       vctrs_0.2.4        
+## [19] grid_3.6.3          tidyselect_1.0.0    glue_1.3.2         
+## [22] R6_2.4.1            fansi_0.4.1         survival_3.1-8     
+## [25] rmarkdown_2.0       purrr_0.3.3         tidyr_1.0.2        
+## [28] magrittr_1.5        codetools_0.2-16    htmltools_0.4.0    
+## [31] splines_3.6.3       assertthat_0.2.1    utf8_1.1.4         
+## [34] stringi_1.4.6       lazyeval_0.2.2      crayon_1.3.4</code></pre>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

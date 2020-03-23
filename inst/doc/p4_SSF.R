@@ -21,7 +21,7 @@ sh_forest
 ssf1 <- deer %>% steps_by_burst()
 
 ## ------------------------------------------------------------------------
-ssf1 <- ssf1 %>% random_steps(n = 15)
+ssf1 <- ssf1 %>% random_steps(n_control = 15)
 
 ## ------------------------------------------------------------------------
 ssf1 <- ssf1 %>% extract_covariates(sh_forest) 

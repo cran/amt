@@ -1,6 +1,6 @@
-#' @importFrom dplyr arrange filter group_by select summarize summarise ungroup
+#' @importFrom dplyr arrange filter group_by select summarize summarise ungroup rename
 #' @importFrom dplyr distinct ungroup mutate mutate_at pull %>% bind_rows select_vars n
-#' @importFrom graphics plot legend
+#' @importFrom graphics plot legend lines par
 #' @importFrom grDevices adjustcolor
 #' @importFrom lazyeval lazy_dots lazy
 #' @importFrom lubridate hours minutes seconds now days weeks
@@ -9,8 +9,9 @@
 #' @importFrom tibble tibble tribble is_tibble as_tibble
 #' @importFrom utils data head tail
 #' @importFrom sp CRS
+#' @importFrom stats dexp qexp terms predict
 #' @importFrom methods is
-#' @importFrom purrr map
+#' @importFrom purrr map map_int
 #' @importFrom rlang quo quos enquo quo_name
 #' @importFrom raster raster
 #' @import survival
@@ -22,7 +23,7 @@ methods::setOldClass(c("random_points", "tbl_df", "tbl", "data.frame"))
 methods::setOldClass(c("steps", "tbl_df", "tbl", "data.frame"))
 methods::setOldClass(c("random_steps", "tbl_df"))
 
-utils::globalVariables(c("burst_", "step_id_", "t_", ".data", "ts")) # to omit CRAN notes
+utils::globalVariables(c("burst_", "step_id_", "t_", ".data", "ts", "sl_")) # to omit CRAN notes
 
 #' @useDynLib amt
 
@@ -69,6 +70,8 @@ lubridate::days
 lubridate::weeks
 #' @export
 purrr::map
+#' @export
+purrr::map_int
 #' @export
 survival::clogit
 #' @export
