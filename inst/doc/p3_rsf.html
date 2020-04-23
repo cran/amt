@@ -12,7 +12,7 @@
 
 <meta name="author" content="Johannes Signer" />
 
-<meta name="date" content="2020-03-30" />
+<meta name="date" content="2020-04-23" />
 
 <title>Resource Selection Functions (RSF) with amt</title>
 
@@ -303,7 +303,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Resource Selection Functions (RSF) with <code>amt</code></h1>
 <h4 class="author">Johannes Signer</h4>
-<h4 class="date">2020-03-30</h4>
+<h4 class="date">2020-04-23</h4>
 
 
 
@@ -350,7 +350,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p>Before fitting a RSF we have to do some data preparation. We have to generate random points, points that we think the animal could have used. The random points define the availability domain. In <code>amt</code> the function <code>random_points</code> is designed to do just that. The function can be used in 3 different ways, depending to the type of object that is passed to the function call.</p>
 <ol style="list-style-type: decimal">
 <li>A <code>track_*</code> (such as the <code>deer</code> object) can be passed to the function <code>random_points</code>. The function then calculates a home range (the home-range estimator can be controlled with argument <code>hr</code>). Within this home range <code>n</code> random points are generated. The default value of <code>n</code> is ten times the number of present points.</li>
-<li>If a <code>hr</code>-object (i.e., the result of a home-range estimation in <code>amt</code>) is passed to <code>random_points</code>, points are genrated within the home range. This allows to generate random points within any home range that was previously estimated in <code>amt</code>. Note, that this could be a home range of multiple animals. In this case, the function <code>random_points</code> has one additional argument called <code>presence</code>. This argument takes a <code>trk_*</code> with the presence points and adds these points for convenience to the random points.</li>
+<li>If a <code>hr</code>-object (i.e., the result of a home-range estimation in <code>amt</code>) is passed to <code>random_points</code>, points are generated within the home range. This allows to generate random points within any home range that was previously estimated in <code>amt</code>. Note, that this could be a home range of multiple animals. In this case, the function <code>random_points</code> has one additional argument called <code>presence</code>. This argument takes a <code>trk_*</code> with the presence points and adds these points for convenience to the random points.</li>
 <li>A <code>SpatialPolygons*</code>-object or <code>sf</code>-object. The latter must contain <code>POLYGON</code>s or <code>MULTIPOLYGON</code>s as features. This can be useful in situation where a home range needs to be buffered, or when other geographical features are considered as the availability domain. As before, this method for <code>random_points</code> also takes the argument <code>presence</code> to optionally add the observed points to the output.</li>
 </ol>
 <p>Lets now illustrate the three different situations. First we take random points from a <code>track_xy</code></p>
@@ -425,7 +425,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="session" class="section level2">
 <h2>Session</h2>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">sessioninfo<span class="op">::</span><span class="kw">session_info</span>()</a></code></pre></div>
-<pre><code>## ─ Session info ──────────────────────────────────────────────────────────
+<pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
 ##  setting  value                       
 ##  version  R version 3.6.3 (2020-02-29)
 ##  os       Ubuntu 18.04.4 LTS          
@@ -435,126 +435,70 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##  collate  C                           
 ##  ctype    en_US.UTF-8                 
 ##  tz       Europe/Berlin               
-##  date     2020-03-30                  
+##  date     2020-04-23                  
 ## 
-## ─ Packages ──────────────────────────────────────────────────────────────
-##  package     * version      date       lib
-##  amt         * 0.0.9        2020-03-30 [1]
-##  assertthat    0.2.1        2019-03-21 [3]
-##  backports     1.1.5        2019-10-02 [3]
-##  checkmate     2.0.0        2020-02-06 [3]
-##  class         7.3-15       2019-01-01 [6]
-##  classInt      0.4-2        2019-10-17 [3]
-##  cli           2.0.2        2020-02-28 [3]
-##  codetools     0.2-16       2018-12-24 [6]
-##  colorspace    1.4-1        2019-03-18 [3]
-##  crayon        1.3.4        2017-09-16 [3]
-##  DBI           1.1.0        2019-12-15 [3]
-##  digest        0.6.25       2020-02-23 [3]
-##  dplyr       * 0.8.5        2020-03-07 [3]
-##  e1071         1.7-3        2019-11-26 [3]
-##  evaluate      0.14         2019-05-28 [3]
-##  fansi         0.4.1        2020-01-08 [3]
-##  farver        2.0.3        2020-01-16 [3]
-##  ggplot2     * 3.3.0        2020-03-05 [3]
-##  glue          1.3.2        2020-03-12 [3]
-##  gtable        0.3.0        2019-03-25 [3]
-##  htmltools     0.4.0        2019-10-04 [3]
-##  KernSmooth    2.23-15      2015-06-29 [6]
-##  knitr       * 1.25         2019-09-18 [3]
-##  labeling      0.3          2014-08-23 [3]
-##  lattice       0.20-40      2020-02-19 [6]
-##  lazyeval      0.2.2        2019-03-15 [3]
-##  lifecycle     0.2.0        2020-03-06 [3]
-##  lubridate   * 1.7.4        2018-04-11 [3]
-##  magrittr      1.5          2014-11-22 [3]
-##  Matrix        1.2-17       2019-03-22 [6]
-##  munsell       0.5.0        2018-06-12 [3]
-##  pillar        1.4.3        2019-12-20 [3]
-##  pkgconfig     2.0.3        2019-09-22 [3]
-##  purrr         0.3.3        2019-10-18 [3]
-##  R6            2.4.1        2019-11-12 [3]
-##  raster      * 3.0-12       2020-01-30 [3]
-##  Rcpp          1.0.4        2020-03-17 [3]
-##  rgdal         1.4-8        2019-11-27 [3]
-##  rlang         0.4.5        2020-03-01 [3]
-##  rmarkdown     2.0          2019-12-12 [3]
-##  scales        1.1.0        2019-11-18 [3]
-##  sessioninfo   1.1.1        2018-11-05 [3]
-##  sf            0.9-0        2020-03-24 [3]
-##  sp          * 1.4-1        2020-02-28 [3]
-##  stringi       1.4.6        2020-02-17 [3]
-##  stringr       1.4.0        2019-02-10 [3]
-##  survival      3.1-8        2019-12-03 [3]
-##  tibble        2.99.99.9014 2020-03-24 [3]
-##  tidyr         1.0.2        2020-01-24 [3]
-##  tidyselect    1.0.0        2020-01-27 [3]
-##  units         0.6-6        2020-03-16 [3]
-##  utf8          1.1.4        2018-05-24 [3]
-##  vctrs         0.2.4        2020-03-10 [3]
-##  withr         2.1.2        2018-03-15 [3]
-##  xfun          0.12         2020-01-13 [3]
-##  yaml          2.2.1        2020-02-01 [3]
-##  source                           
-##  local                            
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.0)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.0)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.5.0)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.2)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.3)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.3)                   
-##  CRAN (R 3.6.3)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  Github (tidyverse/tibble@96af653)
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.3)                   
+## ─ Packages ───────────────────────────────────────────────────────────────────
+##  package     * version    date       lib source                           
+##  amt         * 0.1.0      2020-04-23 [1] local                            
+##  assertthat    0.2.1      2019-03-21 [3] CRAN (R 3.6.1)                   
+##  backports     1.1.6      2020-04-05 [3] CRAN (R 3.6.3)                   
+##  checkmate     2.0.0      2020-02-06 [3] CRAN (R 3.6.1)                   
+##  class         7.3-15     2019-01-01 [6] CRAN (R 3.6.0)                   
+##  classInt      0.4-2      2019-10-17 [3] CRAN (R 3.6.1)                   
+##  cli           2.0.2      2020-02-28 [3] CRAN (R 3.6.1)                   
+##  codetools     0.2-16     2018-12-24 [6] CRAN (R 3.6.0)                   
+##  colorspace    1.4-1      2019-03-18 [3] CRAN (R 3.6.1)                   
+##  crayon        1.3.4      2017-09-16 [3] CRAN (R 3.6.1)                   
+##  DBI           1.1.0      2019-12-15 [3] CRAN (R 3.6.1)                   
+##  digest        0.6.25     2020-02-23 [3] CRAN (R 3.6.1)                   
+##  dplyr       * 0.8.5      2020-03-07 [3] CRAN (R 3.6.1)                   
+##  e1071         1.7-3      2019-11-26 [3] CRAN (R 3.6.1)                   
+##  ellipsis      0.3.0      2019-09-20 [3] CRAN (R 3.6.1)                   
+##  evaluate      0.14       2019-05-28 [3] CRAN (R 3.6.1)                   
+##  fansi         0.4.1      2020-01-08 [3] CRAN (R 3.6.1)                   
+##  farver        2.0.3      2020-01-16 [3] CRAN (R 3.6.1)                   
+##  ggplot2     * 3.3.0      2020-03-05 [3] CRAN (R 3.6.1)                   
+##  glue          1.4.0      2020-04-03 [3] CRAN (R 3.6.3)                   
+##  gtable        0.3.0      2019-03-25 [3] CRAN (R 3.6.1)                   
+##  htmltools     0.4.0      2019-10-04 [3] CRAN (R 3.6.1)                   
+##  KernSmooth    2.23-15    2015-06-29 [6] CRAN (R 3.5.0)                   
+##  knitr       * 1.28       2020-02-06 [3] CRAN (R 3.6.3)                   
+##  labeling      0.3        2014-08-23 [3] CRAN (R 3.6.1)                   
+##  lattice       0.20-40    2020-02-19 [6] CRAN (R 3.6.2)                   
+##  lazyeval      0.2.2      2019-03-15 [3] CRAN (R 3.6.1)                   
+##  lifecycle     0.2.0      2020-03-06 [3] CRAN (R 3.6.1)                   
+##  lubridate   * 1.7.4      2018-04-11 [3] CRAN (R 3.6.1)                   
+##  magrittr      1.5        2014-11-22 [3] CRAN (R 3.6.1)                   
+##  Matrix        1.2-17     2019-03-22 [6] CRAN (R 3.6.1)                   
+##  munsell       0.5.0      2018-06-12 [3] CRAN (R 3.6.1)                   
+##  pillar        1.4.3      2019-12-20 [3] CRAN (R 3.6.1)                   
+##  pkgconfig     2.0.3      2019-09-22 [3] CRAN (R 3.6.1)                   
+##  purrr         0.3.4      2020-04-17 [3] CRAN (R 3.6.3)                   
+##  R6            2.4.1      2019-11-12 [3] CRAN (R 3.6.1)                   
+##  raster      * 3.0-12     2020-01-30 [3] CRAN (R 3.6.1)                   
+##  Rcpp          1.0.4.6    2020-04-09 [3] CRAN (R 3.6.3)                   
+##  rgdal         1.4-8      2019-11-27 [3] CRAN (R 3.6.3)                   
+##  rlang         0.4.5      2020-03-01 [3] CRAN (R 3.6.1)                   
+##  rmarkdown     2.0        2019-12-12 [3] CRAN (R 3.6.1)                   
+##  scales        1.1.0      2019-11-18 [3] CRAN (R 3.6.1)                   
+##  sessioninfo   1.1.1      2018-11-05 [3] CRAN (R 3.6.1)                   
+##  sf            0.9-0      2020-03-24 [3] CRAN (R 3.6.3)                   
+##  sp          * 1.4-1      2020-02-28 [3] CRAN (R 3.6.3)                   
+##  stringi       1.4.6      2020-02-17 [3] CRAN (R 3.6.1)                   
+##  stringr       1.4.0      2019-02-10 [3] CRAN (R 3.6.1)                   
+##  survival      3.1-8      2019-12-03 [3] CRAN (R 3.6.1)                   
+##  tibble        3.0.1.9000 2020-04-23 [3] Github (tidyverse/tibble@3892a7f)
+##  tidyr         1.0.2      2020-01-24 [3] CRAN (R 3.6.1)                   
+##  tidyselect    1.0.0      2020-01-27 [3] CRAN (R 3.6.1)                   
+##  units         0.6-6      2020-03-16 [3] CRAN (R 3.6.1)                   
+##  utf8          1.1.4      2018-05-24 [3] CRAN (R 3.6.1)                   
+##  vctrs         0.2.4      2020-03-10 [3] CRAN (R 3.6.1)                   
+##  withr         2.2.0      2020-04-20 [3] CRAN (R 3.6.3)                   
+##  xfun          0.13       2020-04-13 [3] CRAN (R 3.6.3)                   
+##  yaml          2.2.1      2020-02-01 [3] CRAN (R 3.6.3)                   
 ## 
-## [1] /tmp/RtmpJdj1kQ/Rinst24b358191ad9
-## [2] /tmp/RtmpRDXPYD/temp_libpath34da760f58d3
+## [1] /tmp/Rtmp3TuR3g/Rinst55c47601aee6
+## [2] /tmp/Rtmp8ySvX2/temp_libpath434e213f5de
 ## [3] /home/jsigner/R/x86_64-pc-linux-gnu-library/3.6
 ## [4] /usr/local/lib/R/site-library
 ## [5] /usr/lib/R/site-library

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Johannes Signer" />
 
-<meta name="date" content="2020-03-30" />
+<meta name="date" content="2020-04-23" />
 
 <title>Getting started with amt</title>
 
@@ -303,7 +303,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Getting started with <code>amt</code></h1>
 <h4 class="author">Johannes Signer</h4>
-<h4 class="date">2020-03-30</h4>
+<h4 class="date">2020-04-23</h4>
 
 
 
@@ -341,7 +341,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <li><code>track_xy</code> is a track that only has coordinates, and</li>
 <li><code>track_xyt</code> is a track that has a timestamp associated to each coordinate pair.</li>
 </ul>
-<p>If a <code>track_xy</code> or <code>track_xyt</code> is created with the function <code>make_track</code>, is determined whether or not a timestamp is passed as a thrid argument (called <code>.t</code>) to the function <code>make_track</code>. In the previous example we only passed <code>x</code> and <code>y</code> coordinates. Hence a <code>track_xy</code> was created.</p>
+<p>If a <code>track_xy</code> or <code>track_xyt</code> is created with the function <code>make_track</code>, is determined whether or not a timestamp is passed as a third argument (called <code>.t</code>) to the function <code>make_track</code>. In the previous example we only passed <code>x</code> and <code>y</code> coordinates. Hence a <code>track_xy</code> was created.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">class</span>(tr1)</a></code></pre></div>
 <pre><code>## [1] &quot;track_xy&quot;   &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
 <p>To create a <code>track_xyt</code> we could do the following</p>
@@ -379,8 +379,8 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ## 2     2     2 2017-01-02     1     4
 ## 3     3     3 2017-01-03     1     4</code></pre>
 </div>
-<div id="coordinate-refenece-system" class="section level3">
-<h3>Coordinate refenece system</h3>
+<div id="coordinate-reference-system" class="section level3">
+<h3>Coordinate reference system</h3>
 <p><code>make_track</code> has one further optional argument (<code>crs</code>), which allows the user to set a coordinate reference system (CRS) of the track. The CRS needs to be provided as valid <code>proj4string</code>, see the documentation of <code>sp::CRS</code> for further details.</p>
 </div>
 <div id="an-example-with-one-real-animal" class="section level3">
@@ -508,7 +508,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##      min    q1 median  mean    q3   max    sd     n unit 
 ##    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;
 ## 1 0.0025  2.00   2.01  6.34  6.00 3924.  102.  1492 hour</code></pre>
-<p>This suggests that a sampling rate for 6 hours might be adequat. We can then use the function <code>track_resample</code> to resample the track and only keep relocations that are approximately 6 hours apart (within some tolerance, that can be specified). We will use the function <code>lubridate::hours</code> to specify the sampling rate and <code>lubridate::minutes</code> to specify the tolerance. Both arguments <code>rate</code> and <code>tolerance</code> are expected to be a <code>Period</code>.</p>
+<p>This suggests that a sampling rate for 6 hours might be adequate. We can then use the function <code>track_resample</code> to resample the track and only keep relocations that are approximately 6 hours apart (within some tolerance, that can be specified). We will use the function <code>lubridate::hours</code> to specify the sampling rate and <code>lubridate::minutes</code> to specify the tolerance. Both arguments <code>rate</code> and <code>tolerance</code> are expected to be a <code>Period</code>.</p>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1">tr3 &lt;-<span class="st"> </span>tr2 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">track_resample</span>(<span class="dt">rate =</span> <span class="kw">hours</span>(<span class="dv">6</span>), <span class="dt">tolerance =</span> <span class="kw">minutes</span>(<span class="dv">20</span>))</a>
 <a class="sourceLine" id="cb47-2" data-line-number="2">tr3</a></code></pre></div>
 <pre><code>## # A tibble: 826 x 7
@@ -525,24 +525,24 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##  9 3557204 5999130 2008-04-01 00:01:24 Animal 1     4 187.        1
 ## 10 3557108 5999291 2008-04-01 06:00:54 Animal 1     4   6.32      1
 ## # … with 816 more rows</code></pre>
-<p><code>tr3</code> still a track, but with two differenes compared to <code>tr2</code>. 1) the number of rows is reduced from 1493 to 826, because only relocations that are 6 hours +/- the tolerance apart of each other are retained; 2) <code>tr3</code> has one new column called <code>burst_</code>. A burst is sequence of relocatoins with equal sampling rates. Consider the following hypothetical example: 5 relocations are all 6 hours apart. Then there is a gap of 12 hours because one relocation failed and afterwards then there are an other 10 relocations all 6 hours apart. Then we would consider the first 5 relocations as a burst and the second 10 relocations (after the 12 hour gap) as a second burst.</p>
+<p><code>tr3</code> still a track, but with two differences compared to <code>tr2</code>. 1) the number of rows is reduced from 1493 to 826, because only relocations that are 6 hours +/- the tolerance apart of each other are retained; 2) <code>tr3</code> has one new column called <code>burst_</code>. A burst is sequence of relocations with equal sampling rates. Consider the following hypothetical example: 5 relocations are all 6 hours apart. Then there is a gap of 12 hours because one relocation failed and afterwards then there are an other 10 relocations all 6 hours apart. Then we would consider the first 5 relocations as a burst and the second 10 relocations (after the 12 hour gap) as a second burst.</p>
 </div>
 <div id="from-tracks-to-steps" class="section level3">
 <h3>From tracks to steps</h3>
-<p>In many situations we are more interested in steps (that is the animal moving from one relocation to an other, or the straight line between a start and a end point), that in the individual relocatoins. <code>amt</code> supports <code>steps</code> as an other way to represent movement data. The transition from a track to steps can be done via two functions.</p>
+<p>In many situations we are more interested in steps (that is the animal moving from one relocation to an other, or the straight line between a start and a end point), that in the individual relocations. <code>amt</code> supports <code>steps</code> as an other way to represent movement data. The transition from a track to steps can be done via two functions.</p>
 <ol style="list-style-type: decimal">
 <li><code>steps</code>: Takes as an input a track, converts the track to step and calculating some derived quantities (e.g., step lengths, turning angles). The function <code>steps</code> to receive a track with regular sampling rates.</li>
-<li><code>steps_by_burst</code>: Takes as an input a resampled track (i.e., a track with several bursts) and will calcualte derived quantities per burst.</li>
+<li><code>steps_by_burst</code>: Takes as an input a resampled track (i.e., a track with several bursts) and will calculate derived quantities per burst.</li>
 </ol>
 </div>
 </div>
 <div id="how-to-deal-with-several-animals" class="section level2">
 <h2>How to deal with several animals</h2>
-<p>Up to now we have only considered situations with one animal. However, in most telemetry studies more than one animal are tracked and we often want to calcuated movement relevant characteristics for several aniamls individually. <code>amt</code> does not provide a infrastructure for dealing with several animal, however, <code>list</code>-columns from the <code>tidyverse</code> can be used to manage many animals. Because a track is just a <code>data_frame</code> all <code>tidyverse</code> verbs can be used. The general strategy consists of 4 steps:</p>
+<p>Up to now we have only considered situations with one animal. However, in most telemetry studies more than one animal are tracked and we often want to calculated movement relevant characteristics for several animals individually. <code>amt</code> does not provide a infrastructure for dealing with several animal, however, <code>list</code>-columns from the <code>tidyverse</code> can be used to manage many animals. Because a track is just a <code>data_frame</code> all <code>tidyverse</code> verbs can be used. The general strategy consists of 4 steps:</p>
 <ol style="list-style-type: decimal">
 <li>Group a track by one or more grouping variables using the function <code>group_by</code>.</li>
-<li>Nest a grouped track. This retaains the unique values of the grouping variable(s) and creates a new column called <code>data</code>. The data column is a so called <code>list</code>-column. This means it is an R list that contains a <code>data_frame</code> for each group.</li>
-<li>Now we can perform operations on the grouped data creating a new list columnt. This can be done in a combination with <code>mutate</code> and <code>map</code> (instead of <code>map</code> also <code>lapply</code> could be used).</li>
+<li>Nest a grouped track. This retains the unique values of the grouping variable(s) and creates a new column called <code>data</code>. The data column is a so called <code>list</code>-column. This means it is an R list that contains a <code>data_frame</code> for each group.</li>
+<li>Now we can perform operations on the grouped data creating a new list column. This can be done in a combination with <code>mutate</code> and <code>map</code> (instead of <code>map</code> also <code>lapply</code> could be used).</li>
 <li>Select the relevant columns and unnest. With <code>select</code> we can select columns of interest and reverse the nesting with the function <code>unnest</code>.</li>
 </ol>
 <p>As an example we will use a second data set included in <code>amt</code> on tracks of four fishers. We will load the data, create a track, resample the tracks individually to 30 min and create a histogram of step lengths (accounting for bursts).</p>
@@ -601,7 +601,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="session" class="section level2">
 <h2>Session</h2>
 <div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1">sessioninfo<span class="op">::</span><span class="kw">session_info</span>()</a></code></pre></div>
-<pre><code>## ─ Session info ──────────────────────────────────────────────────────────
+<pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
 ##  setting  value                       
 ##  version  R version 3.6.3 (2020-02-29)
 ##  os       Ubuntu 18.04.4 LTS          
@@ -611,108 +611,61 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##  collate  C                           
 ##  ctype    en_US.UTF-8                 
 ##  tz       Europe/Berlin               
-##  date     2020-03-30                  
+##  date     2020-04-23                  
 ## 
-## ─ Packages ──────────────────────────────────────────────────────────────
-##  package     * version      date       lib
-##  amt         * 0.0.9        2020-03-30 [1]
-##  assertthat    0.2.1        2019-03-21 [3]
-##  cli           2.0.2        2020-02-28 [3]
-##  codetools     0.2-16       2018-12-24 [6]
-##  colorspace    1.4-1        2019-03-18 [3]
-##  crayon        1.3.4        2017-09-16 [3]
-##  digest        0.6.25       2020-02-23 [3]
-##  dplyr       * 0.8.5        2020-03-07 [3]
-##  evaluate      0.14         2019-05-28 [3]
-##  fansi         0.4.1        2020-01-08 [3]
-##  farver        2.0.3        2020-01-16 [3]
-##  ggplot2     * 3.3.0        2020-03-05 [3]
-##  glue          1.3.2        2020-03-12 [3]
-##  gtable        0.3.0        2019-03-25 [3]
-##  htmltools     0.4.0        2019-10-04 [3]
-##  knitr       * 1.25         2019-09-18 [3]
-##  labeling      0.3          2014-08-23 [3]
-##  lattice       0.20-40      2020-02-19 [6]
-##  lazyeval      0.2.2        2019-03-15 [3]
-##  lifecycle     0.2.0        2020-03-06 [3]
-##  lubridate   * 1.7.4        2018-04-11 [3]
-##  magrittr      1.5          2014-11-22 [3]
-##  Matrix        1.2-17       2019-03-22 [6]
-##  munsell       0.5.0        2018-06-12 [3]
-##  pillar        1.4.3        2019-12-20 [3]
-##  pkgconfig     2.0.3        2019-09-22 [3]
-##  purrr         0.3.3        2019-10-18 [3]
-##  R6            2.4.1        2019-11-12 [3]
-##  raster      * 3.0-12       2020-01-30 [3]
-##  Rcpp          1.0.4        2020-03-17 [3]
-##  rgdal         1.4-8        2019-11-27 [3]
-##  rlang         0.4.5        2020-03-01 [3]
-##  rmarkdown     2.0          2019-12-12 [3]
-##  scales        1.1.0        2019-11-18 [3]
-##  sessioninfo   1.1.1        2018-11-05 [3]
-##  sp          * 1.4-1        2020-02-28 [3]
-##  stringi       1.4.6        2020-02-17 [3]
-##  stringr       1.4.0        2019-02-10 [3]
-##  survival      3.1-8        2019-12-03 [3]
-##  tibble        2.99.99.9014 2020-03-24 [3]
-##  tidyr         1.0.2        2020-01-24 [3]
-##  tidyselect    1.0.0        2020-01-27 [3]
-##  utf8          1.1.4        2018-05-24 [3]
-##  vctrs         0.2.4        2020-03-10 [3]
-##  withr         2.1.2        2018-03-15 [3]
-##  xfun          0.12         2020-01-13 [3]
-##  yaml          2.2.1        2020-02-01 [3]
-##  source                           
-##  local                            
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.0)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.2)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.3)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.3)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  Github (tidyverse/tibble@96af653)
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.1)                   
-##  CRAN (R 3.6.3)                   
+## ─ Packages ───────────────────────────────────────────────────────────────────
+##  package     * version    date       lib source                           
+##  amt         * 0.1.0      2020-04-23 [1] local                            
+##  assertthat    0.2.1      2019-03-21 [3] CRAN (R 3.6.1)                   
+##  cli           2.0.2      2020-02-28 [3] CRAN (R 3.6.1)                   
+##  codetools     0.2-16     2018-12-24 [6] CRAN (R 3.6.0)                   
+##  colorspace    1.4-1      2019-03-18 [3] CRAN (R 3.6.1)                   
+##  crayon        1.3.4      2017-09-16 [3] CRAN (R 3.6.1)                   
+##  digest        0.6.25     2020-02-23 [3] CRAN (R 3.6.1)                   
+##  dplyr       * 0.8.5      2020-03-07 [3] CRAN (R 3.6.1)                   
+##  ellipsis      0.3.0      2019-09-20 [3] CRAN (R 3.6.1)                   
+##  evaluate      0.14       2019-05-28 [3] CRAN (R 3.6.1)                   
+##  fansi         0.4.1      2020-01-08 [3] CRAN (R 3.6.1)                   
+##  farver        2.0.3      2020-01-16 [3] CRAN (R 3.6.1)                   
+##  ggplot2     * 3.3.0      2020-03-05 [3] CRAN (R 3.6.1)                   
+##  glue          1.4.0      2020-04-03 [3] CRAN (R 3.6.3)                   
+##  gtable        0.3.0      2019-03-25 [3] CRAN (R 3.6.1)                   
+##  htmltools     0.4.0      2019-10-04 [3] CRAN (R 3.6.1)                   
+##  knitr       * 1.28       2020-02-06 [3] CRAN (R 3.6.3)                   
+##  labeling      0.3        2014-08-23 [3] CRAN (R 3.6.1)                   
+##  lattice       0.20-40    2020-02-19 [6] CRAN (R 3.6.2)                   
+##  lazyeval      0.2.2      2019-03-15 [3] CRAN (R 3.6.1)                   
+##  lifecycle     0.2.0      2020-03-06 [3] CRAN (R 3.6.1)                   
+##  lubridate   * 1.7.4      2018-04-11 [3] CRAN (R 3.6.1)                   
+##  magrittr      1.5        2014-11-22 [3] CRAN (R 3.6.1)                   
+##  Matrix        1.2-17     2019-03-22 [6] CRAN (R 3.6.1)                   
+##  munsell       0.5.0      2018-06-12 [3] CRAN (R 3.6.1)                   
+##  pillar        1.4.3      2019-12-20 [3] CRAN (R 3.6.1)                   
+##  pkgconfig     2.0.3      2019-09-22 [3] CRAN (R 3.6.1)                   
+##  purrr         0.3.4      2020-04-17 [3] CRAN (R 3.6.3)                   
+##  R6            2.4.1      2019-11-12 [3] CRAN (R 3.6.1)                   
+##  raster      * 3.0-12     2020-01-30 [3] CRAN (R 3.6.1)                   
+##  Rcpp          1.0.4.6    2020-04-09 [3] CRAN (R 3.6.3)                   
+##  rgdal         1.4-8      2019-11-27 [3] CRAN (R 3.6.3)                   
+##  rlang         0.4.5      2020-03-01 [3] CRAN (R 3.6.1)                   
+##  rmarkdown     2.0        2019-12-12 [3] CRAN (R 3.6.1)                   
+##  scales        1.1.0      2019-11-18 [3] CRAN (R 3.6.1)                   
+##  sessioninfo   1.1.1      2018-11-05 [3] CRAN (R 3.6.1)                   
+##  sp          * 1.4-1      2020-02-28 [3] CRAN (R 3.6.3)                   
+##  stringi       1.4.6      2020-02-17 [3] CRAN (R 3.6.1)                   
+##  stringr       1.4.0      2019-02-10 [3] CRAN (R 3.6.1)                   
+##  survival      3.1-8      2019-12-03 [3] CRAN (R 3.6.1)                   
+##  tibble        3.0.1.9000 2020-04-23 [3] Github (tidyverse/tibble@3892a7f)
+##  tidyr         1.0.2      2020-01-24 [3] CRAN (R 3.6.1)                   
+##  tidyselect    1.0.0      2020-01-27 [3] CRAN (R 3.6.1)                   
+##  utf8          1.1.4      2018-05-24 [3] CRAN (R 3.6.1)                   
+##  vctrs         0.2.4      2020-03-10 [3] CRAN (R 3.6.1)                   
+##  withr         2.2.0      2020-04-20 [3] CRAN (R 3.6.3)                   
+##  xfun          0.13       2020-04-13 [3] CRAN (R 3.6.3)                   
+##  yaml          2.2.1      2020-02-01 [3] CRAN (R 3.6.3)                   
 ## 
-## [1] /tmp/RtmpJdj1kQ/Rinst24b358191ad9
-## [2] /tmp/RtmpRDXPYD/temp_libpath34da760f58d3
+## [1] /tmp/Rtmp3TuR3g/Rinst55c47601aee6
+## [2] /tmp/Rtmp8ySvX2/temp_libpath434e213f5de
 ## [3] /home/jsigner/R/x86_64-pc-linux-gnu-library/3.6
 ## [4] /usr/local/lib/R/site-library
 ## [5] /usr/lib/R/site-library
