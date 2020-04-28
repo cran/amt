@@ -1,7 +1,7 @@
 Package: amt
 Type: Package
 Title: Animal Movement Tools
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(person("Johannes","Signer", role = c("aut", "cre"), email = "jsigner@gwdg.de"), 
   person("Bjoern", "Reineking", role = "ctb"), 
   person("Brian", "Smith", role = "ctb"), 
@@ -26,7 +26,7 @@ RoxygenNote: 7.1.0
 RdMacros: Rdpack
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2020-04-23 09:23:24 UTC; jsigner
+Packaged: 2020-04-28 05:39:34 UTC; jsigner
 Author: Johannes Signer [aut, cre],
   Bjoern Reineking [ctb],
   Brian Smith [ctb],
@@ -34,4 +34,4 @@ Author: Johannes Signer [aut, cre],
   Scott LaPoint [dtc]
 Maintainer: Johannes Signer <jsigner@gwdg.de>
 Repository: CRAN
-Date/Publication: 2020-04-23 10:00:02 UTC
+Date/Publication: 2020-04-28 12:10:02 UTC
