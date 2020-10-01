@@ -7,7 +7,7 @@
 \method{plot}{log_rss}(x, x_var1 = "guess", x_var2 = "guess", ...)
 }
 \arguments{
-\item{x}{\verb{[log_rss]} An object returned by the function \verb{\link{log_rss}()}.}
+\item{x}{\verb{[log_rss]} An object returned by the function \code{\link{log_rss}()}.}
 
 \item{x_var1}{\verb{[character]} The variable to plot on the x-axis. A string of
 either \code{"guess"} (default -- see Details) or the variable name.}
@@ -26,7 +26,7 @@ This function provides defaults for a basic plot, but we encourage
 the user to carefully consider how to represent the patterns found in their
 habitat selection model.
 
-The function \verb{\link{log_rss}()} is meant to accept a user-defined
+The function \code{\link{log_rss}()} is meant to accept a user-defined
 input for \code{x1}. The structure of \code{x1} likely reflects how the user intended
 to visualize the results. Therefore, it is possible to "guess" which covariate
 the user would like to see on the x-axis by choosing the column from \code{x1} with
@@ -37,22 +37,22 @@ user specifies \code{x_var1 != "guess" & x_var2 == "guess"}, the function will r
 an error.
 
 This function uses integers to represent colors, and therefore the user can
-change the default colors by specifying a custom \verb{\link{palette}()} before
+change the default colors by specifying a custom \code{\link{palette}()} before
 calling the function.
 }
 \examples{
 
 # Load data
 data("amt_fisher")
-data("amt_fisher_lu")
+data("amt_fisher_covar")
 
 # Prepare data for RSF
 rsf_data <- amt_fisher \%>\%
-  filter(burst_ == 1) \%>\%
+  filter(name == "Leroy") \%>\%
   make_track(x_, y_, t_) \%>\%
   random_points() \%>\%
-  extract_covariates(amt_fisher_lu) \%>\%
-  mutate(lu = factor(landuse_study_area))
+  extract_covariates(amt_fisher_covar$landuse) \%>\%
+  mutate(lu = factor(landuse))
 
 # Fit RSF
 m1 <- rsf_data \%>\%
@@ -62,7 +62,8 @@ m1 <- rsf_data \%>\%
 # data.frame of x1s
 x1 <- data.frame(lu = sort(unique(rsf_data$lu)))
 # data.frame of x2 (note factor levels should be same as model data)
-x2 <- data.frame(lu = factor(21, levels = levels(rsf_data$lu)))
+x2 <- data.frame(lu = factor(140,
+levels = levels(rsf_data$lu)))
 # Calculate
 logRSS <- log_rss(object = m1, x1 = x1, x2 = x2)
 

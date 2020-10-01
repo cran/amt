@@ -9,7 +9,7 @@
 fit_logit <- function(data, formula, ...) {
   m <- stats::glm(formula, data = data, family = stats::binomial(link = "logit"), ...)
   m <- list(model = m)
-  class(m) <- c("fit_logit", class(m))
+  class(m) <- c("fit_logit", "glm", class(m))
   m
 }
 

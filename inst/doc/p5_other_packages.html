@@ -12,17 +12,33 @@
 
 <meta name="author" content="Johannes Signer" />
 
-<meta name="date" content="2020-06-14" />
+<meta name="date" content="2020-10-01" />
 
 <title>Interface to other packages with amt</title>
 
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -32,14 +48,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -48,9 +66,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -301,7 +319,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Interface to other packages with <code>amt</code></h1>
 <h4 class="author">Johannes Signer</h4>
-<h4 class="date">2020-06-14</h4>
+<h4 class="date">2020-10-01</h4>
 
 
 
@@ -312,9 +330,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="getting-the-data-ready" class="section level2">
 <h2>Getting the data ready</h2>
 <p>First we load the required libraries and the relocation data (called <code>deer</code>)</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(amt)</a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="kw">data</span>(<span class="st">&quot;deer&quot;</span>)</a>
-<a class="sourceLine" id="cb1-3" title="3">deer</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(amt)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">data</span>(<span class="st">&quot;deer&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a>deer</span></code></pre></div>
 <pre><code>## # A tibble: 826 x 4
 ##          x_       y_ t_                  burst_
 ##  *    &lt;dbl&gt;    &lt;dbl&gt; &lt;dttm&gt;               &lt;dbl&gt;
@@ -332,8 +350,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </div>
 <div id="adehbatit" class="section level2">
 <h2><code>adehbatit*</code></h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">adehabitatLT_ltraj &lt;-<span class="st"> </span><span class="kw">as_ltraj</span>(deer)</a>
-<a class="sourceLine" id="cb3-2" title="2">adehabitatLT_ltraj</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>adehabitatLT_ltraj &lt;-<span class="st"> </span><span class="kw">as_ltraj</span>(deer)</span>
+<span id="cb3-2"><a href="#cb3-2"></a>adehabitatLT_ltraj</span></code></pre></div>
 <pre><code>## 
 ## *********** List of class ltraj ***********
 ## 
@@ -352,16 +370,16 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="ctmm" class="section level2">
 <h2><code>ctmm</code></h2>
 <p>With the function <code>as_telemetry</code> a <code>track_xyt</code> can be coerced to a <code>telemetry</code> object used in <code>ctmm</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">ctmm_obj &lt;-<span class="st"> </span><span class="kw">as_telemetry</span>(deer)</a>
-<a class="sourceLine" id="cb5-2" title="2"><span class="kw">class</span>(ctmm_obj)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>ctmm_obj &lt;-<span class="st"> </span><span class="kw">as_telemetry</span>(deer)</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="kw">class</span>(ctmm_obj)</span></code></pre></div>
 <pre><code>## [1] &quot;telemetry&quot;
 ## attr(,&quot;package&quot;)
 ## [1] &quot;ctmm&quot;</code></pre>
 </div>
 <div id="move" class="section level2">
 <h2><code>move</code></h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">move_obj &lt;-<span class="st"> </span><span class="kw">as_move</span>(deer)</a>
-<a class="sourceLine" id="cb7-2" title="2">move_obj</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>move_obj &lt;-<span class="st"> </span><span class="kw">as_move</span>(deer)</span>
+<span id="cb7-2"><a href="#cb7-2"></a>move_obj</span></code></pre></div>
 <pre><code>## class       : Move 
 ## features    : 826 
 ## extent      : 4309723, 4318383, 3442716, 3450713  (xmin, xmax, ymin, ymax)
@@ -374,14 +392,14 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## sensors     : unknown 
 ## indiv. data :  
 ## indiv. value:  
-## date created: 2020-06-12 07:54:28.890004</code></pre>
+## date created: 2020-08-12 17:20:38.760053</code></pre>
 </div>
 <div id="to-sf-and-sp" class="section level2">
 <h2>To <code>sf</code> and <code>sp</code></h2>
 </div>
 <div id="session" class="section level2">
 <h2>Session</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">sessioninfo<span class="op">::</span><span class="kw">session_info</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>sessioninfo<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
 ##  setting  value                       
 ##  version  R version 4.0.0 (2020-04-24)
@@ -392,16 +410,17 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##  collate  C                           
 ##  ctype    en_US.UTF-8                 
 ##  tz       Europe/Berlin               
-##  date     2020-06-14                  
+##  date     2020-10-01                  
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────
 ##  package      * version  date       lib source        
 ##  ade4           1.7-15   2020-02-13 [3] CRAN (R 4.0.0)
 ##  adehabitatLT   0.3.25   2020-01-19 [3] CRAN (R 4.0.0)
 ##  adehabitatMA   0.3.14   2020-01-13 [3] CRAN (R 4.0.0)
-##  amt          * 0.1.2    2020-06-14 [1] local         
+##  amt          * 0.1.3    2020-10-01 [1] local         
 ##  assertthat     0.2.1    2019-03-21 [3] CRAN (R 4.0.0)
-##  backports      1.1.7    2020-05-13 [3] CRAN (R 4.0.0)
+##  backports      1.1.8    2020-06-17 [3] CRAN (R 4.0.0)
+##  bibtex         0.4.2.2  2020-01-02 [3] CRAN (R 4.0.0)
 ##  boot           1.3-25   2020-04-26 [6] CRAN (R 4.0.0)
 ##  callr          3.4.3    2020-03-28 [3] CRAN (R 4.0.0)
 ##  checkmate      2.0.0    2020-02-06 [3] CRAN (R 4.0.0)
@@ -417,26 +436,27 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##  DBI            1.1.0    2019-12-15 [3] CRAN (R 4.0.0)
 ##  DEoptimR       1.0-8    2016-11-19 [3] CRAN (R 4.0.0)
 ##  desc           1.2.0    2018-05-01 [3] CRAN (R 4.0.0)
-##  devtools       2.3.0    2020-04-10 [3] CRAN (R 4.0.0)
+##  devtools       2.3.1    2020-07-21 [3] CRAN (R 4.0.0)
 ##  digest         0.6.25   2020-02-23 [3] CRAN (R 4.0.0)
-##  dplyr        * 1.0.0    2020-05-29 [3] CRAN (R 4.0.0)
+##  dplyr        * 1.0.1    2020-07-31 [3] CRAN (R 4.0.0)
 ##  e1071          1.7-3    2019-11-26 [3] CRAN (R 4.0.0)
 ##  ellipsis       0.3.1    2020-05-15 [3] CRAN (R 4.0.0)
 ##  evaluate       0.14     2019-05-28 [3] CRAN (R 4.0.0)
 ##  fansi          0.4.1    2020-01-08 [3] CRAN (R 4.0.0)
 ##  farver         2.0.3    2020-01-16 [3] CRAN (R 4.0.0)
 ##  fitdistrplus   1.1-1    2020-05-19 [3] CRAN (R 4.0.0)
-##  fs             1.4.1    2020-04-04 [3] CRAN (R 4.0.0)
+##  fs             1.5.0    2020-07-31 [3] CRAN (R 4.0.0)
+##  gbRd           0.4-11   2012-10-01 [3] CRAN (R 4.0.0)
 ##  generics       0.0.2    2018-11-29 [3] CRAN (R 4.0.0)
 ##  geosphere      1.5-10   2019-05-26 [3] CRAN (R 4.0.0)
-##  ggplot2      * 3.3.1    2020-05-28 [3] CRAN (R 4.0.0)
+##  ggplot2      * 3.3.2    2020-06-19 [3] CRAN (R 4.0.0)
 ##  glue           1.4.1    2020-05-13 [3] CRAN (R 4.0.0)
 ##  Gmedian        1.2.5    2020-03-02 [3] CRAN (R 4.0.0)
 ##  gtable         0.3.0    2019-03-25 [3] CRAN (R 4.0.0)
-##  htmltools      0.4.0    2019-10-04 [3] CRAN (R 4.0.0)
-##  httr           1.4.1    2019-08-05 [3] CRAN (R 4.0.0)
+##  htmltools      0.5.0    2020-06-16 [3] CRAN (R 4.0.0)
+##  httr           1.4.2    2020-07-20 [3] CRAN (R 4.0.0)
 ##  KernSmooth     2.23-17  2020-04-26 [6] CRAN (R 4.0.0)
-##  knitr        * 1.28     2020-02-06 [3] CRAN (R 4.0.0)
+##  knitr        * 1.29     2020-06-23 [3] CRAN (R 4.0.0)
 ##  labeling       0.3      2014-08-23 [3] CRAN (R 4.0.0)
 ##  lattice        0.20-41  2020-04-02 [6] CRAN (R 4.0.0)
 ##  lifecycle      0.2.0    2020-03-06 [3] CRAN (R 4.0.0)
@@ -445,49 +465,50 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##  MASS           7.3-51.6 2020-04-26 [6] CRAN (R 4.0.0)
 ##  Matrix         1.2-18   2019-11-27 [6] CRAN (R 4.0.0)
 ##  memoise        1.1.0    2017-04-21 [3] CRAN (R 4.0.0)
-##  move           4.0.0    2020-06-03 [3] CRAN (R 4.0.0)
+##  move           4.0.2    2020-06-25 [3] CRAN (R 4.0.0)
 ##  munsell        0.5.0    2018-06-12 [3] CRAN (R 4.0.0)
 ##  mvtnorm        1.1-1    2020-06-09 [3] CRAN (R 4.0.0)
-##  pillar         1.4.4    2020-05-05 [3] CRAN (R 4.0.0)
-##  pkgbuild       1.0.8    2020-05-07 [3] CRAN (R 4.0.0)
+##  pillar         1.4.6    2020-07-10 [3] CRAN (R 4.0.0)
+##  pkgbuild       1.1.0    2020-07-13 [3] CRAN (R 4.0.0)
 ##  pkgconfig      2.0.3    2019-09-22 [3] CRAN (R 4.0.0)
 ##  pkgload        1.1.0    2020-05-29 [3] CRAN (R 4.0.0)
 ##  prettyunits    1.1.1    2020-01-24 [3] CRAN (R 4.0.0)
-##  processx       3.4.2    2020-02-09 [3] CRAN (R 4.0.0)
-##  ps             1.3.3    2020-05-08 [3] CRAN (R 4.0.0)
+##  processx       3.4.3    2020-07-05 [3] CRAN (R 4.0.0)
+##  ps             1.3.4    2020-08-11 [3] CRAN (R 4.0.0)
 ##  purrr          0.3.4    2020-04-17 [3] CRAN (R 4.0.0)
 ##  R6             2.4.1    2019-11-12 [3] CRAN (R 4.0.0)
-##  raster       * 3.1-5    2020-04-19 [3] CRAN (R 4.0.0)
-##  Rcpp           1.0.4.6  2020-04-09 [3] CRAN (R 4.0.0)
-##  remotes        2.1.1    2020-02-15 [3] CRAN (R 4.0.0)
-##  rgdal          1.5-10   2020-06-09 [3] CRAN (R 4.0.0)
-##  rlang          0.4.6    2020-05-02 [3] CRAN (R 4.0.0)
-##  rmarkdown      2.2      2020-05-31 [3] CRAN (R 4.0.0)
+##  raster       * 3.3-13   2020-07-17 [3] CRAN (R 4.0.0)
+##  Rcpp           1.0.5    2020-07-06 [3] CRAN (R 4.0.0)
+##  Rdpack         1.0.0    2020-07-01 [3] CRAN (R 4.0.0)
+##  remotes        2.2.0    2020-07-21 [3] CRAN (R 4.0.0)
+##  rgdal          1.5-16   2020-08-07 [3] CRAN (R 4.0.0)
+##  rlang          0.4.7    2020-07-09 [3] CRAN (R 4.0.0)
+##  rmarkdown      2.3      2020-06-18 [3] CRAN (R 4.0.0)
 ##  robustbase     0.93-6   2020-03-23 [3] CRAN (R 4.0.0)
 ##  rprojroot      1.3-2    2018-01-03 [3] CRAN (R 4.0.0)
 ##  RSpectra       0.16-0   2019-12-01 [3] CRAN (R 4.0.0)
 ##  scales         1.1.1    2020-05-11 [3] CRAN (R 4.0.0)
 ##  sessioninfo    1.1.1    2018-11-05 [3] CRAN (R 4.0.0)
-##  sf             0.9-3    2020-05-04 [3] CRAN (R 4.0.0)
+##  sf             0.9-5    2020-07-14 [3] CRAN (R 4.0.0)
 ##  sp           * 1.4-2    2020-05-20 [3] CRAN (R 4.0.0)
 ##  stringi        1.4.6    2020-02-17 [3] CRAN (R 4.0.0)
 ##  stringr        1.4.0    2019-02-10 [3] CRAN (R 4.0.0)
 ##  survival       3.2-3    2020-06-13 [3] CRAN (R 4.0.0)
 ##  testthat       2.3.2    2020-03-02 [3] CRAN (R 4.0.0)
-##  tibble         3.0.1    2020-04-20 [3] CRAN (R 4.0.0)
-##  tidyr          1.1.0    2020-05-20 [3] CRAN (R 4.0.0)
+##  tibble         3.0.3    2020-07-10 [3] CRAN (R 4.0.0)
+##  tidyr          1.1.1    2020-07-31 [3] CRAN (R 4.0.0)
 ##  tidyselect     1.1.0    2020-05-11 [3] CRAN (R 4.0.0)
-##  units          0.6-6    2020-03-16 [3] CRAN (R 4.0.0)
+##  units          0.6-7    2020-06-13 [3] CRAN (R 4.0.0)
 ##  usethis        1.6.1    2020-04-29 [3] CRAN (R 4.0.0)
 ##  utf8           1.1.4    2018-05-24 [3] CRAN (R 4.0.0)
-##  vctrs          0.3.1    2020-06-05 [3] CRAN (R 4.0.0)
+##  vctrs          0.3.2    2020-07-15 [3] CRAN (R 4.0.0)
 ##  withr          2.2.0    2020-04-20 [3] CRAN (R 4.0.0)
-##  xfun           0.14     2020-05-20 [3] CRAN (R 4.0.0)
+##  xfun           0.16     2020-07-24 [3] CRAN (R 4.0.0)
 ##  xml2           1.3.2    2020-04-23 [3] CRAN (R 4.0.0)
 ##  yaml           2.2.1    2020-02-01 [3] CRAN (R 4.0.0)
 ## 
-## [1] /tmp/RtmpDWvEdW/Rinst2870bad8323
-## [2] /tmp/Rtmp7akg2M/temp_libpath170578c93874
+## [1] /tmp/RtmpIqd5HA/Rinst4fbb6b901294
+## [2] /tmp/RtmpEi6HGn/temp_libpath6f8b94fd410
 ## [3] /home/jsigner/R/x86_64-pc-linux-gnu-library/4.0
 ## [4] /usr/local/lib/R/site-library
 ## [5] /usr/lib/R/site-library

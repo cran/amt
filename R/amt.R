@@ -4,7 +4,7 @@
 #' @importFrom grDevices adjustcolor
 #' @importFrom lubridate hours minutes seconds now days weeks
 #' @importFrom magrittr %>%
-#' @importFrom stats coef dgamma median na.omit qgamma quantile runif sd var
+#' @importFrom stats coef dgamma median na.omit qgamma quantile runif sd var formula reformulate qnorm
 #' @importFrom tidyr nest unnest
 #' @importFrom tibble tibble tribble is_tibble as_tibble
 #' @importFrom utils data head tail
@@ -16,6 +16,7 @@
 #' @importFrom rlang quo quos enquo quo_name
 #' @importFrom raster raster
 #' @import survival
+#' @import Rdpack
 #' @export
 
 methods::setOldClass(c("track_xy", "tbl_df", "tbl", "data.frame"))

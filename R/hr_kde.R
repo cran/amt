@@ -45,7 +45,9 @@ hr_kde.track_xy <- function(
     estimator = "kde",
     h = h,
     ud = kde,
+    trast = trast,
     levels = levels,
+    crs = get_crs(x),
     data = if(keep.data) x else NULL
   )
   class(res) <- c("kde", "hr_prob", "hr", class(res))
