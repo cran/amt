@@ -30,7 +30,7 @@ ssf1 <- ssf1 %>% extract_covariates(sh_forest)
 ssf1 <- ssf1 %>% 
   mutate(forest = factor(sh.forest, levels = 1:2, labels = c("forest", "non-forest")), 
          cos_ta = cos(ta_), 
-         log_sl = log(sl_)) 
+        log_sl = log(sl_)) 
 
 ## -----------------------------------------------------------------------------
 m0 <- ssf1 %>% fit_clogit(case_ ~ forest + strata(step_id_))
@@ -39,12 +39,6 @@ m2 <- ssf1 %>% fit_clogit(case_ ~ forest + forest:cos_ta + forest:log_sl + log_s
 summary(m0)
 summary(m1)
 summary(m2)
-#AIC(m0$model)
-#AIC(m1$model)
-#AIC(m2$model)
-
-## -----------------------------------------------------------------------------
-coef(m2)
 
 ## -----------------------------------------------------------------------------
 m1 <- deer %>% 
@@ -59,5 +53,5 @@ m1 <- deer %>%
 summary(m1)
 
 ## -----------------------------------------------------------------------------
-devtools::session_info()
+sessioninfo::session_info()
 

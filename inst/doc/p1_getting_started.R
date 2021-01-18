@@ -109,7 +109,8 @@ trk1
 x <- trk1$data[[1]]
 
 # apply the data analysis
-x %>% track_resample(rate = minutes(30), tolerance = minutes(5)) %>% steps_by_burst()
+x %>% track_resample(rate = minutes(30), tolerance = minutes(5)) %>%
+  steps_by_burst()
 
 ## -----------------------------------------------------------------------------
 trk2 <- trk1 %>% 
@@ -119,7 +120,7 @@ trk2 <- trk1 %>%
 trk2
 
 ## -----------------------------------------------------------------------------
-trk2 %>% select(id, steps) %>% unnest(cols = "steps") %>% 
+trk2 %>% select(id, steps) %>% unnest(cols = steps) %>% 
   ggplot(aes(sl_, fill = factor(id))) + geom_density(alpha = 0.4)
 
 ## -----------------------------------------------------------------------------

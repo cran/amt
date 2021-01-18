@@ -43,6 +43,7 @@
 #'
 #' @examples
 #'
+#' \dontrun{
 #' # RSF -------------------------------------------------------
 #' # Fit an RSF, then calculate log-RSS to visualize results.
 #'
@@ -122,7 +123,7 @@
 #'   ylab("log-RSS") +
 #'   ggtitle(expression("log-RSS" * (x[1] * ", " * x[2]))) +
 #'   theme_bw()
-#'
+#' }
 #' @export
 log_rss <- function(object, ...){
   #Check inputs
@@ -164,6 +165,10 @@ log_rss.glm <- function(object, x1, x2, ci = NA, ci_level = 0.95, n_boot = 1000,
     }
   }
 
+  # If there are factor variables in model, check that levels are identical
+  # in original data, x1, and x2 (internal amt function)
+  check_factors(model = model, x1 = x1, x2 = x2)
+
   #Calculate y_x
   pred_x1 <- stats::predict.glm(model, newdata = x1,
                                 type = "link", se.fit = TRUE)
@@ -191,8 +196,7 @@ log_rss.glm <- function(object, x1, x2, ci = NA, ci_level = 0.95, n_boot = 1000,
       #Subtract x2 model matrix from each row of x1
       delta_mm <- sweep(data.matrix(x1_mm), 2, data.matrix(x2_mm))
       #Get variance of log-RSS prediction
-      var_pred <- apply(delta_mm, 1,
-            function(x) {sum(x %*% diag(m_vcov) %*% t(x))})
+      var_pred <- diag(delta_mm %*% m_vcov %*% t(delta_mm))
       #Get standard error of prediction
       logrss_se <- unname(sqrt(var_pred))
       #Get critical value
@@ -204,7 +208,7 @@ log_rss.glm <- function(object, x1, x2, ci = NA, ci_level = 0.95, n_boot = 1000,
     }
     if (ci == "boot"){ #Bootstrap method
       cat("Generating bootstrapped confidence intervals...\n")
-      boot_res <- bootstrap_logrss.fit_logit(object = object, x1 = x1, x2 = x2,
+      boot_res <- bootstrap_logrss(object = object, x1 = x1, x2 = x2,
                                              ci_level = ci_level, n_boot = n_boot,
                                              mle = df$log_rss)
 
@@ -258,6 +262,10 @@ log_rss.fit_clogit <- function(object, x1, x2, ci = NA, ci_level = 0.95, n_boot 
     }
   }
 
+  # If there are factor variables in model, check that levels are identical
+  # in original data, x1, and x2 (internal amt function)
+  check_factors(model = object$model, x1 = x1, x2 = x2)
+
   #Calculate correction due to sample-centered means (see ?survival::predict.coxph for details)
   uncenter <- sum(coef(object$model) * object$model$means, na.rm=TRUE)
   #predict(..., reference = "sample", se.fit = TRUE) will throw error without a "step_id_"
@@ -293,8 +301,7 @@ log_rss.fit_clogit <- function(object, x1, x2, ci = NA, ci_level = 0.95, n_boot 
       #Subtract x2 model matrix from each row of x1
       delta_mm <- sweep(data.matrix(x1_mm), 2, data.matrix(x2_mm))
       #Get variance of log-RSS prediction
-      var_pred <- apply(delta_mm, 1,
-                        function(x) {sum(x %*% diag(m_vcov) %*% t(x))})
+      var_pred <- diag(delta_mm %*% m_vcov %*% t(delta_mm))
       #Get standard error of prediction
       logrss_se <- unname(sqrt(var_pred))
       #Get critical value
@@ -517,6 +524,140 @@ append_x1 <- function(string){
   }
 }
 
+#' Check factor levels
+#'
+#' Check factor levels before log-RSS calculation
+#'
+#' @param object `[glm, clogit]` \cr The model object from a fitted RSF/(i)SSF.
+#' *I.e.*, it will be `object$model` when called within `log_rss()`.
+#' @param x1 `[data.frame]` \cr A `data.frame` representing the habitat values
+#' at location x_1. Must contain all fitted covariates as expected by
+#' `predict()`.
+#' @param x2 `[data.frame]` \cr A 1-row `data.frame` representing the single
+#' hypothetical location of x_2. Must contain all fitted covariates as expected
+#' by `predict()`.
+#'
+#' @details This function is meant for internal use by `log_rss()` and is
+#' not meant to be called by the user.
+#'
+#' @keywords internal
+#'
+#' @examples
+#'
+#' \dontrun{
+#' #Load data
+#' data("amt_fisher")
+#'
+#' # Prepare data for RSF
+#' rsf_data <- amt_fisher %>%
+#'   filter(name == "Lupe") %>%
+#'   make_track(x_, y_, t_) %>%
+#'   random_points() %>%
+#'   extract_covariates(amt_fisher_covar$elevation) %>%
+#'   extract_covariates(amt_fisher_covar$popden) %>%
+#'   extract_covariates(amt_fisher_covar$landuse) %>%
+#'   mutate(lu = factor(landuse))
+#'
+#' # Fit RSF without factor
+#' m1 <- rsf_data %>%
+#'   fit_rsf(case_ ~ elevation + popden)
+#'
+#' # data.frame of x1s
+#' x1 <- data.frame(elevation = seq(90, 120, length.out = 100),
+#'                  popden = mean(rsf_data$popden))
+#' # data.frame of x2 (note factor levels should be same as model data)
+#' x2 <- data.frame(elevation = mean(rsf_data$elevation),
+#'                  popden = mean(rsf_data$popden))
+#'
+#' # Function should return NULL (no factors to check)
+#' check_factors(m1$model, x1, x2)
+#'
+#' # Fit RSF with factor
+#' m2 <- rsf_data %>%
+#'   fit_rsf(case_ ~ lu + elevation + popden)
+#'
+#' # data.frame of x1s
+#' x1 <- data.frame(lu = factor(50, levels = levels(rsf_data$lu)),
+#'                  elevation = seq(90, 120, length.out = 100),
+#'                  popden = mean(rsf_data$popden))
+#' # data.frame of x2 (note factor levels should be same as model data)
+#' x2 <- data.frame(lu = factor(50, levels = levels(rsf_data$lu)),
+#'                  elevation = mean(rsf_data$elevation),
+#'                  popden = mean(rsf_data$popden))
+#'
+#' # Function should return NULL (no discrepancies)
+#' check_factors(m2, x1, x2)
+#'
+#' # Now misspecify factor for x1
+#' x1 <- data.frame(lu = factor(50),
+#'                  elevation = seq(90, 120, length.out = 100),
+#'                  popden = mean(rsf_data$popden))
+#'
+#' # Function should return informative errors regarding data vs x1 and x1 vs x2
+#' check_factors(m2$model, x1, x2)
+#'
+#' # Also misspecify factor for x2
+#' x2 <- data.frame(lu = factor(50),
+#'                  elevation = mean(rsf_data$elevation),
+#'                  popden = mean(rsf_data$popden))
+#'
+#' # Function should return informative errors regarding data vs x1 and data vs x2
+#' check_factors(m2$model, x1, x2)
+#' }
+#'
+check_factors <- function(model, x1, x2){
+  # Get original data from model
+  dat <- model$model
+
+  # Get factors from contrasts object
+  fcts <- names(model$contrasts)
+
+  # Nothing to check if there aren't any factors
+  if (is.null(fcts)){
+    return(NULL)
+  }
+
+  # Check each factor
+  f_list <- lapply(fcts, function(f) {
+
+    # Compare data to x1
+    dat_x1 <- identical(levels(dat[[f]]), levels(x1[[f]]))
+    # Compare data to x2
+    dat_x2 <- identical(levels(dat[[f]]), levels(x2[[f]]))
+    # Compare x1 to x2
+    x1_x2 <- identical(levels(x1[[f]]), levels(x2[[f]]))
+
+    # Check for any errors
+    if (all(c(dat_x1, dat_x2, x1_x2))){
+      # No errors, error string should be NA
+      es <- NA
+    } else {
+      # Start error string with factor name
+      es <- paste0("\nError with factor \"", f, "\": ")
+
+      # Add detail for comparisons that fail
+      if (! dat_x1) {
+        es <- paste0(es, "\n  * levels from data do not match levels from x1.")
+      }
+      if (! dat_x2) {
+        es <- paste0(es, "\n  * levels from data do not match levels from x2.")
+      }
+      if (! x1_x2) {
+        es <- paste0(es, "\n  * levels from x1 do not match levels from x2.")
+      }
+    }
+  return(es)
+  })
+
+  # If all elements of f_list are NA, then no errors
+  if (length(na.omit(unlist(f_list))) == 0){
+    return(NULL)
+  } else {
+    error_text <- paste(f_list, collapse = "\n\n")
+    stop("factor levels do not match.\n", error_text)
+  }
+}
+
 #' Bootstrap log-RSS estimate
 #'
 #' Use empirical bootstrap to estimate log-RSS CI
@@ -531,9 +672,9 @@ bootstrap_logrss <- function(object, ...){
 }
 
 #' @rdname bootstrap_logrss
-bootstrap_logrss.fit_logit <- function(object, x1, x2, ci_level, n_boot, mle){
+bootstrap_logrss.glm <- function(object, x1, x2, ci_level, n_boot, mle){
   #Perform the bootstrap
-  arr <- replicate(n_boot, boot1.fit_logit(object, x1, x2), simplify = "array")
+  arr <- replicate(n_boot, boot1.glm(object, x1, x2), simplify = "array")
   #Lower percentile
   p_lwr <- (1 - ci_level)/2
   #Upper percentile
@@ -585,16 +726,28 @@ bootstrap_logrss.fit_clogit <- function(object, x1, x2, ci_level, n_boot, mle){
 #' is not meant to be called by the user.
 #' @rdname boot1
 #' @keywords internal
-boot1.fit_logit <- function(object, x1, x2){
-  dat <- object$model$model
+boot1.glm <- function(object, x1, x2){
+  # not so nice workaround
+  object <- if (inherits(object, "fit_logit")) {
+    object$model
+  } else {
+    object
+  }
+  dat <- object$model
+  w <- stats::weights(object)
+
   #If resampling factor levels, missing levels can cause prediction to fail
   logrss <- NULL
   i <- 1
   while(is.null(logrss)){
     #Resample
-    newdat <- dat[sample(1:nrow(dat), nrow(dat), replace = TRUE), ]
+    wp <- sample(1:nrow(dat), nrow(dat), replace = TRUE)
+    newdat <- dat[wp, ]
+    newweights <- w[wp]
     #Refit model
-    m <- fit_logit(formula = formula(object$model), data = newdat)
+    m <- stats::glm(formula = formula(object), data = newdat,
+                    family = stats::binomial())#,
+             #weights = rep(1, nrow(newdat)))
     try({logrss <- log_rss(m, x1, x2, ci = NA)$df$log_rss}, silent = TRUE)
     i <- i + 1
     #Warn after 25 tries

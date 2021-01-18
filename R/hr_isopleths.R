@@ -49,8 +49,10 @@ hr_isopleths.RasterLayer <- function (x, level, ...) {
   ## Set proj4string
   sp::proj4string(con) <- raster::projection(x)
 
-  df <- data.frame(level = level,
-                   area = rgeos::gArea(con, byid = TRUE))
+  df <- data.frame(
+    level = level,
+    what = "estimate",
+    area = rgeos::gArea(con, byid = TRUE))
   row.names(df) <- 1:length(level)
   con <- sp::SpatialPolygonsDataFrame(con, df)
 
@@ -70,8 +72,24 @@ hr_isopleths.locoh <- function (x, ...) {
 }
 
 #' @export
-hr_isopleths.hr_prob <- function (x, ...) {
+hr_isopleths.hr_prob <- function(x, ...) {
   iso <- hr_isopleths(x$ud, level = x$levels, ...)
   iso
 }
 
+#' @export
+hr_isopleths.akde <- function(x, conf.level = 0.95, ...) {
+
+  checkmate::assert_number(conf.level, lower = 0, upper = 1)
+  res <- ctmm::SpatialPolygonsDataFrame.UD(x$akde, level.UD = x$levels,
+                                           conf.level = conf.level)
+  res1 <- sf::st_as_sf(res)
+  res1 <- res1[, setdiff(names(res1), "name")]
+  res1$level <- rep(x$levels, each = nrow(res1))
+  res1$what <- rep(c(paste0("lci (", conf.level, ")"),
+                     "estimate",
+                     paste0("uci (", conf.level,")")),
+                   length(x$levels))
+  res1$area = sf::st_area(res1)
+  res1[, c("level", "what", "area", "geometry")]
+}

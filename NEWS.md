@@ -1,10 +1,19 @@
-# amt 0.1.3
-## bug fixes
+# amt 0.1.4
+## updates
+- `unnest` works for track_xy*
+- Major updates for `hr_akde`. This includes that now CI are available for  
+- new vignette and methods for `hr_overlap`
+- reduced package dependencies.
 
+## bug fixes
+- Fixed bug in confidence calculation for `log_rss`.
+
+
+# amt 0.1.3
 ## updates
 - `hr_overlap` gained two new arguments `labels` and `consecutive.only`.
 - `log_rss` new CI
-- I was asked to move `
+- I was asked to move `Rdpack` to imports. 
 
 ## bug fixes
 - `group_by` for random points works as expected.

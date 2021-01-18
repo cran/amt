@@ -23,12 +23,14 @@ hr_locoh.track_xy <- function(x, n = 10, type = "k", levels = 0.95, keep.data = 
   no <- 1:nrow(x)
   if (type == "k") {
     if (n > nrow(x)) {
-      n <- nrow(x)
-      warning(paste0("hr_locoh, type k, n > number of points, set n to number of points (", n, ")"))
+      stop(paste0("hr_locoh, type k, n > number of points"))
     }
     ## 1. calc dist
     ## 2. order by dist
     ## 3. take n nearest
+    if (!requireNamespace("FNN", quietly = TRUE)) {
+      stop("Please install package `FNN` first.")
+    }
     aa <- FNN::get.knn(x[, c("x_", "y_")], k = n)$nn.index
     #"r" and "a" methods return a list -- split so that this is the same
     aa <- split(aa, 1:nrow(aa))
@@ -86,8 +88,12 @@ hr_locoh.track_xy <- function(x, n = 10, type = "k", levels = 0.95, keep.data = 
     ## buffer is necessary, to overcome some topology errors if the polygon is quasi a line
     p1 <- lapply(1:wlevel[i], function(i) sp::Polygon(mm[[i]]@polygons[[1]]@Polygons[[1]]@coords))
     ff <- sp::SpatialPolygons(list(sp::Polygons(p1, ID=1)))
-
-    qq[[i]] <- rgeos::gBuffer(rgeos::gUnaryUnion(ff), width=0, id=i)
+    ff <- if (length(ff@polygons) == 1) {
+      ff
+    } else {
+      rgeos::gUnaryUnion(ff)
+    }
+    qq[[i]] <- rgeos::gBuffer(ff, width=0, id=i)
   }
 
   rr <- do.call(sp::rbind.SpatialPolygons, qq)
@@ -102,8 +108,10 @@ hr_locoh.track_xy <- function(x, n = 10, type = "k", levels = 0.95, keep.data = 
 
   qq2 <- sf::st_as_sf(qq2)
   qq2$area <- sf::st_area(qq2)
+  qq2$what <- "estimate"
 
-  out <- list(locoh = qq2, levels = levels, type = type, n = n, estimator = "locoh",
+  out <- list(locoh = qq2[, c("level", "what", "area", "geometry")],
+              levels = levels, type = type, n = n, estimator = "locoh",
               crs = get_crs(x),
               data = if (keep.data) x else NULL)
   class(out) <- c("locoh", "hr_geom", "hr", "list")
