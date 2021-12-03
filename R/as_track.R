@@ -2,9 +2,10 @@
 #'
 #' Coerce other classes (currently implemented: `SpatialPoints`) to a `track_xy`.
 #' @export
-#' @param x `[SpatialPoints]` \cr Object to be converted to a track.
+#' @param x Object to be converted to a track.
 #' @template dots_none
 #' @name as_track
+#' @return An object of class `track_xy(t)`
 #' @examples
 #' xy <- sp::SpatialPoints(cbind(c(1, 3, 2, 1), c(3, 2, 2, 1)))
 #' as_track(xy)
@@ -16,7 +17,7 @@ as_track <- function(x, ...) {
 #' @rdname as_track
 as_track.SpatialPoints <- function(x, ...) {
   xx <- sp::coordinates(x)
-  track(x = xx[, 1], y = xx[, 2], crs = sp::proj4string(x))
+  track(x = xx[, 1], y = xx[, 2], crs = sf::st_crs(sp::proj4string(x)))
 }
 
 
@@ -55,6 +56,21 @@ as_track.steps_xyt <- function(x, ...) {
       t = c(x$t1_, x$t2_[n])
     )
     make_track(xx, xs, ys, t, crs = crs)
+  }
+
+}
+
+# Thanks to bniebuhr see https://github.com/jmsigner/amt/issues/44
+#' @export
+#' @rdname as_track
+as_track.data.frame <- function(x, ...) {
+  cols <- colnames(x)
+  if("x_" %in% cols & "y_" %in% cols & !("t_" %in% cols)) {
+    make_track(x, .x = x_, .y = y_, ...)
+  } else {
+    if("x_" %in% cols & "y_" %in% cols & "t_" %in% cols) {
+      make_track(x, .x = x_, .y = y_, .t = t_, ...)
+    }
   }
 
 }

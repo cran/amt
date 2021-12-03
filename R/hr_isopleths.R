@@ -1,10 +1,20 @@
-#' @rdname hr
+#' Home-range isopleths
+#'
+#' Obtain the isopleths of a home-range estimate, possible at different isopleth levels.
+#' @param x An object of class `hr`
+#' @param level `[numeric]` \cr The isopleth levels used for calculating home
+#'   ranges. Should be `0 < level < 1`.
+#' @param conf.level The confidence level for isopleths for `aKDE`.
+#' @return A `tibble` with the home-range level and a simple feature columns with the isoploth as multipolygon.
+#' @template dots_none
+#' @name hr_isopleths
 #' @export
 hr_isopleths <- function (x, ...) {
   UseMethod("hr_isopleths", x)
 }
 
 #' @export
+#' @rdname hr_isopleths
 hr_isopleths.RasterLayer <- function (x, level, ...) {
   con <- raster::rasterToContour(hr_cud(x), level = level)
   b <- sp::coordinates(con)
@@ -46,9 +56,6 @@ hr_isopleths.RasterLayer <- function (x, level, ...) {
   con <- lapply(seq_along(con), function(i) sp::Polygons(con[[i]], i))
   con <- sp::SpatialPolygons(con)
 
-  ## Set proj4string
-  sp::proj4string(con) <- raster::projection(x)
-
   df <- data.frame(
     level = level,
     what = "estimate",
@@ -58,32 +65,44 @@ hr_isopleths.RasterLayer <- function (x, level, ...) {
 
   con <- sf::st_as_sf(con)
   con$area <- sf::st_area(con)
+  # Set projection
+  sf::st_crs(con) <- if (is.null(attr(x, "crs_"))) {
+    raster::projection(x)}
+  else {
+    attr(x, "crs_")
+  }
   con
+
 }
 
 #' @export
+#' @rdname hr_isopleths
 hr_isopleths.mcp <- function (x, ...) {
   x$mcp
 }
 
 #' @export
+#' @rdname hr_isopleths
 hr_isopleths.locoh <- function (x, ...) {
   x$locoh
 }
 
 #' @export
+#' @rdname hr_isopleths
 hr_isopleths.hr_prob <- function(x, ...) {
   iso <- hr_isopleths(x$ud, level = x$levels, ...)
   iso
 }
 
 #' @export
+#' @rdname hr_isopleths
 hr_isopleths.akde <- function(x, conf.level = 0.95, ...) {
 
   checkmate::assert_number(conf.level, lower = 0, upper = 1)
   res <- ctmm::SpatialPolygonsDataFrame.UD(x$akde, level.UD = x$levels,
                                            conf.level = conf.level)
   res1 <- sf::st_as_sf(res)
+  res1 <- sf::st_transform(res1, x$crs)
   res1 <- res1[, setdiff(names(res1), "name")]
   res1$level <- rep(x$levels, each = nrow(res1))
   res1$what <- rep(c(paste0("lci (", conf.level, ")"),

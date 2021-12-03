@@ -4,29 +4,26 @@
 \alias{distributions}
 \alias{make_distribution}
 \alias{make_exp_distr}
+\alias{make_hnorm_distr}
+\alias{make_lnorm_distr}
 \alias{make_unif_distr}
 \alias{make_vonmises_distr}
 \alias{make_gamma_distr}
-\alias{random_numbers}
-\alias{random_numbers.vonmises_distr}
-\alias{random_numbers.amt_distr}
-\title{Functions to work with distributions as objects}
+\title{Functions create statistical distributions}
 \usage{
-make_distribution(name, params, ...)
+make_distribution(name, params, vcov = NULL, ...)
 
 make_exp_distr(rate = 1)
 
+make_hnorm_distr(sd = 1)
+
+make_lnorm_distr(meanlog = 0, sdlog = 1)
+
 make_unif_distr(min = -pi, max = pi)
 
-make_vonmises_distr(kappa = 1)
+make_vonmises_distr(kappa = 1, vcov = NULL)
 
-make_gamma_distr(shape = 1, scale = 1)
-
-random_numbers(x, n = 100, ...)
-
-\method{random_numbers}{vonmises_distr}(x, n = 100, ...)
-
-\method{random_numbers}{amt_distr}(x, n = 100, ...)
+make_gamma_distr(shape = 1, scale = 1, vcov = NULL)
 }
 \arguments{
 \item{name}{\verb{[char(1)]} \cr Short name of distribution. See \code{available_distr()}
@@ -34,9 +31,17 @@ for all currently implemented distributions.}
 
 \item{params}{\verb{[list]} \cr A named list with parameters of the distribution.}
 
+\item{vcov}{\verb{[matrix]} \cr A matrix with variance and covariances.}
+
 \item{...}{none implemented.}
 
 \item{rate}{\verb{[double(1)>0]} \cr The rate of the exponential distribution.}
+
+\item{sd}{\verb{[double(1)>0]} \cr The standard deviation of the half-normal distribution.}
+
+\item{meanlog}{\verb{[double(1)>0]} \cr The standard deviation of the half-normal distribution.}
+
+\item{sdlog}{\verb{[double(1)>0]} \cr The standard deviation of the half-normal distribution.}
 
 \item{min}{\verb{[double(1)]} \cr The minimum of the uniform distribution.}
 
@@ -45,11 +50,10 @@ for all currently implemented distributions.}
 \item{kappa}{\verb{[double(1)>=0]} \cr Concentration parameter of the von Mises distribution.}
 
 \item{shape, scale}{\verb{[double(1)>=0]} \cr Shape and scale of the Gamma distribution}
-
-\item{x}{\verb{[amt_distr]} \cr A distribution object.}
-
-\item{n}{\verb{[integer(1)=100]\{>0\}} \cr The number of random draws.}
+}
+\value{
+A list of class \code{amt_distr} that contains the name (\code{name}) and parameters (\code{params}) of a distribution.
 }
 \description{
-\code{make_distributions} creates a distribution.
+\code{make_distributions} creates a distribution suitable for using it with integrated step selection functions
 }

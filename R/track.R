@@ -4,7 +4,7 @@
 #' `track` is usually created from a set of `x` and `y` coordinates, possibly
 #' time stamps, and any number of optional columns, such as id, sex, age, etc.
 #'
-#' @param tbl [data.frame] \cr The `data.frame` from which a track should be
+#' @param tbl `[data.frame]` \cr The `data.frame` from which a track should be
 #'   created.
 #' @param .x,.y,.t `[expression(1)]` \cr Unquoted variable names of columns
 #'   containing the x and y coordinates, and optionally a time stamp.
@@ -12,8 +12,8 @@
 #'   track. Columns should be provided in the form of `key = val` (e.g., for ids
 #'   this may look like this `id = c(1, 1, 1, 2, 2, 2` for three points for ids
 #'   1 and 2 each).
-#' @param crs `[sp::CRS]` \cr An optional coordinate reference system of the
-#'   points.
+#' @param crs `[crs]` \cr An optional coordinate reference system of the
+#'   points. Usually just the `epsg` code is sufficient.
 #' @param order_by_ts `[logical(1)]` \cr Should relocations be ordered by time
 #'   stamp, default is `TRUE`.
 #' @param check_duplicates `[logical(1)=FALSE]` \cr Should it be checked if there are
@@ -21,16 +21,19 @@
 #' @param all_cols `[logical(1)=FALSE]` \cr Should all columns be carried over to the track object, default is `FALSE`.
 #' @param x,y `[numeric]` \cr The x and y coordinates.
 #' @param t `[POSIXct]` \cr The time stamp.
+#' @param verbose `[logical(1)=FALSE]` \cr Inform when tracks are created.
 #' @return If `t` was provided an object of class `track_xyt` is returned
 #'   otherwise a `track_xy`.
 #' @export
 #' @name track
 
-mk_track <- function(tbl, .x, .y, .t, ..., crs = NULL, order_by_ts = TRUE,
-                     check_duplicates = FALSE, all_cols = FALSE) {
+mk_track <- function(tbl, .x, .y, .t, ..., crs = NA_crs_, order_by_ts = TRUE,
+                     check_duplicates = FALSE, all_cols = FALSE, verbose = FALSE) {
+
+  checkmate::assert_logical(verbose)
 
   if (missing(.x) | missing(.y)) {
-    stop("x and y are required")
+    stop(".x and .y are required.")
   }
 
   if (!is_tibble(tbl)) {
@@ -54,7 +57,9 @@ mk_track <- function(tbl, .x, .y, .t, ..., crs = NULL, order_by_ts = TRUE,
 
 
   if (missing(.t)) {
-    message(".t missing, creating `track_xy`.")
+    if (verbose) {
+      message(".t missing, creating `track_xy`.")
+    }
     out <- tbl %>%
       dplyr::select(x_ = !!.x,
              y_ = !!.y,
@@ -63,7 +68,9 @@ mk_track <- function(tbl, .x, .y, .t, ..., crs = NULL, order_by_ts = TRUE,
     class(out) <- c("track_xy", class(out))
 
   } else {
-    message(".t found, creating `track_xyt`.")
+    if (verbose) {
+      message(".t found, creating `track_xyt`.")
+    }
 
     .t <- enquo(.t)
     if (order_by_ts) {
@@ -91,13 +98,20 @@ mk_track <- function(tbl, .x, .y, .t, ..., crs = NULL, order_by_ts = TRUE,
     class(out) <- c("track_xyt", "track_xy", class(out))
   }
 
-
-  if (!is.null(crs)) {
-    if (!is(crs, "CRS")) {
-      stop("crs is no instance of class CRS")
+  if (!is.na(crs)) {
+    if (is(crs, "CRS")) {
+      .Deprecated("It looks like you used `CRS()` to create the crs,
+                  please use the ESPG directly.")
+      crs <- sf::st_crs(crs)
+    } else {
+      crs <- sf::st_crs(crs)
+      if (is.na(crs)) {
+        warning("`crs` invalid.")
+      }
     }
   }
-  attributes(out)$crs_ <- if(is.null(crs)) NA_character_ else crs
+
+  attributes(out)$crs_ <- crs
 
   out
 }

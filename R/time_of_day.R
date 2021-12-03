@@ -7,6 +7,7 @@
 #' @param include.crepuscule `[logical(1)=TRUE]`\cr Should dawn and dusk be included.
 #' @param where `[character(1)="end"]{"start", "end", "both"}` For `steps`, should the start, end or both time points be used?
 #' @template dots_none
+#' @return A `tibble` with an additional column `tod_` that contains the time of the day for each relocation.
 #' @name time_of_day
 #' @export
 #' @examples
@@ -47,7 +48,6 @@ time_of_day.steps_xyt <- function(x, solar.dep = 6, include.crepuscule = FALSE, 
     x
 }
 
-
 time_of_day_base <- function(x, t, solar.dep, include.crepuscule, end = TRUE) {
 
   # Remove NA coordinates, so we can propagate NA's
@@ -67,10 +67,8 @@ time_of_day_base <- function(x, t, solar.dep, include.crepuscule, end = TRUE) {
   }
 
   if (any(!idx)) {
-
     x <- x[!idx, ]
     t <- t[!idx]
-
     if (suppressWarnings(has_crs(x))) {
       pts <- sp::spTransform(as_sp(x, end = end), sp::CRS("+init=epsg:4326"))
     } else {

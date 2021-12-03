@@ -9,8 +9,6 @@
 \alias{as_ltraj}
 \alias{as_ltraj.track_xy}
 \alias{as_ltraj.track_xyt}
-\alias{as_bcpa}
-\alias{as_bcpa.track_xyt}
 \alias{as_telemetry}
 \alias{as_telemetry.track_xyt}
 \alias{as_moveHMM}
@@ -31,10 +29,6 @@ as_ltraj(x, ...)
 
 \method{as_ltraj}{track_xyt}(x, ...)
 
-as_bcpa(x, ...)
-
-\method{as_bcpa}{track_xyt}(x, ...)
-
 as_telemetry(x, ...)
 
 \method{as_telemetry}{track_xyt}(x, ...)
@@ -52,21 +46,9 @@ as_moveHMM(x, ...)
 
 \item{id}{\verb{[numeric,character,factor]} \cr Animal id(s).}
 }
-\description{
-Several other packages provides methods to analyze movement data, and \code{amt} provides coercion methods to some packages
+\value{
+An object of the class to which coercion is performed to.
 }
-\examples{
-data(deer)
-as_move(deer)
-as_move(deer, id = "foo")
-data(deer)
-as_ltraj(deer)
-as_ltraj(deer, id = "animal_3")
-data(deer)
-d <- as_bcpa(deer)
-data(deer)
-as_telemetry(deer)
-# Fit HMM with two states
-data(deer)
-dm <- as_moveHMM(deer)
+\description{
+Several other packages provides methods to analyze movement data, and \code{amt} provides coercion methods to some packages.
 }

@@ -9,15 +9,17 @@
 #' @param where `[character(1)="end"]{"start", "end", "both"}` \cr For `steps` this
 #'   determines if the covariate values should be extracted at the beginning or
 #'   the end of a step. or `end`.
+#' @return A `tibble` with additional columns for covariate values.
 #' @template dots_none
 #' @name extract_covariates
 #' @export
 #' @examples
 #' data(deer)
 #' data(sh_forest)
-#' deer %>% extract_covariates(sh_forest)
-#' deer %>% steps %>% extract_covariates(sh_forest)
-#' deer %>% steps %>% extract_covariates(sh_forest, where = "start")
+#' mini_deer <- deer[1:20, ]
+#' mini_deer %>% extract_covariates(sh_forest)
+#' mini_deer %>% steps %>% extract_covariates(sh_forest)
+#' mini_deer %>% steps %>% extract_covariates(sh_forest, where = "start")
 
 extract_covariates <- function(x, ...) {
   UseMethod("extract_covariates", x)
@@ -78,17 +80,15 @@ extract_covar_base <- function(x, covars) {
 #' @details `extract_covariates_along` extracts the covariates along a straight line between the start and the end point of a (random) step. It returns a list, which in most cases will have to be processed further.
 #' @export
 #' @examples
-#' \dontrun{
-#' data(deer) # relocation
-#' data("sh_forest") # env covar
-#'
-#' p1 <- deer %>% steps() %>% random_steps() %>%
+#' \donttest{
+#' # Illustration of extracting covariates along the a step
+#' mini_deer %>% steps() %>% random_steps() %>%
 #'   extract_covariates(sh_forest) %>% # extract at the endpoint
 #'   mutate(for_path = extract_covariates_along(., sh_forest))  %>%
 #'   # 1 = forest, lets calc the fraction of forest along the path
 #'   mutate(for_per = purrr::map_dbl(for_path, ~ mean(. == 1)))
 #' }
-#'
+
 extract_covariates_along <- function(x, ...) {
   UseMethod("extract_covariates_along", x)
 }
@@ -109,7 +109,6 @@ extract_covariates_along.steps_xy <- function(x, covariates, ...) {
   }
 }
 
-
 # Extract covariates varying time -----------------------------------------
 #' @rdname extract_covariates
 #' @param when `[character(1)="any"]{"any", "before", "after"}` \cr Specifies for
@@ -120,78 +119,7 @@ extract_covariates_along.steps_xy <- function(x, covariates, ...) {
 #'  distance `NA` is returned.
 #' @param name_covar `[character(1)="time_var_covar"]` \cr The name of the new column.
 #' @export
-#' @examples
-#' # Simulate some dummy data
-#' # Hourly data for 10 days: 24 * 10
-#' set.seed(123)
-#' path <- data.frame(x = cumsum(rnorm(240)),
-#'               y = cumsum(rnorm(240)),
-#'               t = lubridate::ymd("2018-01-01") + hours(0:239))
-#' trk <- make_track(path, x, y, t)
-#'
-#' # dummy env data
-#' rs <- raster::raster(xmn = -50, xmx = 50, ymn = -50, ymx = 50, res = 1)
-#'
-#' # create dummy covars for each day
-#' rs <- raster::stack(lapply(1:10, function(i)
-#'   raster::setValues(rs, runif(1e4, i - 1, i))))
-#'
-#' # Env covariates are always taken at noon
-#' rs <- raster::setZ(rs, lubridate::ymd_hm("2018-01-01 12:00") + days(0:9))
-#'
-#' # Allow up to 2 hours after
-#' trk %>% extract_covariates_var_time(rs, max_time = hours(2), when = "after") %>%
-#'   print(n = 25)
-#' trk %>% extract_covariates_var_time(rs, max_time = hours(2), when = "before") %>%
-#'   print(n = 25)
-#' trk %>% extract_covariates_var_time(rs, max_time = hours(2), when = "any") %>%
-#'   print(n = 25)
-#'
-#' # We can use different time scales
-#' trk %>%
-#'   extract_covariates_var_time(
-#'     rs, max_time = hours(2), when = "any", name_covar = "env_2h") %>%
-#'   extract_covariates_var_time(
-#'     rs, max_time = hours(4), when = "any", name_covar = "env_4h") %>%
-#'   extract_covariates_var_time(
-#'     rs, max_time = hours(6), when = "any", name_covar = "env_6h") %>%
-#'   print(n = 25)
-#'
-#' # We can use different time scales: after
-#' trk %>%
-#'   extract_covariates_var_time(
-#'     rs, max_time = hours(2), when = "after", name_covar = "env_2h") %>%
-#'   extract_covariates_var_time(
-#'     rs, max_time = hours(4), when = "after", name_covar = "env_4h") %>%
-#'   extract_covariates_var_time(
-#'     rs, max_time = hours(6), when = "after", name_covar = "env_6h") %>%
-#'   print(n = 25)
-#'
-#' # We can use different time scales: before
-#' trk %>%
-#'   extract_covariates_var_time(
-#'     rs, max_time = hours(2), when = "before", name_covar = "env_2h") %>%
-#'   extract_covariates_var_time(
-#'     rs, max_time = hours(4), when = "before", name_covar = "env_4h") %>%
-#'   extract_covariates_var_time(
-#'     rs, max_time = hours(6), when = "before", name_covar = "env_6h") %>%
-#'   print(n = 25)
-#'
-#' # The same works also for steps
-#' trk %>%
-#'   steps() %>%
-#'   extract_covariates_var_time(
-#'     rs, max_time = hours(2), when = "before", name_covar = "env_2h") %>%
-#'   print(n = 25)
-#'
-#' # also with start and end
-#' trk %>%
-#'   steps() %>%
-#'   extract_covariates_var_time(
-#'     rs, max_time = hours(2), when = "before", name_covar = "env_2h",
-#'     where = "both") %>%
-#'   print(n = 25)
-#'
+
 extract_covariates_var_time <- function(x, ...) {
   UseMethod("extract_covariates_var_time", x)
 }

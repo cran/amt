@@ -1,3 +1,15 @@
+# amt 0.1.6
+
+# amt 0.1.5
+## updates
+- support for `hnorm` and `lnorm` step-length distributions.
+- support for `st_crs` for CRS. Major updates for several functions
+- deprecated the function `dist_cent`.
+- Added `as_track` for `data.frames`.
+- Added argument `verbose` to `make_track()`. 
+- Fixed bug with `hr_isopleths()` for aKDE.
+- Fix issue #48 (https://github.com/jmsigner/amt/issues/48). Zero step lengths return now NA for direction.
+
 # amt 0.1.4
 ## updates
 - `unnest` works for track_xy*
@@ -17,6 +29,7 @@
 
 ## bug fixes
 - `group_by` for random points works as expected.
+
 
 # amt 0.1.2
 ## bug fixes

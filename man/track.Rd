@@ -12,10 +12,11 @@ mk_track(
   .y,
   .t,
   ...,
-  crs = NULL,
+  crs = NA_crs_,
   order_by_ts = TRUE,
   check_duplicates = FALSE,
-  all_cols = FALSE
+  all_cols = FALSE,
+  verbose = FALSE
 )
 
 make_track(
@@ -24,16 +25,17 @@ make_track(
   .y,
   .t,
   ...,
-  crs = NULL,
+  crs = NA_crs_,
   order_by_ts = TRUE,
   check_duplicates = FALSE,
-  all_cols = FALSE
+  all_cols = FALSE,
+  verbose = FALSE
 )
 
 track(x, y, t, ..., crs = NULL)
 }
 \arguments{
-\item{tbl}{\link{data.frame} \cr The \code{data.frame} from which a track should be
+\item{tbl}{\verb{[data.frame]} \cr The \code{data.frame} from which a track should be
 created.}
 
 \item{.x, .y, .t}{\verb{[expression(1)]} \cr Unquoted variable names of columns
@@ -44,8 +46,8 @@ track. Columns should be provided in the form of \code{key = val} (e.g., for ids
 this may look like this \verb{id = c(1, 1, 1, 2, 2, 2} for three points for ids
 1 and 2 each).}
 
-\item{crs}{\verb{[sp::CRS]} \cr An optional coordinate reference system of the
-points.}
+\item{crs}{\verb{[crs]} \cr An optional coordinate reference system of the
+points. Usually just the \code{epsg} code is sufficient.}
 
 \item{order_by_ts}{\verb{[logical(1)]} \cr Should relocations be ordered by time
 stamp, default is \code{TRUE}.}
@@ -54,6 +56,8 @@ stamp, default is \code{TRUE}.}
 duplicated time stamp, default is \code{FALSE}.}
 
 \item{all_cols}{\verb{[logical(1)=FALSE]} \cr Should all columns be carried over to the track object, default is \code{FALSE}.}
+
+\item{verbose}{\verb{[logical(1)=FALSE]} \cr Inform when tracks are created.}
 
 \item{x, y}{\verb{[numeric]} \cr The x and y coordinates.}
 

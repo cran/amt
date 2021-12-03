@@ -33,6 +33,9 @@ random_points(x, ...)
 
 \item{hr}{\verb{[character(1)]} \cr The home range estimator to be used. Currently only MCP is implemented.}
 }
+\value{
+A \code{tibble} with the observed and random points and a new column \code{case_} that indicates if a point is observed (\code{case_ = TRUE}) or random (\verb{case_ TRUE}).
+}
 \description{
 Functions to generate random points within an animals home range. This is usually the first step for investigating habitat selection via Resource Selection Functions (RSF).
 }
@@ -41,47 +44,36 @@ For objects of class \code{track_xyt} the timestamp (\code{t_}) is lost.
 }
 \examples{
 
+\donttest{
 data(deer)
 
 # track_xyt ---------------------------------------------------------------
 # Default settings
 rp1 <- random_points(deer)
 
-\dontrun{
 plot(rp1)
-}
 
- \dontrun{
 trast <- raster(bbox(deer, buffer = 5000), res = 30)
 rp3 <- random_points(deer, hr = "kde", trast = trast) # we need a larger template raster
 
 plot(rp3)
-}
-
 
 # Only one random point for each observed point
 rp <- random_points(deer, factor = 1)
-\dontrun{
 plot(rp)
-}
 
 # Within a home range -----------------------------------------------------
 hr <- hr_mcp(deer, level = 1)
 
 # 100 random point within the home range
 rp <- random_points(hr, n = 100)
-\dontrun{
 plot(rp)
-}
 
 # 100 regular point within the home range
 rp <- random_points(hr, n = 100, type = "regular")
-\dontrun{
 plot(rp)
-}
 # 100 hexagonal point within the home range
 rp <- random_points(hr, n = 100, type = "hexagonal")
-\dontrun{
 plot(rp)
 }
 

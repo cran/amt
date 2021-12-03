@@ -29,9 +29,9 @@ Important, \code{x} requires a valid coordinate reference system.
 }
 \examples{
 data(sh)
-x <- track(x = sh$x, y = sh$y, crs = sp::CRS("+init=epsg:31467"))
+x <- track(x = sh$x, y = sh$y, crs = 31467)
 
-\dontrun{
+\donttest{
 inspect(x)
 inspect(x, cluster = FALSE)
 inspect(x, popup = 1:nrow(x), cluster = FALSE)

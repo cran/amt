@@ -1,11 +1,12 @@
 #' Coerce a track to other formats.
 #'
-#' Several other packages provides methods to analyze movement data, and `amt` provides coercion methods to some packages
+#' Several other packages provides methods to analyze movement data, and `amt` provides coercion methods to some packages.
 #'
 #' @template track_xy_star
 #' @param id `[numeric,character,factor]` \cr Animal id(s).
 #' @template dots_none
 #' @name coercion
+#' @return An object of the class to which coercion is performed to.
 #' @export
 as_sp <- function(x, ...) {
   UseMethod("as_sp", x)
@@ -13,14 +14,7 @@ as_sp <- function(x, ...) {
 
 #' @export
 as_sp.track_xy <- function(x, ...) {
-  sp::SpatialPoints(
-    coords = x[, c("x_", "y_")],
-    proj4string = if (!is.na(attributes(x)$crs_)) {
-      attributes(x)$crs_
-    } else {
-      sp::CRS(NA_character_)
-    }
-  )
+  sf::as_Spatial(as_sf_points(x))
 }
 
 #' @export
@@ -31,7 +25,7 @@ as_sp.steps_xy <- function(x, end = TRUE, ...) {
     sp::SpatialPoints(
       coords = as.matrix(x[, c("x2_", "y2_")]),
       proj4string = if (!is.null(attributes(x)$crs_)) {
-        attributes(x)$crs_
+        as(attributes(x)$crs_, "CRS")
       } else {
         sp::CRS(as.character(NA))
       }
@@ -40,7 +34,7 @@ as_sp.steps_xy <- function(x, end = TRUE, ...) {
     sp::SpatialPoints(
       coords = as.matrix(x[, c("x1_", "y1_")]),
       proj4string = if (!is.null(attributes(x)$crs_)) {
-        attributes(x)$crs_
+        as(attributes(x)$crs_, "CRS")
       } else {
         sp::CRS(as.character(NA))
       }
@@ -48,15 +42,13 @@ as_sp.steps_xy <- function(x, end = TRUE, ...) {
   }
 }
 
-# as_sf_points ----------------------------------------------------------------
-
-#' Export track to points
+#' Coerces a track to points
 #'
-#' Exports a track to points from the `sf` package.
+#' Coerces a track to points from the `sf` package.
 #'
 #' @template track_xy_star
 #' @template dots_none
-#' @return A `tibble` with a `sfc`-column
+#' @return A data `data.frame` with a `sfc`-column
 #' @export
 
 as_sf_points <- function(x, ...) {
@@ -69,7 +61,6 @@ as_sf_points.track_xy <- function(x, ...) {
   p <- sf::st_as_sf(x, coords = c("x_", "y_"))
   p <- sf::st_set_crs(p, if (!is.null(attributes(x)$crs_))
     attributes(x)$crs_ else sf::NA_crs_)
-
   p
 }
 
@@ -120,10 +111,7 @@ as_sf_lines.track_xy <- function(x, ...) {
 
 #' @export
 #' @rdname coercion
-#' @examples
-#' data(deer)
-#' as_move(deer)
-#' as_move(deer, id = "foo")
+
 as_move <- function(x, ...) {
   UseMethod("as_move", x)
 }
@@ -166,7 +154,7 @@ as_move.track_xyt <- function(x, id = "id", ...){
     y= x$y_,
     time = x$t_,
     data = data.frame(x[!names(x) %in% c("x_","y_","t_")]),
-    proj = get_crs(x),
+    proj = as(get_crs(x), "CRS"),
     animal = if (has_id) as.character(x[[id]]) else "unnamed")
 }
 
@@ -176,10 +164,7 @@ as_move.track_xyt <- function(x, id = "id", ...){
 
 #' @export
 #' @rdname coercion
-#' @examples
-#' data(deer)
-#' as_ltraj(deer)
-#' as_ltraj(deer, id = "animal_3")
+
 as_ltraj <- function(x, ...) {
   UseMethod("as_ltraj", x)
 }
@@ -205,30 +190,9 @@ as_ltraj.track_xyt <- function(x, ...) {
 }
 
 
-# as_bcpa -----------------------------------------------------------------
-#' @export
-#' @rdname coercion
-#' @examples
-#' data(deer)
-#' d <- as_bcpa(deer)
-
-as_bcpa <- function(x, ...) {
-  UseMethod("as_bcpa", x)
-}
-
-#' @export
-#' @rdname coercion
-as_bcpa.track_xyt <- function(x, ...) {
-  x <- tibble(X = x$x_, Y = x$y_, Time = x$t_)
-  bcpa::GetVT(x, ...)
-}
-
 # as_telemetry -----------------------------------------------------------------
 #' @export
 #' @rdname coercion
-#' @examples
-#' data(deer)
-#' as_telemetry(deer)
 as_telemetry <- function(x, ...) {
   UseMethod("as_telemetry", x)
 }
@@ -239,7 +203,7 @@ as_telemetry.track_xyt <- function(x, ...) {
   if (!amt::has_crs(x)) {
     stop("track needs to have a crs.")
   }
-  x <- transform_coords(x, sp::CRS("+init=epsg:4326"))
+  x <- transform_coords(x, 4326)
 
   dat_ctmm <- data.frame(
     lon = x$x_, lat = x$y_, timestamp = x$t_,
@@ -266,10 +230,6 @@ as_telemetry.track_xyt <- function(x, ...) {
 # as_moveHMM --------------------------------------------------------------
 #' @export
 #' @rdname coercion
-#' @examples
-#' # Fit HMM with two states
-#' data(deer)
-#' dm <- as_moveHMM(deer)
 
 as_moveHMM <- function(x, ...) {
   UseMethod("as_moveHMM", x)
@@ -278,7 +238,7 @@ as_moveHMM <- function(x, ...) {
 #' @export
 #' @rdname coercion
 as_moveHMM.track_xy <- function(x, ...) {
-  if (grepl("+proj=longlat", attr(x, "crs"))) {
+  if (grepl("+proj=longlat", attr(x, "crs")$wkt)) {
     moveHMM::prepData(as.data.frame(x), type = "LL", coordNames = c("x_", "y_"))
   } else {
     message("Assuming projected CRS")

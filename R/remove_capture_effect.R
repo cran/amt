@@ -4,31 +4,16 @@
 #'
 #' @param x An object of class `track_xyt`.
 #' @template dots_none
+#' @param start A `lubirdate::Period`, indicating the time period to be removed at the beginning of the track.
+#' @param end A `lubirdate::Period`, indicating the time period to be removed at the end of the track.
+#' @return A `tibble` without observations that fall within the period of the capture effect.
 #' @export
 #' @name remove_capture
-#' @examples
-#' library(lubridate)
-#' n <- 10
-#' df <- track(
-#'   x = cumsum(rnorm(n)),
-#'   y = cumsum(rnorm(n)),
-#'   t = ymd_hm("2017-01-01 00:00") +
-#'    hours(seq(0, by = 24, length.out = n))
-#' )
-#'
-#' df
-#' remove_capture_effect(df, start = days(1))
-#' remove_capture_effect(df, end = days(2))
-#' remove_capture_effect(df, start = days(1), end = days(2))
-#'
-
 remove_capture_effect <- function(x, ...) {
   UseMethod("remove_capture_effect", x)
 }
 
 #' @export
-#' @param start A `lubirdate::Period`, indicating the time period to be removed at the beginning of the track.
-#' @param end A `lubirdate::Period`, indicating the time period to be removed at the end of the track.
 #' @rdname remove_capture
 remove_capture_effect.track_xyt <- function(x, start, end, ...) {
   t <- as.numeric(x$t_)

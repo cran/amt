@@ -4,12 +4,8 @@
 #' @template track_xy_star
 #' @template dots_none
 #' @name from_to
+#' @return A vector of class `POSIXct`.
 #' @export
-#' @examples
-#' data(deer)
-#' from(deer)
-#' to(deer)
-#' from_to(deer)
 
 from_to <- function(x, ...) {
   UseMethod("from_to", x)
@@ -30,7 +26,7 @@ from <- function(x, ...) {
 #' @export
 #' @rdname from_to
 from.track_xyt <- function(x, ...) {
-  min(x$t_)
+  min(x[["t_"]])
 }
 
 #' @export
@@ -42,6 +38,6 @@ to <- function(x, ...) {
 #' @export
 #' @rdname from_to
 to.track_xyt <- function(x, ...) {
-  max(x$t_)
+  max(x[["t_"]])
 }
 

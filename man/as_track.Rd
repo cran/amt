@@ -5,6 +5,7 @@
 \alias{as_track.SpatialPoints}
 \alias{as_track.sfc_POINT}
 \alias{as_track.steps_xyt}
+\alias{as_track.data.frame}
 \title{Coerce to track}
 \usage{
 as_track(x, ...)
@@ -14,11 +15,16 @@ as_track(x, ...)
 \method{as_track}{sfc_POINT}(x, ...)
 
 \method{as_track}{steps_xyt}(x, ...)
+
+\method{as_track}{data.frame}(x, ...)
 }
 \arguments{
-\item{x}{\verb{[SpatialPoints]} \cr Object to be converted to a track.}
+\item{x}{Object to be converted to a track.}
 
 \item{...}{Further arguments, none implemented.}
+}
+\value{
+An object of class \code{track_xy(t)}
 }
 \description{
 Coerce other classes (currently implemented: \code{SpatialPoints}) to a \code{track_xy}.
