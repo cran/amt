@@ -10,7 +10,9 @@ hr_kde.track_xy <- function(
   x, h = hr_kde_ref(x), trast = make_trast(x),
   levels = 0.95, keep.data = TRUE, ...) {
 
-  # ---------------------------------------------------------------------------- #
+  checkmate::assert_numeric(levels, lower = 0, upper = 1)
+  levels <- sort(levels)
+
   # Check bandwidth
   if (!is.numeric(h)) {
     stop("hr_kde: bandwidth should be numeric")
@@ -44,7 +46,9 @@ hr_kde.track_xy <- function(
                         ymn = yrange[1],
                         ymx = yrange[2])
 
-  raster::projection(kde)  <- as(get_crs(x), "CRS")
+  raster::projection(kde)  <- if (is.numeric(get_crs(x)))
+    sp::CRS(paste0("+init=epsg:", get_crs(x))) else
+    as(get_crs(x), "CRS")
   attr(kde, "crs_") <- get_crs(x) # needs to be fixed when updating to terra
 
   res <- list(
@@ -301,6 +305,7 @@ lscv <- function(x, hs) {
 #' @template return_bandwidth
 #' @param rescale `[character(1)]` \cr Rescaling method for reference bandwidth calculation. Must be one of "unitvar", "xvar", or "none".
 #' @name bandwidth_ref
+#' @export
 
 
 hr_kde_ref <- function(x, ...) {

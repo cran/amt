@@ -18,6 +18,8 @@ hr_area.hr <- function(x, units = FALSE, ...) {
   xx <- tibble::as_tibble(sf::st_set_geometry(hr_isopleths(x), NULL))
   if (!units) {
     xx$area <- as.numeric(xx$area)
+  } else if (units & is.na(x$crs)) {
+    warning("Units requested from data that has no CRS assigned. Please assign a CRS first.")
   }
   xx
 }
@@ -26,8 +28,7 @@ hr_area.hr <- function(x, units = FALSE, ...) {
 #' @export
 #' @rdname hr_area
 hr_area.RasterLayer <- function(x, level = 0.95, ...) {
-    x <- hr_cud(x)
-    sum(x[] <= level) * prod(raster::res(x))
+    hr_isopleths(x, level = level)$area
 }
 
 

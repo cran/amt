@@ -1,4 +1,14 @@
 # amt 0.1.6
+## updates
+- fixed issue #54.
+- fixed issue #43 by adding a an example. 
+- fixed issue #57.
+- fixed issue #58.
+- fixed issue #56: levels for `akde`
+- added enhancement #55
+- fixed small error in `steps()` for calculating the absolute direction. 
+- New method `add_nsd()` to calculate the NSD for tracks and steps. 
+- Fixed error with time_of_day and CRS
 
 # amt 0.1.5
 ## updates

@@ -2,14 +2,19 @@
 % Please edit documentation in R/coercion.R
 \name{as_sf_points}
 \alias{as_sf_points}
+\alias{as_sf_points.steps_xy}
 \title{Coerces a track to points}
 \usage{
 as_sf_points(x, ...)
+
+\method{as_sf_points}{steps_xy}(x, end = TRUE, ...)
 }
 \arguments{
 \item{x}{\code{[track_xy, track_xyt]} \cr A track created with \code{make_track}.}
 
 \item{...}{Further arguments, none implemented.}
+
+\item{end}{\verb{[logical(1)=TRUE]} \cr For steps, should the end or start points be used?}
 }
 \value{
 A data \code{data.frame} with a \code{sfc}-column

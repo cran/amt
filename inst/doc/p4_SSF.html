@@ -12,7 +12,7 @@
 
 <meta name="author" content="Johannes Signer" />
 
-<meta name="date" content="2021-12-02" />
+<meta name="date" content="2022-01-18" />
 
 <title>Fitting Step-Selection Functions with amt</title>
 
@@ -141,7 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Fitting Step-Selection Functions with <code>amt</code></h1>
 <h4 class="author">Johannes Signer</h4>
-<h4 class="date">2021-12-02</h4>
+<h4 class="date">2022-01-18</h4>
 
 
 
@@ -239,83 +239,83 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> ssf1 <span class="sc">%&gt;%</span> <span class="fu">fit_clogit</span>(case_ <span class="sc">~</span> forest <span class="sc">+</span> forest<span class="sc">:</span>cos_ta <span class="sc">+</span> forest<span class="sc">:</span>log_sl <span class="sc">+</span> log_sl <span class="sc">+</span> cos_ta <span class="sc">+</span> <span class="fu">strata</span>(step_id_))</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m0)</span></code></pre></div>
 <pre><code>## Call:
-## coxph(formula = Surv(rep(1, 12640L), case_) ~ forest + strata(step_id_), 
+## coxph(formula = Surv(rep(1, 12656L), case_) ~ forest + strata(step_id_), 
 ##     data = data, method = &quot;exact&quot;)
 ## 
-##   n= 12640, number of events= 790 
+##   n= 12656, number of events= 791 
 ## 
 ##                     coef exp(coef) se(coef)      z Pr(&gt;|z|)    
-## forestnon-forest -0.5809    0.5594   0.1077 -5.392 6.97e-08 ***
+## forestnon-forest -0.5456    0.5795   0.1059 -5.152 2.58e-07 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ##                  exp(coef) exp(-coef) lower .95 upper .95
-## forestnon-forest    0.5594      1.788    0.4529    0.6909
+## forestnon-forest    0.5795      1.726    0.4709    0.7132
 ## 
-## Concordance= 0.532  (se = 0.007 )
-## Likelihood ratio test= 28.15  on 1 df,   p=1e-07
-## Wald test            = 29.07  on 1 df,   p=7e-08
-## Score (logrank) test = 29.21  on 1 df,   p=6e-08</code></pre>
+## Concordance= 0.531  (se = 0.007 )
+## Likelihood ratio test= 25.73  on 1 df,   p=4e-07
+## Wald test            = 26.54  on 1 df,   p=3e-07
+## Score (logrank) test = 26.67  on 1 df,   p=2e-07</code></pre>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code></pre></div>
 <pre><code>## Call:
-## coxph(formula = Surv(rep(1, 12640L), case_) ~ forest + forest:cos_ta + 
+## coxph(formula = Surv(rep(1, 12656L), case_) ~ forest + forest:cos_ta + 
 ##     forest:log_sl + log_sl * cos_ta + strata(step_id_), data = data, 
 ##     method = &quot;exact&quot;)
 ## 
-##   n= 12609, number of events= 759 
-##    (31 observations deleted due to missingness)
+##   n= 12624, number of events= 759 
+##    (32 observations deleted due to missingness)
 ## 
 ##                             coef exp(coef) se(coef)      z Pr(&gt;|z|)    
-## forestnon-forest         0.85586   2.35340  0.33084  2.587  0.00968 ** 
-## log_sl                   0.19794   1.21889  0.05006  3.954 7.69e-05 ***
-## cos_ta                  -0.28202   0.75426  0.20242 -1.393  0.16355    
-## forestnon-forest:cos_ta -0.22377   0.79950  0.11801 -1.896  0.05793 .  
-## forestnon-forest:log_sl -0.26924   0.76396  0.05807 -4.637 3.54e-06 ***
-## log_sl:cos_ta            0.01695   1.01710  0.03396  0.499  0.61759    
+## forestnon-forest         0.91288   2.49148  0.33487  2.726  0.00641 ** 
+## log_sl                   0.20543   1.22805  0.05134  4.001 6.30e-05 ***
+## cos_ta                  -0.40320   0.66818  0.20330 -1.983  0.04734 *  
+## forestnon-forest:cos_ta -0.06846   0.93383  0.11754 -0.582  0.56029    
+## forestnon-forest:log_sl -0.27871   0.75676  0.05914 -4.712 2.45e-06 ***
+## log_sl:cos_ta            0.01559   1.01571  0.03397  0.459  0.64630    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ##                         exp(coef) exp(-coef) lower .95 upper .95
-## forestnon-forest           2.3534     0.4249    1.2305    4.5010
-## log_sl                     1.2189     0.8204    1.1050    1.3446
-## cos_ta                     0.7543     1.3258    0.5073    1.1216
-## forestnon-forest:cos_ta    0.7995     1.2508    0.6344    1.0075
-## forestnon-forest:log_sl    0.7640     1.3090    0.6818    0.8561
-## log_sl:cos_ta              1.0171     0.9832    0.9516    1.0871
+## forestnon-forest           2.4915     0.4014    1.2924    4.8029
+## log_sl                     1.2281     0.8143    1.1105    1.3581
+## cos_ta                     0.6682     1.4966    0.4486    0.9953
+## forestnon-forest:cos_ta    0.9338     1.0709    0.7417    1.1758
+## forestnon-forest:log_sl    0.7568     1.3214    0.6739    0.8498
+## log_sl:cos_ta              1.0157     0.9845    0.9503    1.0857
 ## 
-## Concordance= 0.604  (se = 0.012 )
-## Likelihood ratio test= 97.2  on 6 df,   p=&lt;2e-16
-## Wald test            = 96.29  on 6 df,   p=&lt;2e-16
-## Score (logrank) test = 98.62  on 6 df,   p=&lt;2e-16</code></pre>
+## Concordance= 0.608  (se = 0.012 )
+## Likelihood ratio test= 96.93  on 6 df,   p=&lt;2e-16
+## Wald test            = 96.96  on 6 df,   p=&lt;2e-16
+## Score (logrank) test = 99.16  on 6 df,   p=&lt;2e-16</code></pre>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
 <pre><code>## Call:
-## coxph(formula = Surv(rep(1, 12640L), case_) ~ forest + forest:cos_ta + 
+## coxph(formula = Surv(rep(1, 12656L), case_) ~ forest + forest:cos_ta + 
 ##     forest:log_sl + log_sl + cos_ta + strata(step_id_), data = data, 
 ##     method = &quot;exact&quot;)
 ## 
-##   n= 12609, number of events= 759 
-##    (31 observations deleted due to missingness)
+##   n= 12624, number of events= 759 
+##    (32 observations deleted due to missingness)
 ## 
 ##                             coef exp(coef) se(coef)      z Pr(&gt;|z|)    
-## forestnon-forest         0.86520   2.37549  0.33005  2.621  0.00876 ** 
-## log_sl                   0.19792   1.21887  0.05005  3.955 7.67e-05 ***
-## cos_ta                  -0.19352   0.82405  0.09769 -1.981  0.04759 *  
-## forestnon-forest:cos_ta -0.22673   0.79713  0.11784 -1.924  0.05434 .  
-## forestnon-forest:log_sl -0.27117   0.76249  0.05791 -4.682 2.84e-06 ***
+## forestnon-forest         0.91853   2.50560  0.33442  2.747  0.00602 ** 
+## log_sl                   0.20526   1.22784  0.05134  3.998 6.38e-05 ***
+## cos_ta                  -0.32146   0.72509  0.09794 -3.282  0.00103 ** 
+## forestnon-forest:cos_ta -0.07174   0.93077  0.11729 -0.612  0.54078    
+## forestnon-forest:log_sl -0.28003   0.75576  0.05906 -4.741 2.12e-06 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ##                         exp(coef) exp(-coef) lower .95 upper .95
-## forestnon-forest           2.3755     0.4210    1.2440    4.5362
-## log_sl                     1.2189     0.8204    1.1050    1.3445
-## cos_ta                     0.8241     1.2135    0.6805    0.9979
-## forestnon-forest:cos_ta    0.7971     1.2545    0.6327    1.0042
-## forestnon-forest:log_sl    0.7625     1.3115    0.6807    0.8541
+## forestnon-forest           2.5056     0.3991    1.3009    4.8258
+## log_sl                     1.2278     0.8144    1.1103    1.3578
+## cos_ta                     0.7251     1.3791    0.5984    0.8785
+## forestnon-forest:cos_ta    0.9308     1.0744    0.7396    1.1713
+## forestnon-forest:log_sl    0.7558     1.3232    0.6732    0.8485
 ## 
-## Concordance= 0.604  (se = 0.012 )
-## Likelihood ratio test= 96.95  on 5 df,   p=&lt;2e-16
-## Wald test            = 95.58  on 5 df,   p=&lt;2e-16
-## Score (logrank) test = 97.85  on 5 df,   p=&lt;2e-16</code></pre>
+## Concordance= 0.606  (se = 0.012 )
+## Likelihood ratio test= 96.72  on 5 df,   p=&lt;2e-16
+## Wald test            = 96.47  on 5 df,   p=&lt;2e-16
+## Score (logrank) test = 98.72  on 5 df,   p=&lt;2e-16</code></pre>
 <div id="interpretation-of-coefficients" class="section level3">
 <h3>Interpretation of coefficients</h3>
 <p>See the discussion in Fieberg et al 2020.</p>
@@ -333,73 +333,74 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_clogit</span>(case_ <span class="sc">~</span> forest <span class="sc">+</span> forest<span class="sc">:</span>cos_ta <span class="sc">+</span> forest<span class="sc">:</span>sl_ <span class="sc">+</span> sl_ <span class="sc">*</span> cos_ta <span class="sc">+</span> <span class="fu">strata</span>(step_id_))</span></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code></pre></div>
 <pre><code>## Call:
-## coxph(formula = Surv(rep(1, 12640L), case_) ~ forest + forest:cos_ta + 
+## coxph(formula = Surv(rep(1, 12656L), case_) ~ forest + forest:cos_ta + 
 ##     forest:sl_ + sl_ * cos_ta + strata(step_id_), data = data, 
 ##     method = &quot;exact&quot;)
 ## 
-##   n= 12609, number of events= 759 
-##    (31 observations deleted due to missingness)
+##   n= 12624, number of events= 759 
+##    (32 observations deleted due to missingness)
 ## 
 ##                               coef  exp(coef)   se(coef)      z Pr(&gt;|z|)    
-## forestnon-forest        -0.1503855  0.8603763  0.1408574 -1.068  0.28568    
-## sl_                      0.0006941  1.0006944  0.0001529  4.539 5.65e-06 ***
-## cos_ta                  -0.3419012  0.7104184  0.1116427 -3.062  0.00220 ** 
-## forestnon-forest:cos_ta -0.2256032  0.7980347  0.1191441 -1.894  0.05829 .  
-## forestnon-forest:sl_    -0.0009555  0.9990450  0.0001973 -4.843 1.28e-06 ***
-## sl_:cos_ta               0.0004105  1.0004106  0.0001313  3.126  0.00177 ** 
+## forestnon-forest        -0.1853638  0.8308020  0.1369323 -1.354   0.1758    
+## sl_                      0.0005926  1.0005927  0.0001477  4.011 6.04e-05 ***
+## cos_ta                  -0.4711862  0.6242613  0.1098044 -4.291 1.78e-05 ***
+## forestnon-forest:cos_ta -0.0332544  0.9672924  0.1173285 -0.283   0.7768    
+## forestnon-forest:sl_    -0.0008546  0.9991458  0.0001917 -4.458 8.27e-06 ***
+## sl_:cos_ta               0.0003312  1.0003313  0.0001306  2.537   0.0112 *  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ##                         exp(coef) exp(-coef) lower .95 upper .95
-## forestnon-forest           0.8604     1.1623    0.6528    1.1339
-## sl_                        1.0007     0.9993    1.0004    1.0010
-## cos_ta                     0.7104     1.4076    0.5708    0.8842
-## forestnon-forest:cos_ta    0.7980     1.2531    0.6318    1.0079
-## forestnon-forest:sl_       0.9990     1.0010    0.9987    0.9994
-## sl_:cos_ta                 1.0004     0.9996    1.0002    1.0007
+## forestnon-forest           0.8308     1.2037    0.6352    1.0866
+## sl_                        1.0006     0.9994    1.0003    1.0009
+## cos_ta                     0.6243     1.6019    0.5034    0.7742
+## forestnon-forest:cos_ta    0.9673     1.0338    0.7686    1.2174
+## forestnon-forest:sl_       0.9991     1.0009    0.9988    0.9995
+## sl_:cos_ta                 1.0003     0.9997    1.0001    1.0006
 ## 
-## Concordance= 0.609  (se = 0.012 )
-## Likelihood ratio test= 107.2  on 6 df,   p=&lt;2e-16
-## Wald test            = 110.3  on 6 df,   p=&lt;2e-16
-## Score (logrank) test = 115.8  on 6 df,   p=&lt;2e-16</code></pre>
+## Concordance= 0.606  (se = 0.013 )
+## Likelihood ratio test= 101.5  on 6 df,   p=&lt;2e-16
+## Wald test            = 104.3  on 6 df,   p=&lt;2e-16
+## Score (logrank) test = 109.1  on 6 df,   p=&lt;2e-16</code></pre>
 </div>
 <div id="session" class="section level2">
 <h2>Session</h2>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>sessioninfo<span class="sc">::</span><span class="fu">session_info</span>()</span></code></pre></div>
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
-##  setting  value                       
+##  setting  value
 ##  version  R version 4.1.2 (2021-11-01)
-##  os       Ubuntu 20.04.3 LTS          
-##  system   x86_64, linux-gnu           
-##  ui       X11                         
-##  language (EN)                        
-##  collate  C                           
-##  ctype    en_US.UTF-8                 
-##  tz       Europe/Berlin               
-##  date     2021-12-02                  
+##  os       Ubuntu 20.04.3 LTS
+##  system   x86_64, linux-gnu
+##  ui       X11
+##  language (EN)
+##  collate  C
+##  ctype    en_US.UTF-8
+##  tz       Europe/Berlin
+##  date     2022-01-18
+##  pandoc   2.14.0.3 @ /usr/lib/rstudio/bin/pandoc/ (via rmarkdown)
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────
-##  package      * version date       lib source        
-##  amt          * 0.1.5   2021-12-02 [1] local         
+##  package      * version date (UTC) lib source
+##  amt          * 0.1.6   2022-01-18 [1] local
 ##  assertthat     0.2.1   2019-03-21 [3] CRAN (R 4.1.1)
-##  backports      1.3.0   2021-10-27 [3] CRAN (R 4.1.1)
-##  boot           1.3-28  2021-05-03 [6] CRAN (R 4.0.5)
+##  backports      1.4.1   2021-12-13 [3] CRAN (R 4.1.2)
+##  boot           1.3-28  2021-05-03 [3] CRAN (R 4.1.2)
 ##  bslib          0.3.1   2021-10-06 [5] CRAN (R 4.1.1)
 ##  checkmate      2.0.0   2020-02-06 [3] CRAN (R 4.1.1)
 ##  circular       0.4-93  2017-06-29 [3] CRAN (R 4.1.1)
-##  class          7.3-19  2021-05-03 [6] CRAN (R 4.0.5)
+##  class          7.3-19  2021-05-03 [3] CRAN (R 4.1.2)
 ##  classInt       0.4-3   2020-04-07 [3] CRAN (R 4.1.1)
 ##  cli            3.1.0   2021-10-27 [3] CRAN (R 4.1.1)
-##  codetools      0.2-18  2020-11-04 [6] CRAN (R 4.0.3)
+##  codetools      0.2-18  2020-11-04 [3] CRAN (R 4.1.2)
 ##  colorspace     2.0-2   2021-06-24 [3] CRAN (R 4.1.1)
 ##  crayon         1.4.2   2021-10-29 [3] CRAN (R 4.1.1)
-##  DBI            1.1.1   2021-01-15 [3] CRAN (R 4.1.1)
-##  digest         0.6.28  2021-09-23 [3] CRAN (R 4.1.1)
+##  DBI            1.1.2   2021-12-20 [3] CRAN (R 4.1.2)
+##  digest         0.6.29  2021-12-01 [3] CRAN (R 4.1.2)
 ##  dplyr        * 1.0.7   2021-06-18 [3] CRAN (R 4.1.1)
 ##  e1071          1.7-9   2021-09-16 [3] CRAN (R 4.1.1)
 ##  ellipsis       0.3.2   2021-04-29 [3] CRAN (R 4.1.1)
 ##  evaluate       0.14    2019-05-28 [3] CRAN (R 4.1.1)
-##  fansi          0.5.0   2021-05-25 [3] CRAN (R 4.1.1)
+##  fansi          1.0.2   2022-01-14 [3] CRAN (R 4.1.2)
 ##  farver         2.1.0   2021-02-28 [3] CRAN (R 4.1.1)
 ##  fastmap        1.1.0   2021-01-25 [3] CRAN (R 4.1.1)
 ##  fitdistrplus   1.1-6   2021-09-28 [3] CRAN (R 4.1.1)
@@ -408,24 +409,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  ggplot2      * 3.3.5   2021-06-25 [3] CRAN (R 4.1.1)
 ##  ggraph       * 2.0.5   2021-02-23 [3] CRAN (R 4.1.1)
 ##  ggrepel        0.9.1   2021-01-15 [3] CRAN (R 4.1.1)
-##  glue           1.4.2   2020-08-27 [3] CRAN (R 4.1.1)
-##  graphlayouts   0.7.1   2020-10-26 [3] CRAN (R 4.1.1)
+##  glue           1.6.0   2021-12-17 [3] CRAN (R 4.1.2)
+##  graphlayouts   0.8.0   2022-01-03 [3] CRAN (R 4.1.2)
 ##  gridExtra      2.3     2017-09-09 [3] CRAN (R 4.1.1)
 ##  gtable         0.3.0   2019-03-25 [3] CRAN (R 4.1.1)
 ##  highr          0.9     2021-04-16 [3] CRAN (R 4.1.1)
 ##  htmltools      0.5.2   2021-08-25 [3] CRAN (R 4.1.1)
-##  igraph         1.2.7   2021-10-15 [3] CRAN (R 4.1.1)
+##  igraph         1.2.11  2022-01-04 [3] CRAN (R 4.1.2)
 ##  jquerylib      0.1.4   2021-04-26 [3] CRAN (R 4.1.1)
 ##  jsonlite       1.7.2   2020-12-09 [3] CRAN (R 4.1.1)
-##  KernSmooth     2.23-20 2021-05-03 [6] CRAN (R 4.0.5)
-##  knitr        * 1.36    2021-09-29 [3] CRAN (R 4.1.1)
+##  KernSmooth     2.23-20 2021-05-03 [3] CRAN (R 4.1.2)
+##  knitr        * 1.37    2021-12-16 [3] CRAN (R 4.1.2)
 ##  labeling       0.4.2   2020-10-20 [3] CRAN (R 4.1.1)
 ##  lattice        0.20-45 2021-09-22 [6] CRAN (R 4.1.1)
 ##  lifecycle      1.0.1   2021-09-24 [3] CRAN (R 4.1.1)
 ##  lubridate    * 1.8.0   2021-10-07 [3] CRAN (R 4.1.1)
 ##  magrittr       2.0.1   2020-11-17 [3] CRAN (R 4.1.1)
-##  MASS           7.3-54  2021-05-03 [6] CRAN (R 4.0.5)
-##  Matrix         1.3-4   2021-06-01 [6] CRAN (R 4.1.0)
+##  MASS           7.3-54  2021-05-03 [3] CRAN (R 4.1.2)
+##  Matrix         1.4-0   2021-12-08 [6] CRAN (R 4.1.2)
 ##  munsell        0.5.0   2018-06-12 [3] CRAN (R 4.1.1)
 ##  mvtnorm        1.1-3   2021-10-08 [3] CRAN (R 4.1.1)
 ##  pillar         1.6.4   2021-10-18 [3] CRAN (R 4.1.1)
@@ -434,25 +435,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  proxy          0.4-26  2021-06-07 [3] CRAN (R 4.1.1)
 ##  purrr          0.3.4   2020-04-17 [3] CRAN (R 4.1.1)
 ##  R6             2.5.1   2021-08-19 [3] CRAN (R 4.1.1)
-##  raster       * 3.5-2   2021-10-11 [3] CRAN (R 4.1.1)
-##  rbibutils      2.2.4   2021-10-11 [3] CRAN (R 4.1.1)
-##  Rcpp           1.0.7   2021-07-07 [3] CRAN (R 4.1.1)
-##  Rdpack         2.1.2   2021-06-01 [3] CRAN (R 4.1.1)
-##  rgdal          1.5-27  2021-09-16 [3] CRAN (R 4.1.1)
-##  rgeos          0.5-8   2021-09-22 [3] CRAN (R 4.1.1)
+##  raster       * 3.5-11  2021-12-23 [3] CRAN (R 4.1.2)
+##  rbibutils      2.2.7   2021-12-07 [3] CRAN (R 4.1.2)
+##  Rcpp           1.0.8   2022-01-13 [3] CRAN (R 4.1.2)
+##  Rdpack         2.1.3   2021-12-08 [3] CRAN (R 4.1.2)
+##  rgdal          1.5-28  2021-12-15 [3] CRAN (R 4.1.2)
+##  rgeos          0.5-9   2021-12-15 [3] CRAN (R 4.1.2)
 ##  rlang          0.4.12  2021-10-18 [3] CRAN (R 4.1.1)
 ##  rmarkdown      2.11    2021-09-14 [3] CRAN (R 4.1.1)
-##  rstudioapi     0.13    2020-11-12 [5] CRAN (R 4.0.3)
-##  sass           0.4.0   2021-05-12 [5] CRAN (R 4.0.5)
+##  rstudioapi     0.13    2020-11-12 [3] CRAN (R 4.1.2)
+##  sass           0.4.0   2021-05-12 [3] CRAN (R 4.1.2)
 ##  scales         1.1.1   2020-05-11 [3] CRAN (R 4.1.1)
-##  sessioninfo    1.1.1   2018-11-05 [3] CRAN (R 4.1.1)
-##  sf             1.0-3   2021-10-07 [3] CRAN (R 4.1.1)
-##  sp           * 1.4-5   2021-01-10 [3] CRAN (R 4.1.1)
-##  stringi        1.7.5   2021-10-04 [3] CRAN (R 4.1.1)
+##  sessioninfo    1.2.2   2021-12-06 [3] CRAN (R 4.1.2)
+##  sf             1.0-5   2021-12-17 [3] CRAN (R 4.1.2)
+##  sp           * 1.4-6   2021-11-14 [3] CRAN (R 4.1.2)
+##  stringi        1.7.6   2021-11-29 [3] CRAN (R 4.1.2)
 ##  stringr        1.4.0   2019-02-10 [3] CRAN (R 4.1.1)
 ##  survival       3.2-13  2021-08-24 [6] CRAN (R 4.1.1)
-##  terra          1.4-11  2021-10-11 [3] CRAN (R 4.1.1)
-##  tibble         3.1.5   2021-09-30 [3] CRAN (R 4.1.1)
+##  terra          1.5-12  2022-01-13 [3] CRAN (R 4.1.2)
+##  tibble         3.1.6   2021-11-07 [3] CRAN (R 4.1.2)
 ##  tidygraph    * 1.2.0   2020-05-12 [3] CRAN (R 4.1.1)
 ##  tidyr          1.1.4   2021-09-27 [3] CRAN (R 4.1.1)
 ##  tidyselect     1.1.1   2021-04-30 [3] CRAN (R 4.1.1)
@@ -462,16 +463,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  vctrs          0.3.8   2021-04-29 [3] CRAN (R 4.1.1)
 ##  viridis        0.6.2   2021-10-13 [3] CRAN (R 4.1.1)
 ##  viridisLite    0.4.0   2021-04-13 [3] CRAN (R 4.1.1)
-##  withr          2.4.2   2021-04-18 [3] CRAN (R 4.1.1)
-##  xfun           0.27    2021-10-18 [3] CRAN (R 4.1.1)
+##  withr          2.4.3   2021-11-30 [3] CRAN (R 4.1.2)
+##  xfun           0.29    2021-12-14 [3] CRAN (R 4.1.2)
 ##  yaml           2.2.1   2020-02-01 [3] CRAN (R 4.1.1)
 ## 
-## [1] /tmp/RtmpXBk6U6/Rinst292653af4766d
-## [2] /tmp/RtmpURq9WN/temp_libpath2126b766c140d
-## [3] /home/jsigner/R/x86_64-pc-linux-gnu-library/4.1
-## [4] /usr/local/lib/R/site-library
-## [5] /usr/lib/R/site-library
-## [6] /usr/lib/R/library</code></pre>
+##  [1] /tmp/RtmpEoRrC1/Rinst1710ac2383395d
+##  [2] /tmp/RtmpIdsWlZ/temp_libpath16f1ad601e0bd8
+##  [3] /home/jsigner/R/x86_64-pc-linux-gnu-library/4.1
+##  [4] /usr/local/lib/R/site-library
+##  [5] /usr/lib/R/site-library
+##  [6] /usr/lib/R/library
+## 
+## ──────────────────────────────────────────────────────────────────────────────</code></pre>
 </div>
 <div class="footnotes">
 <hr />
