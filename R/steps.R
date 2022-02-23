@@ -311,6 +311,9 @@ steps_base <- function(x, n, lonlat, zero_dir, keep_cols) {
   out
 }
 
+
+# Support for dplyr -------------------------------------------------------
+
 steps_transfer_attr <- function(from, to) {
   from <- attributes(from)
  # attributes(to)$class <- from$class

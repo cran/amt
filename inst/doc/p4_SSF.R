@@ -5,7 +5,6 @@ set.seed(20161113)
 
 ## -----------------------------------------------------------------------------
 library(lubridate)
-library(raster)
 library(amt)
 data("deer")
 deer

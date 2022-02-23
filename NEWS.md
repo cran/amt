@@ -1,3 +1,11 @@
+# amt 0.1.7
+## updates
+- Accepted merge to have to have buffers for `extract_covariates()`.
+- Accepted merge to fix error in `as_ltraj()`.
+- Accepted merge to typo. 
+- New method `remove_incomplete_strata()`
+
+
 # amt 0.1.6
 ## updates
 - fixed issue #54.

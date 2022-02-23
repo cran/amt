@@ -81,6 +81,7 @@ random_steps.steps_xy <- function(
 
  out <- dplyr::bind_rows(x, for_rand)
  out <- dplyr::arrange(out, step_id_)
+ out[["direction_p"]] <- NULL
 
  class(out) <- c("random_steps", class(out))
  attributes(out)$sl_ <- sl_distr
@@ -110,6 +111,49 @@ plot.random_steps <- function(x, ...) {
     graphics::points(x1$x2_[i], x1$y2_[i], pch = 20, cex = 2, col = "red")
   }
 }
+
+# Flag incomplete steps ----
+
+#' Remove strata with missing values for observed steps
+#'
+#' @param x An object of class `random_steps`.
+#' @param col A character with the column name that will be scanned for missing values.
+#' @template dots_none
+#' @name remove_incomplete_strata
+#'
+#' @return An object of class `random_steps`, where observed steps (`case_ == TRUE`) with missing values (`NA`) in the column `col` are removed (including all random steps).
+
+#' @examples
+#'
+#' mini_deer <- deer[1:4, ]
+#'
+#' # The first step is removed, because we have `NA` turn angles.
+#' mini_deer %>% steps() %>% random_steps() %>% remove_incomplete_strata() %>%
+#'   select(case_, ta_, step_id_)
+
+#' @export
+remove_incomplete_strata <- function(x, ...) {
+  UseMethod("remove_incomplete_strata", x)
+}
+
+#' @export
+#' @rdname remove_incomplete_strata
+remove_incomplete_strata.random_steps <- function(x, col = "ta_", ...) {
+
+  checkmate::assert_character(col, len = 1)
+
+  if (!col %in% names(x)) {
+    stop("`col` not found in `x` (make sure the column name is spelled correct).")
+
+  }
+
+  x.case <- dplyr::filter(x, case_)
+  incomplete.steps <- which(is.na(x.case[[col]]))
+  dplyr::filter(
+    x, !step_id_ %in% x.case$step_id_[incomplete.steps])
+}
+
+
 
 
 rsteps_transfer_attr <- function(from, to) {
