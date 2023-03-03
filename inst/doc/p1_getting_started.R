@@ -59,32 +59,32 @@ tr1 <- make_track(sh, x_epsg31467, y_epsg31467, ts, id = id, month = month)
 
 ## -----------------------------------------------------------------------------
 tr1 <- make_track(sh, x_epsg31467, y_epsg31467, ts, id = id, month = month, 
-                crs = sp::CRS("+init=epsg:31467"))
+                crs = 31467)
 
 ## -----------------------------------------------------------------------------
 data(sh)
-tr2 <- sh %>% filter(complete.cases(.)) %>% 
+tr2 <- sh |> filter(complete.cases(sh)) |> 
   mutate(
     ts = as.POSIXct(lubridate::ymd(day) + lubridate::hms(time)), 
     id = "Animal 1", 
     month = lubridate::month(ts)
-  ) %>% 
-  filter(!duplicated(ts)) %>% 
+  ) |> 
+  filter(!duplicated(ts)) |> 
   make_track(x_epsg31467, y_epsg31467, ts, id = id, month = month, 
-           crs = sp::CRS("+init=epsg:31467"))
+           crs = 31467)
 tr2
 
 ## -----------------------------------------------------------------------------
-tr3 <- tr2 %>% filter(month == 5)
+tr3 <- tr2 |> filter(month == 5)
 
 # we are left with a track
 class(tr3)
 
 ## -----------------------------------------------------------------------------
-transform_coords(tr2, sp::CRS("+init=epsg:4326"))
+transform_coords(tr2, 4326)
 
 ## -----------------------------------------------------------------------------
-tr2 <- tr2 %>% mutate(sl_ = step_lengths(.))
+tr2 <- tr2 |> mutate(sl_ = step_lengths(tr2))
 
 ## -----------------------------------------------------------------------------
 summary(tr2$sl_)
@@ -93,15 +93,15 @@ summary(tr2$sl_)
 summarize_sampling_rate(tr2)
 
 ## -----------------------------------------------------------------------------
-tr3 <- tr2 %>% track_resample(rate = hours(6), tolerance = minutes(20))
+tr3 <- tr2 |> track_resample(rate = hours(6), tolerance = minutes(20))
 tr3
 
 ## -----------------------------------------------------------------------------
 data("amt_fisher")
-trk <- amt_fisher %>% make_track(x_, y_, t_, id = id)
+trk <- amt_fisher |> make_track(x_, y_, t_, id = id)
 
 ## -----------------------------------------------------------------------------
-trk1 <- trk %>% nest(data = -"id")
+trk1 <- trk |> nest(data = -"id")
 trk1
 
 ## -----------------------------------------------------------------------------
@@ -109,18 +109,18 @@ trk1
 x <- trk1$data[[1]]
 
 # apply the data analysis
-x %>% track_resample(rate = minutes(30), tolerance = minutes(5)) %>%
+x |> track_resample(rate = minutes(30), tolerance = minutes(5)) |>
   steps_by_burst()
 
 ## -----------------------------------------------------------------------------
-trk2 <- trk1 %>% 
+trk2 <- trk1 |> 
   mutate(steps = map(data, function(x) 
-    x %>% track_resample(rate = minutes(30), tolerance = minutes(5)) %>% steps_by_burst()))
+    x |> track_resample(rate = minutes(30), tolerance = minutes(5)) |> steps_by_burst()))
 
 trk2
 
 ## -----------------------------------------------------------------------------
-trk2 %>% select(id, steps) %>% unnest(cols = steps) %>% 
+trk2 |> select(id, steps) |> unnest(cols = steps) |> 
   ggplot(aes(sl_, fill = factor(id))) + geom_density(alpha = 0.4)
 
 ## -----------------------------------------------------------------------------

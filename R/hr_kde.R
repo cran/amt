@@ -8,7 +8,7 @@ hr_kde <- function(x, ...) {
 #' @rdname hrest
 hr_kde.track_xy <- function(
   x, h = hr_kde_ref(x), trast = make_trast(x),
-  levels = 0.95, keep.data = TRUE, ...) {
+  levels = 0.95, keep.data = TRUE, wrap = FALSE, ...) {
 
   checkmate::assert_numeric(levels, lower = 0, upper = 1)
   levels <- sort(levels)
@@ -25,10 +25,10 @@ hr_kde.track_xy <- function(
   }
 
   # Estimate kernels
-  xrange <- c(raster::xmin(trast), raster::xmax(trast))
-  yrange <- c(raster::ymin(trast), raster::ymax(trast))
-  rncol <- raster::ncol(trast)
-  rnrow <- raster::nrow(trast)
+  xrange <- c(terra::xmin(trast), terra::xmax(trast))
+  yrange <- c(terra::ymin(trast), terra::ymax(trast))
+  rncol <- terra::ncol(trast)
+  rnrow <- terra::nrow(trast)
 
   if (!requireNamespace("KernSmooth", quietly = TRUE)) {
     stop("Please install the package `KernSmooth` first.")
@@ -40,22 +40,16 @@ hr_kde.track_xy <- function(
                             gridsize = c(rncol, rnrow))
 
   # Finish output
-  kde <- raster::raster(t(kde$fhat)[nrow(trast):1,],
-                        xmn = xrange[1],
-                        xmx = xrange[2],
-                        ymn = yrange[1],
-                        ymx = yrange[2])
+  kde1 <- trast
+  kde1[] <- as.vector(kde$fhat[, ncol(kde$fhat):1])
 
-  raster::projection(kde)  <- if (is.numeric(get_crs(x)))
-    sp::CRS(paste0("+init=epsg:", get_crs(x))) else
-    as(get_crs(x), "CRS")
-  attr(kde, "crs_") <- get_crs(x) # needs to be fixed when updating to terra
+  attr(kde1, "crs_") <- get_crs(x) # needs to be fixed when updating to terra
 
   res <- list(
     estimator = "kde",
     h = h,
-    ud = kde,
-    trast = trast,
+    ud = if (wrap) terra::wrap(kde1) else kde1,
+    trast = if (wrap) suppressWarnings(terra::wrap(trast)) else trast,
     levels = levels,
     crs = get_crs(x),
     data = if(keep.data) x else NULL
@@ -228,7 +222,7 @@ hr_kde_lscv <- function(
   x,
   range = do.call(seq, as.list(c(hr_kde_ref(x) * c(0.1, 2), length.out=100))),
   which_min = "global", rescale = "none",
-  trast = raster(as_sp(x), nrow = 100, ncol = 100)) {
+  trast = make_trast(x)) {
 
   if (!rescale %in% c("unitvar", "xvar", "none")) {
     stop("scale: not one of unit, sd or none")
@@ -289,7 +283,7 @@ local_minima <- function(x) {
 
 lscv <- function(x, hs) {
   n <- nrow(x)
-  f <- sp::spDists(x)
+  f <- as.matrix(stats::dist(x))
   f <- f[lower.tri(f)]
   sapply(hs, function(h) {
     out <- sum(exp(-f^2 / (4 * h^2)) - 4 * exp(-f^2 / (2 * h^2)))

@@ -42,7 +42,8 @@ cum_dist <- function(x, ...) {
 
 #' @export
 cum_dist.track_xy <- function(x, ...) {
-  sum(sp::spDists(as.matrix(x[, c("x_", "y_")]), segments = TRUE))
+  xx <- as_sf(x)
+  sum(sf::st_distance(xx[-1, ], xx[-nrow(xx), ], by_element = TRUE))
 }
 
 #' @export
@@ -53,7 +54,7 @@ tot_dist <- function(x, ...) {
 
 #' @export
 tot_dist.track_xy <- function(x, ...) {
-  sp::spDists(as.matrix(x[c(1, nrow(x)), c("x_", "y_")]), segments = TRUE)
+  sf::st_distance(as_sf(x[c(1, nrow(x)), ]))[1, 2]
 }
 
 #' @export
@@ -107,8 +108,8 @@ tac <- function(x, ...) {
 tac.track_xy <- function(x, ...) {
   # following abrahams 2017 and dray 2010
   x <- steps(x)
-  ta <- x$ta_[-1] * pi/180
-  1/nrow(x) * sum(diff(cos(ta))^2 + diff(cos(ta))^2)
+  ta <- x$ta_[-1]
+  1/nrow(x) * sum(diff(cos(ta))^2 + diff(sin(ta))^2)
 
 
 }

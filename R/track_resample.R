@@ -19,7 +19,7 @@ track_resample <- function(x, ...) {
 track_resample.track_xyt <- function(x, rate = hours(2), tolerance = minutes(15), start = 1, ...) {
 
   t_ <- as.numeric(x$t_)
-  if (any(diff_rcpp(t_) < 0)) {
+  if (any(diff(t_) < 0)) {
     stop("Neg. time diffs are not possible, maybe reorder?")
   }
 
@@ -28,6 +28,40 @@ track_resample.track_xyt <- function(x, rate = hours(2), tolerance = minutes(15)
   x$burst_ <- xx
  # cond <- quo(burst_ > 0) # -1 indicates that point is left out
   filter(x, !!quo(burst_ > 0))
+}
+
+
+mk_reg <- function(t1, time_dist, time_tol, start) {
+
+  n <- length(t1)
+  out <- numeric(n)
+  k <- 1
+
+  if (start > 1) {
+    out[1:(start - 1)] <- -1
+  }
+  out[start] <- 1
+
+  i <- start
+  while(i != n) {
+    t_min = t1[i] + time_dist - time_tol
+    t_max = t1[i] + time_dist + time_tol
+    j <- i + 1
+    while((j < n) && (t1[j] < t_min)) {
+      out[j] <- -1
+      j <- j + 1
+    }
+    i <- j
+    if ((j == n) && (t1[j] < t_min)) {
+      out[j] = -1
+    } else if (t1[j] >= t_min && t1[j] <= t_max) {
+      out[j] = k
+    } else {
+      k <- k + 1
+      out[j] = k
+    }
+  }
+  out
 }
 
 #' Filter bursts by number of relocations
@@ -52,11 +86,12 @@ filter_min_n_burst.track_xy <- function(x, min_n = 3, ...) {
     stop("column 'burst_' not found.")
   }
   #pred <- lazyeval::interp(~ col >= min_n, col = as.name("n"))
-  x_select <- group_by(x, !!quo(burst_)) %>% summarise(n = n()) %>%
+  x_select <- group_by(x, !!quo(burst_)) |> summarise(n = n()) |>
     filter(!!quo(n >= min_n))
   #pred <- lazyeval::interp(~ col %in% x_select$burst_, col = as.name("burst_"))
-  #x %>% filter_(pred)
+  #x |> filter_(pred)
   xx <- x[x$burst_ %in% x_select$burst_, ]
   class(xx) <- class(x)
   xx
 }
+

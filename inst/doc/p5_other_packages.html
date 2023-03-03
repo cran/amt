@@ -12,29 +12,42 @@
 
 <meta name="author" content="Johannes Signer" />
 
-<meta name="date" content="2022-02-22" />
+<meta name="date" content="2023-03-03" />
 
 <title>Interface to other packages with amt</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
 
 
 <style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
@@ -52,55 +65,54 @@ pre > code.sourceCode { white-space: pre-wrap; }
 pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
-  { counter-reset: source-line 0; }
+{ counter-reset: source-line 0; }
 pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
+{ position: relative; left: -4em; counter-increment: source-line; }
 pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
 div.sourceCode
-  {   }
+{ }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -109,13 +121,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -127,7 +146,187 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -139,19 +338,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<h1 class="title toc-ignore">Interface to other packages with <code>amt</code></h1>
+<h1 class="title toc-ignore">Interface to other packages with
+<code>amt</code></h1>
 <h4 class="author">Johannes Signer</h4>
-<h4 class="date">2022-02-22</h4>
+<h4 class="date">2023-03-03</h4>
 
 
 
 <div id="about" class="section level2">
 <h2>About</h2>
-<p>This vignette briefly introduces how one can coerce <code>amt track_xy*</code> to other commonly used packages. At the moment this vignette shows methods to coerce to <code>adehabitatHR</code>, <code>ctmm</code>, and <code>move</code>.</p>
+<p>This vignette briefly introduces how one can coerce
+<code>amt track_xy*</code> to other commonly used packages. At the
+moment this vignette shows methods to coerce to
+<code>adehabitatHR</code>, <code>ctmm</code>, and <code>move</code>.</p>
 </div>
 <div id="getting-the-data-ready" class="section level2">
 <h2>Getting the data ready</h2>
-<p>First we load the required libraries and the relocation data (called <code>deer</code>)</p>
+<p>First we load the required libraries and the relocation data (called
+<code>deer</code>)</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(amt)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;deer&quot;</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>deer</span></code></pre></div>
@@ -191,7 +395,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="ctmm" class="section level2">
 <h2><code>ctmm</code></h2>
-<p>With the function <code>as_telemetry</code> a <code>track_xyt</code> can be coerced to a <code>telemetry</code> object used in <code>ctmm</code>.</p>
+<p>With the function <code>as_telemetry</code> a <code>track_xyt</code>
+can be coerced to a <code>telemetry</code> object used in
+<code>ctmm</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ctmm_obj <span class="ot">&lt;-</span> <span class="fu">as_telemetry</span>(deer)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(ctmm_obj)</span></code></pre></div>
 <pre><code>## [1] &quot;telemetry&quot;
@@ -214,7 +420,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## sensors     : unknown 
 ## indiv. data :  
 ## indiv. value:  
-## date created: 2022-01-23 11:18:39.07346</code></pre>
+## date created: 2023-02-12 20:54:10.825017</code></pre>
 </div>
 <div id="to-sf-and-sp" class="section level2">
 <h2>To <code>sf</code> and <code>sp</code></h2>
@@ -224,123 +430,119 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sessioninfo<span class="sc">::</span><span class="fu">session_info</span>()</span></code></pre></div>
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
 ##  setting  value
-##  version  R version 4.1.2 (2021-11-01)
-##  os       Ubuntu 20.04.3 LTS
+##  version  R version 4.2.2 Patched (2022-11-10 r83330)
+##  os       Ubuntu 22.04.2 LTS
 ##  system   x86_64, linux-gnu
 ##  ui       X11
 ##  language (EN)
 ##  collate  C
 ##  ctype    en_US.UTF-8
 ##  tz       Europe/Berlin
-##  date     2022-02-22
-##  pandoc   2.14.0.3 @ /usr/lib/rstudio/bin/pandoc/ (via rmarkdown)
+##  date     2023-03-03
+##  pandoc   2.19.2 @ /usr/lib/rstudio/resources/app/bin/quarto/bin/tools/ (via rmarkdown)
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────
-##  package      * version date (UTC) lib source
-##  ade4           1.7-18  2021-09-16 [3] CRAN (R 4.1.1)
-##  adehabitatLT   0.3.25  2020-01-19 [3] CRAN (R 4.1.1)
-##  adehabitatMA   0.3.14  2020-01-13 [3] CRAN (R 4.1.1)
-##  amt          * 0.1.7   2022-02-22 [1] local
-##  assertthat     0.2.1   2019-03-21 [3] CRAN (R 4.1.1)
-##  backports      1.4.1   2021-12-13 [3] CRAN (R 4.1.2)
-##  boot           1.3-28  2021-05-03 [3] CRAN (R 4.1.2)
-##  bslib          0.3.1   2021-10-06 [5] CRAN (R 4.1.1)
-##  cachem         1.0.6   2021-08-19 [3] CRAN (R 4.1.1)
-##  checkmate      2.0.0   2020-02-06 [3] CRAN (R 4.1.1)
-##  CircStats      0.2-6   2018-07-01 [3] CRAN (R 4.1.2)
-##  circular       0.4-93  2017-06-29 [3] CRAN (R 4.1.1)
-##  class          7.3-20  2022-01-13 [3] CRAN (R 4.1.2)
-##  classInt       0.4-3   2020-04-07 [3] CRAN (R 4.1.1)
-##  cli            3.1.1   2022-01-20 [3] CRAN (R 4.1.2)
-##  codetools      0.2-18  2020-11-04 [3] CRAN (R 4.1.2)
-##  colorspace     2.0-2   2021-06-24 [3] CRAN (R 4.1.1)
-##  crayon         1.4.2   2021-10-29 [3] CRAN (R 4.1.1)
-##  ctmm           0.6.1   2021-07-28 [3] CRAN (R 4.1.2)
-##  DBI            1.1.2   2021-12-20 [3] CRAN (R 4.1.2)
-##  DEoptimR       1.0-10  2022-01-03 [3] CRAN (R 4.1.2)
-##  digest         0.6.29  2021-12-01 [3] CRAN (R 4.1.2)
-##  dplyr        * 1.0.7   2021-06-18 [3] CRAN (R 4.1.1)
-##  e1071          1.7-9   2021-09-16 [3] CRAN (R 4.1.1)
-##  ellipsis       0.3.2   2021-04-29 [3] CRAN (R 4.1.1)
-##  evaluate       0.14    2019-05-28 [3] CRAN (R 4.1.1)
-##  fansi          1.0.2   2022-01-14 [3] CRAN (R 4.1.2)
-##  farver         2.1.0   2021-02-28 [3] CRAN (R 4.1.1)
-##  fastmap        1.1.0   2021-01-25 [3] CRAN (R 4.1.1)
-##  fitdistrplus   1.1-6   2021-09-28 [3] CRAN (R 4.1.1)
-##  generics       0.1.1   2021-10-25 [3] CRAN (R 4.1.1)
-##  geosphere      1.5-14  2021-10-13 [3] CRAN (R 4.1.1)
-##  ggforce        0.3.3   2021-03-05 [3] CRAN (R 4.1.1)
-##  ggplot2      * 3.3.5   2021-06-25 [3] CRAN (R 4.1.1)
-##  ggraph       * 2.0.5   2021-02-23 [3] CRAN (R 4.1.1)
-##  ggrepel        0.9.1   2021-01-15 [3] CRAN (R 4.1.1)
-##  glue           1.6.1   2022-01-22 [3] CRAN (R 4.1.2)
-##  Gmedian        1.2.6   2021-04-07 [3] CRAN (R 4.1.1)
-##  graphlayouts   0.8.0   2022-01-03 [3] CRAN (R 4.1.2)
-##  gridExtra      2.3     2017-09-09 [3] CRAN (R 4.1.1)
-##  gtable         0.3.0   2019-03-25 [3] CRAN (R 4.1.1)
-##  highr          0.9     2021-04-16 [3] CRAN (R 4.1.1)
-##  htmltools      0.5.2   2021-08-25 [3] CRAN (R 4.1.1)
-##  httr           1.4.2   2020-07-20 [3] CRAN (R 4.1.1)
-##  igraph         1.2.11  2022-01-04 [3] CRAN (R 4.1.2)
-##  jquerylib      0.1.4   2021-04-26 [3] CRAN (R 4.1.1)
-##  jsonlite       1.7.3   2022-01-17 [3] CRAN (R 4.1.2)
-##  KernSmooth     2.23-20 2021-05-03 [3] CRAN (R 4.1.2)
-##  knitr        * 1.37    2021-12-16 [3] CRAN (R 4.1.2)
-##  labeling       0.4.2   2020-10-20 [3] CRAN (R 4.1.1)
-##  lattice        0.20-45 2021-09-22 [6] CRAN (R 4.1.1)
-##  lifecycle      1.0.1   2021-09-24 [3] CRAN (R 4.1.1)
-##  lubridate    * 1.8.0   2021-10-07 [3] CRAN (R 4.1.1)
-##  magrittr       2.0.1   2020-11-17 [3] CRAN (R 4.1.1)
-##  MASS           7.3-55  2022-01-13 [3] CRAN (R 4.1.2)
-##  Matrix         1.4-0   2021-12-08 [6] CRAN (R 4.1.2)
-##  memoise        2.0.1   2021-11-26 [3] CRAN (R 4.1.2)
-##  move           4.1.6   2021-12-09 [3] CRAN (R 4.1.2)
-##  munsell        0.5.0   2018-06-12 [3] CRAN (R 4.1.1)
-##  mvtnorm        1.1-3   2021-10-08 [3] CRAN (R 4.1.1)
-##  pillar         1.6.4   2021-10-18 [3] CRAN (R 4.1.1)
-##  pkgconfig      2.0.3   2019-09-22 [3] CRAN (R 4.1.1)
-##  polyclip       1.10-0  2019-03-14 [3] CRAN (R 4.1.1)
-##  proxy          0.4-26  2021-06-07 [3] CRAN (R 4.1.1)
-##  purrr          0.3.4   2020-04-17 [3] CRAN (R 4.1.1)
-##  R6             2.5.1   2021-08-19 [3] CRAN (R 4.1.1)
-##  raster         3.5-15  2022-01-22 [3] CRAN (R 4.1.2)
-##  rbibutils      2.2.7   2021-12-07 [3] CRAN (R 4.1.2)
-##  Rcpp           1.0.8   2022-01-13 [3] CRAN (R 4.1.2)
-##  Rdpack         2.1.3   2021-12-08 [3] CRAN (R 4.1.2)
-##  rgdal          1.5-28  2021-12-15 [3] CRAN (R 4.1.2)
-##  rgeos          0.5-9   2021-12-15 [3] CRAN (R 4.1.2)
-##  rlang          0.4.12  2021-10-18 [3] CRAN (R 4.1.1)
-##  rmarkdown      2.11    2021-09-14 [3] CRAN (R 4.1.1)
-##  robustbase     0.93-9  2021-09-27 [3] CRAN (R 4.1.1)
-##  RSpectra       0.16-0  2019-12-01 [3] CRAN (R 4.1.1)
-##  rstudioapi     0.13    2020-11-12 [3] CRAN (R 4.1.2)
-##  sass           0.4.0   2021-05-12 [3] CRAN (R 4.1.2)
-##  scales         1.1.1   2020-05-11 [3] CRAN (R 4.1.1)
-##  sessioninfo    1.2.2   2021-12-06 [3] CRAN (R 4.1.2)
-##  sf             1.0-5   2021-12-17 [3] CRAN (R 4.1.2)
-##  sp             1.4-6   2021-11-14 [3] CRAN (R 4.1.2)
-##  stringi        1.7.6   2021-11-29 [3] CRAN (R 4.1.2)
-##  stringr        1.4.0   2019-02-10 [3] CRAN (R 4.1.1)
-##  survival       3.2-13  2021-08-24 [6] CRAN (R 4.1.1)
-##  terra          1.5-12  2022-01-13 [3] CRAN (R 4.1.2)
-##  tibble         3.1.6   2021-11-07 [3] CRAN (R 4.1.2)
-##  tidygraph    * 1.2.0   2020-05-12 [3] CRAN (R 4.1.1)
-##  tidyr          1.1.4   2021-09-27 [3] CRAN (R 4.1.1)
-##  tidyselect     1.1.1   2021-04-30 [3] CRAN (R 4.1.1)
-##  tweenr         1.0.2   2021-03-23 [3] CRAN (R 4.1.1)
-##  units          0.7-2   2021-06-08 [3] CRAN (R 4.1.1)
-##  utf8           1.2.2   2021-07-24 [3] CRAN (R 4.1.1)
-##  vctrs          0.3.8   2021-04-29 [3] CRAN (R 4.1.1)
-##  viridis        0.6.2   2021-10-13 [3] CRAN (R 4.1.1)
-##  viridisLite    0.4.0   2021-04-13 [3] CRAN (R 4.1.1)
-##  withr          2.4.3   2021-11-30 [3] CRAN (R 4.1.2)
-##  xfun           0.29    2021-12-14 [3] CRAN (R 4.1.2)
-##  xml2           1.3.3   2021-11-30 [3] CRAN (R 4.1.2)
-##  yaml           2.2.1   2020-02-01 [3] CRAN (R 4.1.1)
+##  package      * version  date (UTC) lib source
+##  ade4           1.7-22   2023-02-06 [3] CRAN (R 4.2.2)
+##  adehabitatLT   0.3.26   2022-10-21 [3] CRAN (R 4.2.2)
+##  adehabitatMA   0.3.15   2022-10-21 [3] CRAN (R 4.2.2)
+##  amt          * 0.2      2023-03-03 [1] local
+##  backports      1.4.1    2021-12-13 [5] CRAN (R 4.2.0)
+##  boot           1.3-28.1 2022-11-22 [3] CRAN (R 4.2.2)
+##  bslib          0.4.2    2022-12-16 [3] CRAN (R 4.2.2)
+##  cachem         1.0.7    2023-02-24 [5] CRAN (R 4.2.2)
+##  checkmate      2.1.0    2022-04-21 [5] CRAN (R 4.2.0)
+##  CircStats      0.2-6    2018-07-01 [3] CRAN (R 4.2.2)
+##  circular       0.4-95   2022-04-26 [3] CRAN (R 4.2.2)
+##  class          7.3-21   2023-01-23 [6] CRAN (R 4.2.2)
+##  classInt       0.4-9    2023-02-28 [3] CRAN (R 4.2.2)
+##  cli            3.6.0    2023-01-09 [5] CRAN (R 4.2.2)
+##  codetools      0.2-19   2023-02-01 [6] CRAN (R 4.2.2)
+##  colorspace     2.1-0    2023-01-23 [5] CRAN (R 4.2.2)
+##  ctmm           1.1.0    2022-11-04 [3] CRAN (R 4.2.2)
+##  data.table     1.14.8   2023-02-17 [3] CRAN (R 4.2.2)
+##  DBI            1.1.3    2022-06-18 [5] CRAN (R 4.2.1)
+##  DEoptimR       1.0-11   2022-04-03 [3] CRAN (R 4.2.2)
+##  digest         0.6.31   2022-12-11 [3] CRAN (R 4.2.2)
+##  dplyr        * 1.1.0    2023-01-29 [5] CRAN (R 4.2.2)
+##  e1071          1.7-13   2023-02-01 [3] CRAN (R 4.2.2)
+##  evaluate       0.20     2023-01-17 [5] CRAN (R 4.2.2)
+##  fansi          1.0.4    2023-01-22 [5] CRAN (R 4.2.2)
+##  farver         2.1.1    2022-07-06 [5] CRAN (R 4.2.1)
+##  fastmap        1.1.1    2023-02-24 [5] CRAN (R 4.2.2)
+##  fitdistrplus   1.1-8    2022-03-10 [3] CRAN (R 4.2.2)
+##  generics       0.1.3    2022-07-05 [5] CRAN (R 4.2.1)
+##  geosphere      1.5-18   2022-11-15 [3] CRAN (R 4.2.2)
+##  ggforce        0.4.1    2022-10-04 [3] CRAN (R 4.2.2)
+##  ggplot2      * 3.4.1    2023-02-10 [3] CRAN (R 4.2.2)
+##  ggraph       * 2.1.0    2022-10-09 [3] CRAN (R 4.2.2)
+##  ggrepel        0.9.3    2023-02-03 [3] CRAN (R 4.2.2)
+##  glue           1.6.2    2022-02-24 [5] CRAN (R 4.2.0)
+##  Gmedian        1.2.7    2022-06-08 [3] CRAN (R 4.2.2)
+##  graphlayouts   0.8.4    2022-11-24 [3] CRAN (R 4.2.2)
+##  gridExtra      2.3      2017-09-09 [3] CRAN (R 4.2.2)
+##  gtable         0.3.1    2022-09-01 [5] CRAN (R 4.2.1)
+##  highr          0.10     2022-12-22 [3] CRAN (R 4.2.2)
+##  htmltools      0.5.4    2022-12-07 [5] CRAN (R 4.2.2)
+##  httr           1.4.5    2023-02-24 [5] CRAN (R 4.2.2)
+##  igraph         1.4.0    2023-02-10 [3] CRAN (R 4.2.2)
+##  jquerylib      0.1.4    2021-04-26 [3] CRAN (R 4.2.2)
+##  jsonlite       1.8.4    2022-12-06 [3] CRAN (R 4.2.2)
+##  KernSmooth     2.23-20  2021-05-03 [6] CRAN (R 4.2.0)
+##  knitr        * 1.42     2023-01-25 [5] CRAN (R 4.2.2)
+##  labeling       0.4.2    2020-10-20 [5] CRAN (R 4.2.0)
+##  lattice        0.20-45  2021-09-22 [6] CRAN (R 4.2.0)
+##  lifecycle      1.0.3    2022-10-07 [5] CRAN (R 4.2.1)
+##  lubridate    * 1.9.2    2023-02-10 [3] CRAN (R 4.2.2)
+##  magrittr       2.0.3    2022-03-30 [5] CRAN (R 4.2.0)
+##  MASS           7.3-58.2 2023-01-23 [6] CRAN (R 4.2.2)
+##  Matrix         1.5-3    2022-11-11 [6] CRAN (R 4.2.2)
+##  memoise        2.0.1    2021-11-26 [5] CRAN (R 4.2.0)
+##  move           4.1.12   2023-01-20 [3] CRAN (R 4.2.2)
+##  munsell        0.5.0    2018-06-12 [3] CRAN (R 4.2.2)
+##  mvtnorm        1.1-3    2021-10-08 [3] CRAN (R 4.2.2)
+##  pillar         1.8.1    2022-08-19 [5] CRAN (R 4.2.1)
+##  pkgconfig      2.0.3    2019-09-22 [3] CRAN (R 4.2.2)
+##  polyclip       1.10-4   2022-10-20 [3] CRAN (R 4.2.2)
+##  proxy          0.4-27   2022-06-09 [3] CRAN (R 4.2.2)
+##  purrr          1.0.1    2023-01-10 [5] CRAN (R 4.2.2)
+##  R6             2.5.1    2021-08-19 [5] CRAN (R 4.2.0)
+##  raster         3.6-14   2023-01-16 [3] CRAN (R 4.2.2)
+##  rbibutils      2.2.13   2023-01-13 [3] CRAN (R 4.2.2)
+##  Rcpp           1.0.10   2023-01-22 [5] CRAN (R 4.2.2)
+##  Rdpack         2.4      2022-07-20 [3] CRAN (R 4.2.2)
+##  rgdal          1.6-4    2023-01-12 [3] CRAN (R 4.2.2)
+##  rlang          1.0.6    2022-09-24 [5] CRAN (R 4.2.1)
+##  rmarkdown      2.20     2023-01-19 [5] CRAN (R 4.2.2)
+##  robustbase     0.95-0   2022-04-02 [3] CRAN (R 4.2.2)
+##  RSpectra       0.16-1   2022-04-24 [3] CRAN (R 4.2.2)
+##  rstudioapi     0.14     2022-08-22 [5] CRAN (R 4.2.1)
+##  sass           0.4.5    2023-01-24 [5] CRAN (R 4.2.2)
+##  scales         1.2.1    2022-08-20 [5] CRAN (R 4.2.1)
+##  sessioninfo    1.2.2    2021-12-06 [3] CRAN (R 4.2.2)
+##  sf             1.0-9    2022-11-08 [3] CRAN (R 4.2.2)
+##  sp             1.6-0    2023-01-19 [3] CRAN (R 4.2.2)
+##  survival       3.5-3    2023-02-12 [3] CRAN (R 4.2.2)
+##  terra          1.7-12   2023-02-21 [3] Github (rspatial/terra@b79b4b0)
+##  tibble         3.1.8    2022-07-22 [5] CRAN (R 4.2.2)
+##  tidygraph    * 1.2.3    2023-02-01 [3] CRAN (R 4.2.2)
+##  tidyr          1.3.0    2023-01-24 [5] CRAN (R 4.2.2)
+##  tidyselect     1.2.0    2022-10-10 [5] CRAN (R 4.2.1)
+##  timechange     0.2.0    2023-01-11 [5] CRAN (R 4.2.2)
+##  tweenr         2.0.2    2022-09-06 [3] CRAN (R 4.2.2)
+##  units          0.8-1    2022-12-10 [3] CRAN (R 4.2.2)
+##  utf8           1.2.3    2023-01-31 [5] CRAN (R 4.2.2)
+##  vctrs          0.5.2    2023-01-23 [5] CRAN (R 4.2.2)
+##  viridis        0.6.2    2021-10-13 [5] CRAN (R 4.2.0)
+##  viridisLite    0.4.1    2022-08-22 [5] CRAN (R 4.2.1)
+##  withr          2.5.0    2022-03-03 [5] CRAN (R 4.2.0)
+##  xfun           0.37     2023-01-31 [5] CRAN (R 4.2.2)
+##  xml2           1.3.3    2021-11-30 [5] CRAN (R 4.2.0)
+##  yaml           2.3.7    2023-01-23 [5] CRAN (R 4.2.2)
 ## 
-##  [1] /tmp/RtmpWI98rT/Rinst14b2c38667b80
-##  [2] /tmp/RtmpmbHhqG/temp_libpath9844cc8f32d
-##  [3] /home/jsigner/R/x86_64-pc-linux-gnu-library/4.1
+##  [1] /tmp/RtmpkZjmNG/Rinst1f30d572cc19b
+##  [2] /tmp/Rtmp5u4RFy/temp_libpath1f1126926afa7
+##  [3] /home/jsigner/R/x86_64-pc-linux-gnu-library/4.2
 ##  [4] /usr/local/lib/R/site-library
 ##  [5] /usr/lib/R/site-library
 ##  [6] /usr/lib/R/library

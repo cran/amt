@@ -33,12 +33,15 @@ random_steps.numeric <- function(
   checkmate::assert_numeric(rand_sl, lower = 0)
   checkmate::assert_numeric(rand_ta, lower = -pi, upper = pi)
 
-  rs <- random_steps_cpp_one_step(
-    n_control,  # number of controll steps
-    x[1], x[2],
-    angle,
-    rand_sl, rand_ta)
-  rs
+  slr <- rand_sl[sample.int(length(rand_sl), n_control, replace = TRUE)]
+  tar <- rand_ta[sample.int(length(rand_ta), n_control, replace = TRUE)]
+
+  new.x <- x[1] + slr * cos(tar + angle)
+  new.y <- x[2] + slr * sin(tar + angle)
+
+  out <- cbind(x[1], x[2], new.x, new.y, slr, tar + angle)
+  colnames(out) <- c("x1_", "y1_", "x2_", "y2_", "sl_", "ta_")
+  out
 }
 
 
@@ -53,45 +56,97 @@ random_steps.steps_xy <- function(
   rand_ta = random_numbers(ta_distr, n = 1e5),
   include_observed = TRUE, ...) {
 
-
   # Generate random points
   ns <- nrow(x)  # number of steps
-  case_for_control <- rep(1:ns, each = n_control)
+  case_for_control <- rep(2:ns, each = n_control)
 
-  stps <- which(!is.na(x$direction_p))
-  x$step_id_ <- 1:nrow(x)
+
   x$case_ <- TRUE
 
   # This could be moved to c++
-  xx <- lapply(stps, function(i) {
+  ##xx <- lapply(stps, function(i) {
+  xx <- lapply(2:nrow(x), function(i) {
     random_steps(c(x$x1_[i], x$y1_[i]), n_control = n_control,
-                 angle = x$direction_p[i],
+                 #angle = x$direction_p[i],
+                 angle = x$direction_p[i-1],
                  rand_sl = rand_sl, rand_ta = rand_ta)})
- xx <- do.call(rbind, xx)
+  xx <- do.call(rbind, xx)
 
- for_rand <- x[rep(stps, each = n_control), ]
- for_rand$case_ <- FALSE
+  x$step_id_ <- 1:nrow(x)
 
- for_rand$x2_ <- xx[, "x2_"]
- for_rand$y2_ <- xx[, "y2_"]
+  for_rand <- x[rep(2:nrow(x), each = n_control), ]
+  for_rand$case_ <- FALSE
 
- for_rand$sl_ <- xx[, "sl_"]
- for_rand$ta_ <- xx[, "ta_"]
- x <- x[stps, ]
+  for_rand$x2_ <- xx[, "x2_"]
+  for_rand$y2_ <- xx[, "y2_"]
 
- out <- dplyr::bind_rows(x, for_rand)
- out <- dplyr::arrange(out, step_id_)
- out[["direction_p"]] <- NULL
+  for_rand$sl_ <- xx[, "sl_"]
 
- class(out) <- c("random_steps", class(out))
- attributes(out)$sl_ <- sl_distr
- attributes(out)$ta_ <- ta_distr
- attributes(out)$n_control_ <- n_control
- attr(out, "crs_") <- attr(x, "crs_")
+  for_rand <- dplyr::left_join(
+    for_rand |> dplyr::mutate(step_id_1 = step_id_ - 1),
+      dplyr::select(x, x0_ = x1_, y0_ = y1_, step_id_),
+    by = c("step_id_1" = "step_id_"))
 
- out
+  for_rand <- for_rand |> dplyr::mutate(
+    abs.dir1 = atan2(y1_ - y0_, x1_ - x0_),
+    abs.dir2 = atan2(y2_ - y1_, x2_ - x1_),
+    rel.dir = abs.dir2 - abs.dir1,
+    rel.dir = ifelse(rel.dir <= -pi, rel.dir + 2 * pi, rel.dir),
+    rel.dir = ifelse(rel.dir >= pi, rel.dir - 2 * pi, rel.dir)) |>
+    dplyr::select(-abs.dir1, -abs.dir2, -x0_, -y0_, -ta_, -step_id_1) |>
+    dplyr::rename(ta_ = rel.dir)
+
+  out <- dplyr::bind_rows(x, for_rand) |>
+    dplyr::filter(step_id_ > 1)
+  out <- dplyr::arrange(out, step_id_)
+  out[["direction_p"]] <- NULL
+
+  class(out) <- c("random_steps", class(out))
+  attributes(out)$sl_ <- sl_distr
+  attributes(out)$ta_ <- ta_distr
+  attributes(out)$n_control_ <- n_control
+  attr(out, "crs_") <- attr(x, "crs_")
+
+  out
 
 }
+
+#' @export
+#' @rdname random_steps
+#'
+random_steps.bursted_steps_xyt <- function(
+  x, n_control = 10,
+  sl_distr = fit_distr(x$sl_, "gamma"), # this argument could be remove
+  ta_distr = fit_distr(x$ta_, "vonmises"), # this argument could be remove
+  rand_sl = random_numbers(sl_distr, n = 1e5),
+  rand_ta = random_numbers(ta_distr, n = 1e5),
+  include_observed = TRUE, ...) {
+
+  out <- lapply(split(x, x$burst_), function(q) {
+    class(q) <- class(q)[-1]
+    if (nrow(q) > 1) {
+      random_steps(q, n_control = n_control, sl_distr = NULL, ta_distr = NULL, rand_sl = rand_sl,
+                   rand_ta = rand_ta, include_observed = include_observed, ...)
+    }
+  })
+
+  out <- out[!sapply(out, is.null)]
+
+  cls <- class(out[[1]])
+
+  out <- data.table::rbindlist(
+    out
+  ) |> tibble::as_tibble()
+
+  class(out) <- cls
+  attributes(out)$sl_ <- sl_distr
+  attributes(out)$ta_ <- ta_distr
+  attributes(out)$n_control_ <- n_control
+  attr(out, "crs_") <- attr(x, "crs_")
+  out
+}
+
+
 
 #' @export
 plot.random_steps <- function(x, ...) {
@@ -128,7 +183,7 @@ plot.random_steps <- function(x, ...) {
 #' mini_deer <- deer[1:4, ]
 #'
 #' # The first step is removed, because we have `NA` turn angles.
-#' mini_deer %>% steps() %>% random_steps() %>% remove_incomplete_strata() %>%
+#' mini_deer |> steps() |> random_steps() |> remove_incomplete_strata() |>
 #'   select(case_, ta_, step_id_)
 
 #' @export

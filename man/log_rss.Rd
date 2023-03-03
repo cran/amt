@@ -65,21 +65,22 @@ the terms in the model formula exactly.
 # Load packages
 library(ggplot2)
 
-#Load data
+# Load data
 data("amt_fisher")
+amt_fisher_covar <- get_amt_fisher_covars()
 
 # Prepare data for RSF
-rsf_data <- amt_fisher \%>\%
-  filter(name == "Lupe") \%>\%
-  make_track(x_, y_, t_) \%>\%
-  random_points() \%>\%
-  extract_covariates(amt_fisher_covar$elevation) \%>\%
-  extract_covariates(amt_fisher_covar$popden) \%>\%
-  extract_covariates(amt_fisher_covar$landuse) \%>\%
+rsf_data <- amt_fisher |>
+  filter(name == "Lupe") |>
+  make_track(x_, y_, t_) |>
+  random_points() |>
+  extract_covariates(amt_fisher_covar$elevation) |>
+  extract_covariates(amt_fisher_covar$popden) |>
+  extract_covariates(amt_fisher_covar$landuse) |>
   mutate(lu = factor(landuse))
 
 # Fit RSF
-m1 <- rsf_data \%>\%
+m1 <- rsf_data |>
   fit_rsf(case_ ~ lu + elevation + popden)
 
 # Calculate log-RSS
@@ -107,18 +108,22 @@ ggplot(logRSS$df, aes(x = elevation_x1, y = log_rss)) +
 # SSF -------------------------------------------------------
 # Fit an SSF, then calculate log-RSS to visualize results.
 
- #Prepare data for SSF
-ssf_data <- deer \%>\%
-  steps_by_burst() \%>\%
-  random_steps(n = 15) \%>\%
-  extract_covariates(sh_forest) \%>\%
-  mutate(forest = factor(sh.forest, levels = 1:2,
+# Load data
+data(deer)
+sh_forest <- get_sh_forest()
+
+# Prepare data for SSF
+ssf_data <- deer |>
+  steps_by_burst() |>
+  random_steps(n = 15) |>
+  extract_covariates(sh_forest) |>
+  mutate(forest = factor(forest, levels = 1:0,
                     labels = c("forest", "non-forest")),
   cos_ta = cos(ta_),
   log_sl = log(sl_))
 
 # Fit an SSF (note model = TRUE necessary for predict() to work)
-m2 <- ssf_data \%>\%
+m2 <- ssf_data |>
   fit_clogit(case_ ~ forest + strata(step_id_), model = TRUE)
 
 # Calculate log-RSS

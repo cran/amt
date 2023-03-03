@@ -36,13 +36,13 @@ NULL
 #' direction_abs(trk, append_last = FALSE)
 #'
 #' # degrees
-#' direction_abs(trk) %>% as_degree
+#' direction_abs(trk) |> as_degree()
 #'
 #' # full circle or not: check
 #' direction_abs(trk, full_circle = TRUE)
 #' direction_abs(trk, full_circle = FALSE)
-#' direction_abs(trk, full_circle = TRUE) %>% as_degree()
-#' direction_abs(trk, full_circle = FALSE) %>% as_degree()
+#' direction_abs(trk, full_circle = TRUE) |> as_degree()
+#' direction_abs(trk, full_circle = FALSE) |> as_degree()
 #'
 #' # direction of 0
 #' direction_abs(trk, full_circle = TRUE, zero_dir = "N")
@@ -58,36 +58,6 @@ NULL
 #' direction_abs(trk, full_circle = FALSE, zero_dir = "N", lonlat = FALSE, clockwise = TRUE)
 #' direction_abs(trk, full_circle = FALSE, zero_dir = "N", lonlat = TRUE, clockwise = TRUE)
 #'
-## #' # How do results compare to other packages
-## #' # adehabitatLT
-## #' df <- adehabitatLT::as.ltraj(data.frame(x = xy$x, y = xy$y), typeII = FALSE, id = 1)
-## #' df[[1]]$abs.angle
-## #' amt::direction_abs(trk)
-## #'
-## #' # bcpa
-## #' df <- bcpa::MakeTrack(xy$x, xy$y, lubridate::now() +  lubridate::hours(0:10))
-## #' bcpa::GetVT(df)$Phi
-## #' direction_abs(trk, full_circle = FALSE, append_last = FALSE)
-## #'
-## #' # move
-## #' m <- move::move(xy$x, xy$y, lubridate::now() + lubridate::hours(1:11),
-## #'  proj = sp::CRS("+init=epsg:4326"))
-## #' move::angle(m)
-## #' direction_abs(trk, lonlat = TRUE, zero_dir = "E") %>% as_degree()
-## #'
-## #' # trajectories
-## #' t1 <- trajectories::Track(
-## #'   spacetime::STIDF(sp::SpatialPoints(cbind(xy$x, xy$y)),
-## #'   lubridate::now(tzone = "UTC") + lubridate::hours(1:11), data = data.frame(1:11)))
-## #'
-## #' t1[["direction"]]
-## #' direction_abs(trk, full_circle = TRUE, zero_dir = "N",
-## #'   clockwise = TRUE, append_last = FALSE) %>% as_degree
-## #'
-## #' # moveHMM (only rel. ta)
-## #' df <- data.frame(ID = 1, x = xy$x, y = xy$y)
-## #' moveHMM::prepData(df, type = "UTM")$angle
-## #' direction_rel(trk)
 
 
 direction_abs <- function(x, ...) {
@@ -117,8 +87,7 @@ direction_abs.track_xy <- function(x, full_circle = FALSE, zero_dir = "E",
   a <- if (!lonlat) {
     atan2(x$dy, x$dx)
   } else {
-    xx <- sp::coordinates(as_sp(x))
-    #c((450 + ((360 - geosphere::bearing(xx[-nrow(xx), ], xx[-1, ]))) %% 360) %% 360, NA) * pi / 180
+    xx <- sf::st_coordinates(as_sf(x))
     c(geosphere::bearing(xx[-nrow(xx), ], xx[-1, ]), NA) * pi / 180
   }
 
@@ -157,7 +126,7 @@ direction_rel.track_xy <- function(x, lonlat = FALSE, append_last = TRUE,
 
   p <- direction_abs(x, lonlat = lonlat, full_circle = FALSE,
                      zero_dir = zero_dir, clockwise = FALSE, append_last = append_last)
-  p <- c(NA, diff_rcpp(p)) %% (2 * pi)
+  p <- c(NA, diff(p)) %% (2 * pi)
   p <- ifelse( p > pi, p - 2 * pi, p)
   p
 }
@@ -171,7 +140,7 @@ direction_rel.track_xy <- function(x, lonlat = FALSE, append_last = TRUE,
 
 #' @export
 #' @rdname steps
-#' @details `step_lengths` calculates the step lengths between points a long the path. The last value returned is `NA`, because no observed step is 'started' at the last point. If `lonlat = TRUE`, `step_lengths()` wraps [raster::pointDistance()].
+#' @details `step_lengths` calculates the step lengths between points a long the path. The last value returned is `NA`, because no observed step is 'started' at the last point. If `lonlat = TRUE`, `step_lengths()` wraps [sf::st_distance()].
 
 
 
@@ -183,12 +152,14 @@ step_lengths <- function(x, ...) {
 #' @rdname steps
 step_lengths.track_xy <- function(x, lonlat = FALSE, append_last = TRUE, ...) {
   if (lonlat) {
-    pts <- sp::coordinates(as_sp(x))
-    q <- c(raster::pointDistance(pts[-nrow(pts), ], pts[-1, ], lonlat = TRUE), NA)
+    q <- c(as_sf(x) |> sf::st_distance(which = "Great Circle"), NA)
   } else {
     q <- sqrt(step_lengths_sq(x))
   }
-  if (append_last) q else q[-length(q)]
+  if (append_last)
+    q
+  else
+    q[-length(q)]
 }
 
 #' @noRd
@@ -230,7 +201,7 @@ steps_by_burst.track_xyt <- function(x, lonlat = FALSE,
 
   ss[head(togo, -1) + 1, "ta_"] <- NA
   ss <- ss[-togo, ]
-  class(ss) <- c("steps_xyt", "steps_xy", class(x)[-(1:2)])
+  class(ss) <- c("bursted_steps_xyt", "steps_xyt", "steps_xy", class(x)[-(1:2)])
   attr(ss, "crs_") <- attr(x, "crs_")
   ss
 }

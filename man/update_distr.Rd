@@ -41,13 +41,16 @@ Update tentative step length or turning angle distribution from a fitted iSSF.
 \examples{
 
 # Fit an SSF, then update movement parameters.
+data(deer)
+mini_deer <- deer[1:100, ]
+sh_forest <- get_sh_forest()
 
 # Prepare data for SSF
-ssf_data <- deer \%>\%
-  steps_by_burst() \%>\%
-  random_steps(n = 15) \%>\%
-  extract_covariates(sh_forest) \%>\%
-  mutate(forest = factor(sh.forest, levels = 1:2,
+ssf_data <- mini_deer |>
+  steps_by_burst() |>
+  random_steps(n = 15) |>
+  extract_covariates(sh_forest) |>
+  mutate(forest = factor(forest, levels = 1:0,
                     labels = c("forest", "non-forest")),
   cos_ta_ = cos(ta_),
   log_sl_ = log(sl_))
@@ -60,7 +63,7 @@ attr(ssf_data, "sl_")
 ta_distr_params(ssf_data)
 
 # Fit an iSSF
-m1 <- ssf_data \%>\%
+m1 <- ssf_data |>
   fit_issf(case_ ~ forest +
                sl_ + log_sl_ + cos_ta_ +
                strata(step_id_))
@@ -74,25 +77,25 @@ new_vm <- update_ta_distr(m1)
 # It is also possible to use different step length distributions
 
 # exponential step-length distribution
-s2 <- deer \%>\% steps_by_burst() \%>\%
-  random_steps(sl_distr = fit_distr(.$sl_, "exp"))
-m2 <- s2 \%>\%
+s2 <- mini_deer |> steps_by_burst()
+s2 <- random_steps(s2, sl_distr = fit_distr(s2$sl_, "exp"))
+m2 <- s2 |>
   fit_clogit(case_ ~ sl_ + strata(step_id_))
 update_sl_distr(m2)
 
 # half normal step-length distribution
-s3 <- deer \%>\% steps_by_burst() \%>\%
-  random_steps(sl_distr = fit_distr(.$sl_, "hnorm"))
-m3 <- s3 \%>\%
-  mutate(sl_sq_ = sl_^2) \%>\%
+s3 <- mini_deer |> steps_by_burst()
+s3 <- random_steps(s3, sl_distr = fit_distr(s3$sl_, "hnorm"))
+m3 <- s3 |>
+  mutate(sl_sq_ = sl_^2) |>
   fit_clogit(case_ ~ sl_sq_ + strata(step_id_))
 update_sl_distr(m3)
 
 # log normal step-length distribution
-s4 <- deer \%>\% steps_by_burst() \%>\%
-  random_steps(sl_distr = fit_distr(.$sl_, "lnorm"))
-m4 <- s4 \%>\%
-  mutate(log_sl_ = log(sl_), log_sl_sq_ = log(sl_)^2) \%>\%
+s4 <- mini_deer |> steps_by_burst()
+s4 <- random_steps(s4, sl_distr = fit_distr(s4$sl_, "lnorm"))
+m4 <- s4 |>
+  mutate(log_sl_ = log(sl_), log_sl_sq_ = log(sl_)^2) |>
   fit_clogit(case_ ~ log_sl_ + log_sl_sq_ + strata(step_id_))
 update_sl_distr(m4)
 

@@ -138,7 +138,8 @@ make_unif_distr <- function(min = -pi, max = pi) {
 #' @param kappa `[double(1)>=0]` \cr Concentration parameter of the von Mises distribution.
 make_vonmises_distr <- function(kappa = 1, vcov = NULL) {
   checkmate::check_number(kappa, lower = 0)
-  make_distribution(name = "vonmises", params = list(kappa = kappa, mu = 0),
+  mu <- circular::circular(x = 0)
+  make_distribution(name = "vonmises", params = list(kappa = kappa, mu = mu),
                     vcov = vcov)
 }
 
@@ -171,7 +172,7 @@ random_numbers.vonmises_distr <- function(x, n = 100, ...) {
   suppressWarnings(
     x <- do.call(circular::rvonmises, c(list(n = n), x$params)))
 
-  # turn angles for new stps
+  # turn angles for new steps
   x <- x %% (2 * pi)
   ifelse(x > base::pi, x - (2 * base::pi), x)
 }
@@ -302,13 +303,16 @@ fit_distr <- function(x, dist_name, na.rm = TRUE) {
 #' @examples
 #'
 #' # Fit an SSF, then update movement parameters.
+#' data(deer)
+#' mini_deer <- deer[1:100, ]
+#' sh_forest <- get_sh_forest()
 #'
 #' # Prepare data for SSF
-#' ssf_data <- deer %>%
-#'   steps_by_burst() %>%
-#'   random_steps(n = 15) %>%
-#'   extract_covariates(sh_forest) %>%
-#'   mutate(forest = factor(sh.forest, levels = 1:2,
+#' ssf_data <- mini_deer |>
+#'   steps_by_burst() |>
+#'   random_steps(n = 15) |>
+#'   extract_covariates(sh_forest) |>
+#'   mutate(forest = factor(forest, levels = 1:0,
 #'                     labels = c("forest", "non-forest")),
 #'   cos_ta_ = cos(ta_),
 #'   log_sl_ = log(sl_))
@@ -321,7 +325,7 @@ fit_distr <- function(x, dist_name, na.rm = TRUE) {
 #' ta_distr_params(ssf_data)
 #'
 #' # Fit an iSSF
-#' m1 <- ssf_data %>%
+#' m1 <- ssf_data |>
 #'   fit_issf(case_ ~ forest +
 #'                sl_ + log_sl_ + cos_ta_ +
 #'                strata(step_id_))
@@ -335,25 +339,25 @@ fit_distr <- function(x, dist_name, na.rm = TRUE) {
 #' # It is also possible to use different step length distributions
 #'
 #' # exponential step-length distribution
-#' s2 <- deer %>% steps_by_burst() %>%
-#'   random_steps(sl_distr = fit_distr(.$sl_, "exp"))
-#' m2 <- s2 %>%
+#' s2 <- mini_deer |> steps_by_burst()
+#' s2 <- random_steps(s2, sl_distr = fit_distr(s2$sl_, "exp"))
+#' m2 <- s2 |>
 #'   fit_clogit(case_ ~ sl_ + strata(step_id_))
 #' update_sl_distr(m2)
 #'
 #' # half normal step-length distribution
-#' s3 <- deer %>% steps_by_burst() %>%
-#'   random_steps(sl_distr = fit_distr(.$sl_, "hnorm"))
-#' m3 <- s3 %>%
-#'   mutate(sl_sq_ = sl_^2) %>%
+#' s3 <- mini_deer |> steps_by_burst()
+#' s3 <- random_steps(s3, sl_distr = fit_distr(s3$sl_, "hnorm"))
+#' m3 <- s3 |>
+#'   mutate(sl_sq_ = sl_^2) |>
 #'   fit_clogit(case_ ~ sl_sq_ + strata(step_id_))
 #' update_sl_distr(m3)
 #'
 #' # log normal step-length distribution
-#' s4 <- deer %>% steps_by_burst() %>%
-#'   random_steps(sl_distr = fit_distr(.$sl_, "lnorm"))
-#' m4 <- s4 %>%
-#'   mutate(log_sl_ = log(sl_), log_sl_sq_ = log(sl_)^2) %>%
+#' s4 <- mini_deer |> steps_by_burst()
+#' s4 <- random_steps(s4, sl_distr = fit_distr(s4$sl_, "lnorm"))
+#' m4 <- s4 |>
+#'   mutate(log_sl_ = log(sl_), log_sl_sq_ = log(sl_)^2) |>
 #'   fit_clogit(case_ ~ log_sl_ + log_sl_sq_ + strata(step_id_))
 #' update_sl_distr(m4)
 #'
@@ -532,51 +536,51 @@ update_ta_distr <- function(object, beta_cos_ta = "cos_ta_", ...){
 #' their selection-free movement distributions.
 #'
 #' @examples
-#'
-#' # Fit an SSF, then update movement parameters.
-#'
-#'  #Prepare data for SSF
-#' ssf_data <- deer %>%
-#'   steps_by_burst() %>%
-#'   random_steps(n = 15) %>%
-#'   extract_covariates(sh_forest) %>%
-#'   mutate(forest = factor(sh.forest, levels = 1:2,
-#'                     labels = c("forest", "non-forest")),
-#'   cos_ta_ = cos(ta_),
-#'   log_sl_ = log(sl_))
-#'
-#' # Check tentative distributions
-#' #    Step length
-#' attr(ssf_data, "sl_")
-#' #    Turning angle
-#' attr(ssf_data, "ta_")
-#'
-#' # Fit an iSSF (note model = TRUE necessary for predict() to work)
-#' m1 <- ssf_data %>%
-#'   fit_issf(case_ ~ forest * (sl_ + log_sl_ + cos_ta_) +
-#'                strata(step_id_), model = TRUE)
-#'
-#' # Update forest step lengths (the reference level)
-#' forest_sl <- update_gamma(m1$sl_,
-#'                           beta_sl = m1$model$coefficients["sl_"],
-#'                           beta_log_sl = m1$model$coefficients["log_sl_"])
-#'
-#' # Update non-forest step lengths
-#' nonforest_sl <- update_gamma(m1$sl_,
-#'                              beta_sl = m1$model$coefficients["sl_"] +
-#'                                m1$model$coefficients["forestnon-forest:sl_"],
-#'                              beta_log_sl = m1$model$coefficients["log_sl_"] +
-#'                                m1$model$coefficients["forestnon-forest:log_sl_"])
-#'
-#' # Update forest turn angles (the reference level)
-#' forest_ta <- update_vonmises(m1$ta_,
-#'                              beta_cos_ta = m1$model$coefficients["cos_ta_"])
-#'
-#' # Update non-forest turn angles
-#' nonforest_ta <- update_vonmises(m1$ta_,
-#'                                 beta_cos_ta = m1$model$coefficients["cos_ta_"] +
-#'                                   m1$model$coefficients["forestnon-forest:cos_ta_"])
-#'
+#' #  sh_forest <- get_sh_forest()
+#' #  # Fit an SSF, then update movement parameters.
+#' #
+#' #   #Prepare data for SSF
+#' #  ssf_data <- deer |>
+#' #    steps_by_burst() |>
+#' #    random_steps(n = 15) |>
+#' #    extract_covariates(sh_forest) |>
+#' #    mutate(forest = factor(forest, levels = 1:0,
+#' #                      labels = c("forest", "non-forest")),
+#' #    cos_ta_ = cos(ta_),
+#' #    log_sl_ = log(sl_))
+#' #
+#' #  # Check tentative distributions
+#' #  #    Step length
+#' #  attr(ssf_data, "sl_")
+#' #  #    Turning angle
+#' #  attr(ssf_data, "ta_")
+#' #
+#' #  # Fit an iSSF (note model = TRUE necessary for predict() to work)
+#' #  m1 <- ssf_data |>
+#' #    fit_issf(case_ ~ forest * (sl_ + log_sl_ + cos_ta_) +
+#' #                 strata(step_id_), model = TRUE)
+#' #
+#' #  # Update forest step lengths (the reference level)
+#' #  forest_sl <- update_gamma(m1$sl_,
+#' #                            beta_sl = m1$model$coefficients["sl_"],
+#' #                            beta_log_sl = m1$model$coefficients["log_sl_"])
+#' #
+#' #  # Update non-forest step lengths
+#' #  nonforest_sl <- update_gamma(m1$sl_,
+#' #                               beta_sl = m1$model$coefficients["sl_"] +
+#' #                                 m1$model$coefficients["forestnon-forest:sl_"],
+#' #                               beta_log_sl = m1$model$coefficients["log_sl_"] +
+#' #                                 m1$model$coefficients["forestnon-forest:log_sl_"])
+#' #
+#' #  # Update forest turn angles (the reference level)
+#' #  forest_ta <- update_vonmises(m1$ta_,
+#' #                               beta_cos_ta = m1$model$coefficients["cos_ta_"])
+#' #
+#' #  # Update non-forest turn angles
+#' #  nonforest_ta <- update_vonmises(m1$ta_,
+#' #                                  beta_cos_ta = m1$model$coefficients["cos_ta_"] +
+#' #                                    m1$model$coefficients["forestnon-forest:cos_ta_"])
+#' #
 #' @export
 update_gamma <- function(dist, beta_sl, beta_log_sl){
   #Update shape
@@ -745,7 +749,7 @@ ta_distr_name.fit_clogit <- function(x, ...) {
 #' @export
 #' @examples
 #' data(deer)
-#' d <- deer %>% steps() %>% random_steps()
+#' d <- deer |> steps() |> random_steps()
 #' sl_distr_params(d)
 #' ta_distr_params(d)
 #'

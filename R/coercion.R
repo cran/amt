@@ -8,20 +8,26 @@
 #' @name coercion
 #' @return An object of the class to which coercion is performed to.
 #' @export
-as_sp <- function(x, ...) {
-  UseMethod("as_sp", x)
+as_sf <- function(x, ...) {
+  UseMethod("as_sf", x)
 }
 
 #' @export
-as_sp.track_xy <- function(x, ...) {
-  sf::as_Spatial(as_sf_points(x))
+as_sf.track_xy <- function(x, ...) {
+  as_sf_points(x)
 }
 
 #' @export
 #' @param end `[logical(1)=TRUE]` \cr For steps, should the end or start points be used?
 #' @rdname coercion
-as_sp.steps_xy <- function(x, end = TRUE, ...) {
-  sf::as_Spatial(as_sf_points(x, end = end, ...))
+as_sf.steps_xy <- function(x, end = TRUE, ...) {
+  as_sf_points(x, end = end, ...)
+}
+
+#' @export
+#' @rdname coercion
+as_sp <- function(x, ...) {
+  .Deprecated("as_sf")
 }
 
 #' Coerces a track to points
@@ -43,7 +49,7 @@ as_sf_points.track_xy <- function(x, ...) {
 
   p <- sf::st_as_sf(x, coords = c("x_", "y_"))
   p <- sf::st_set_crs(p, if (!is.null(attributes(x)$crs_))
-    attributes(x)$crs_ else sf::NA_crs_)
+    attributes(x)$crs else sf::NA_crs_)
   p
 }
 
@@ -57,8 +63,8 @@ as_sf_points.steps_xy <- function(x, end = TRUE, ...) {
   } else {
     sf::st_as_sf(x, coords = c("x1_", "y1_"))
   }
-  p <- sf::st_set_crs(p, if (!is.null(attributes(x)$crs_))
-    attributes(x)$crs_ else sf::NA_crs_)
+  p <- sf::st_set_crs(p, if (!is.null(attributes(x)$crs))
+    attributes(x)$crs else sf::NA_crs_)
   p
 }
 
@@ -100,6 +106,19 @@ as_sf_lines.track_xy <- function(x, ...) {
 
   l <- sf::st_set_crs(l,  if (!is.null(attributes(x)$crs_)) attributes(x)$crs_ else sf::NA_crs_)
   l
+}
+
+#' @export
+as_sf_lines.steps_xy <- function(x, ...) {
+  xx <- data.table::setDT(x)
+  xx[, linestring_id := .I]
+  l <- data.table::melt(xx,
+            id.vars = "linestring_id",
+            measure.vars = list(x = c("x1_", "x2_"), y = c("y1_", "y2_"))) |>
+    data.table::setorder(linestring_id) |>
+    sfheaders::sf_line()
+  sf::st_set_crs(l,  if (!is.null(attributes(x)$crs_)) attributes(x)$crs_ else sf::NA_crs_)
+
 }
 
 

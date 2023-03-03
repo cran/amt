@@ -1,8 +1,8 @@
-#' Obtain the utilization distribution of a probabilistic home range
+#' Obtain the utilization distribution of a probabilistic home-range estimate
 #'
 #' @param x `[hr_prob]` The home-range estimate
 #' @template dots_none
-#' @return `RasterLayer`
+#' @return `SpatRaster`
 
 #' @export
 hr_ud <- function(x, ...) {
@@ -12,6 +12,9 @@ hr_ud <- function(x, ...) {
 #' @export
 hr_ud.hr_prob <- function(x, ...) {
   ud <- x$ud
+  if (is(ud, "PackedSpatRaster")) {
+    ud <- terra::unwrap(ud)
+  }
   ud[] <- ud[] / sum(ud[], na.rm = TRUE)
   ud
 }
