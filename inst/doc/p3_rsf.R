@@ -1,4 +1,4 @@
-## ---- include=FALSE-----------------------------------------------------------
+## ----include=FALSE------------------------------------------------------------
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 ## -----------------------------------------------------------------------------
@@ -9,31 +9,31 @@ deer
 ## -----------------------------------------------------------------------------
 sh_forest <- get_sh_forest()
 
-## ---- fig.width=4, fig.height=4-----------------------------------------------
+## ----fig.width=4, fig.height=4------------------------------------------------
 r1 <- random_points(deer)
 plot(r1)
 
-## ---- fig.width=4, fig.height=4-----------------------------------------------
+## ----fig.width=4, fig.height=4------------------------------------------------
 r1 <- random_points(deer, n = 100)
 plot(r1)
 
-## ---- fig.width=4, fig.height=4-----------------------------------------------
+## ----fig.width=4, fig.height=4------------------------------------------------
 hr <- hr_mcp(deer)
 r1 <- random_points(hr, n = 500)
 plot(r1)
 
-## ---- fig.width=4, fig.height=4-----------------------------------------------
+## ----fig.width=4, fig.height=4------------------------------------------------
 hr <- hr_mcp(deer)
 r1 <- random_points(hr, n = 500, presence = deer)
 plot(r1)
 
-## ---- fig.width=4, fig.height=4-----------------------------------------------
+## ----fig.width=4, fig.height=4------------------------------------------------
 hr <- hr_mcp(deer) |> hr_isopleths() |> 
   sf::st_buffer(dist =3e4) # add a 30km buffer
 r1 <- random_points(hr, n = 500)
 plot(r1)
 
-## ---- fig.width=4, fig.height=4-----------------------------------------------
+## ----fig.width=4, fig.height=4------------------------------------------------
 hr <- hr_mcp(deer) |> hr_isopleths() |> 
   sf::st_buffer(dist =3e4) # add a 30km buffer
 r1 <- random_points(hr, n = 500, presence = deer)

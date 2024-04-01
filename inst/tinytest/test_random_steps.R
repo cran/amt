@@ -1,5 +1,6 @@
 library(amt)
 # Check that angles are correct
+data(deer)
 a <- round(-pi, 5)
 x1 <- random_steps(c(0, 0), n_control = 1, rand_sl = 1, rand_ta = a)
 expect_true(round(atan2(x1[1, "y2_"] - x1[1, "y1_"], x1[1, "x2_"] - x1[1, "x1_"]), 5) == a)
@@ -110,10 +111,13 @@ expect_equal(mini_deer |> steps() |> random_steps() |> nrow(), 22)
 expect_equal(mini_deer |> steps() |> random_steps() |> remove_incomplete_strata() |> nrow(), 22)
 expect_equal(mini_deer |> steps() |> random_steps() |> remove_incomplete_strata(col = "sl_") |> nrow(), 22)
 
+
+expect_equal(mini_deer |> steps() |> random_steps() |> remove_incomplete_strata(col = "sl_") |> nrow(), 22)
+
 expect_error(mini_deer |> steps() |> random_steps() |> remove_incomplete_strata(col = "sl"))
 
 
 ###
 mini_deer <- deer[5:20, ]
-expect_true(mini_deer |> steps_by_burst() |> random_steps(n_control = 1) |>
-              pull(step_id_) |> unique() |> length() == (nrow(mini_deer) - 2 * length(unique(mini_deer$burst_))))
+expect_true(mini_deer |> steps() |> random_steps(n_control = 1) |>
+              pull(step_id_) |> unique() |> length() == nrow(mini_deer) - 2)

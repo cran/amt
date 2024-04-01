@@ -1,4 +1,4 @@
-## ---- include=FALSE-----------------------------------------------------------
+## ----include=FALSE------------------------------------------------------------
 library(knitr)
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 set.seed(20161113)

@@ -1,4 +1,4 @@
-## ---- warning=FALSE, message=FALSE--------------------------------------------
+## ----warning=FALSE, message=FALSE---------------------------------------------
 library(dplyr)
 library(ggplot2)
 library(amt)

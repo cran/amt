@@ -12,7 +12,7 @@
 
 <meta name="author" content="Johannes Signer" />
 
-<meta name="date" content="2023-03-28" />
+<meta name="date" content="2024-04-01" />
 
 <title>Fitting Step-Selection Functions with amt</title>
 
@@ -51,7 +51,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Fitting Step-Selection Functions with
 <code>amt</code></h1>
 <h4 class="author">Johannes Signer</h4>
-<h4 class="date">2023-03-28</h4>
+<h4 class="date">2024-04-01</h4>
 
 
 
@@ -358,10 +358,10 @@ and supplement B.</p>
 <h2>Getting the data ready</h2>
 <p>First we load the required libraries and the relocation data (called
 <code>deer</code>)</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(amt)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;deer&quot;</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>deer</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(amt)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;deer&quot;</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>deer</span></code></pre></div>
 <pre><code>## # A tibble: 826 × 4
 ##          x_       y_ t_                  burst_
 ##  *    &lt;dbl&gt;    &lt;dbl&gt; &lt;dttm&gt;               &lt;dbl&gt;
@@ -375,10 +375,10 @@ and supplement B.</p>
 ##  8 4312858. 3445858. 2008-03-31 18:01:55      1
 ##  9 4312745. 3445862. 2008-04-01 00:01:24      1
 ## 10 4312651. 3446024. 2008-04-01 06:00:54      1
-## # … with 816 more rows</code></pre>
+## # ℹ 816 more rows</code></pre>
 <p>In order to continue, we need a regular sampling rate. To check the
 current sampling rate, we use <code>summarize_sampling_rate</code>:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarize_sampling_rate</span>(deer)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">summarize_sampling_rate</span>(deer)</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 9
 ##     min    q1 median  mean    q3   max    sd     n unit 
 ##   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;
@@ -387,8 +387,8 @@ current sampling rate, we use <code>summarize_sampling_rate</code>:</p>
 <p>Next, we have to get the environmental covariates. A forest layer is
 included in the package. Note, that this a regular
 <code>SpatRast</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sh_forest <span class="ot">&lt;-</span> <span class="fu">get_sh_forest</span>()</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>sh_forest</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>sh_forest <span class="ot">&lt;-</span> <span class="fu">get_sh_forest</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>sh_forest</span></code></pre></div>
 <pre><code>## class       : SpatRaster 
 ## dimensions  : 720, 751, 1  (nrow, ncol, nlyr)
 ## resolution  : 25, 25  (x, y)
@@ -407,7 +407,7 @@ included in the package. Note, that this a regular
 change from a point representation to a step representation, using the
 function <code>steps_by_burst</code>, which in contrast to the
 <code>steps</code> function accounts for bursts.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ssf1 <span class="ot">&lt;-</span> deer <span class="sc">|&gt;</span> <span class="fu">steps_by_burst</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>ssf1 <span class="ot">&lt;-</span> deer <span class="sc">|&gt;</span> <span class="fu">steps_by_burst</span>()</span></code></pre></div>
 </div>
 <div id="controlrandom-steps" class="section level3">
 <h3>Control/random steps</h3>
@@ -443,7 +443,7 @@ or not.</li>
 <div id="the-default-situation" class="section level4">
 <h4>The default situation</h4>
 <p>In most situations the following code snippet should work<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ssf1 <span class="ot">&lt;-</span> ssf1 <span class="sc">|&gt;</span> <span class="fu">random_steps</span>(<span class="at">n_control =</span> <span class="dv">15</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>ssf1 <span class="ot">&lt;-</span> ssf1 <span class="sc">|&gt;</span> <span class="fu">random_steps</span>(<span class="at">n_control =</span> <span class="dv">15</span>)</span></code></pre></div>
 </div>
 <div id="a-exponential-distribution-for-step-lengths" class="section level4">
 <h4>A exponential distribution for step lengths</h4>
@@ -454,16 +454,16 @@ or not.</li>
 <h3>Extract covariates</h3>
 <p>As a last step, we have to extract the covariates at the end point of
 each step. We can do this with <code>extract_covariates</code>.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ssf1 <span class="ot">&lt;-</span> ssf1 <span class="sc">|&gt;</span> <span class="fu">extract_covariates</span>(sh_forest) </span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>ssf1 <span class="ot">&lt;-</span> ssf1 <span class="sc">|&gt;</span> <span class="fu">extract_covariates</span>(sh_forest) </span></code></pre></div>
 <p>Since the forest layers is coded as <code>1 = forest</code> and
 <code>2 != forest</code>, we create a factor with appropriate levels. We
 also calculate the log of the step length and the cosine of the turn
 angle, which we may use later for a integrated step selection
 function.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ssf1 <span class="ot">&lt;-</span> ssf1 <span class="sc">|&gt;</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">forest =</span> <span class="fu">factor</span>(forest, <span class="at">levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">0</span>, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;forest&quot;</span>, <span class="st">&quot;non-forest&quot;</span>)), </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">cos_ta =</span> <span class="fu">cos</span>(ta_), </span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">log_sl =</span> <span class="fu">log</span>(sl_)) </span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>ssf1 <span class="ot">&lt;-</span> ssf1 <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">forest =</span> <span class="fu">factor</span>(forest, <span class="at">levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">0</span>, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;forest&quot;</span>, <span class="st">&quot;non-forest&quot;</span>)), </span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>         <span class="at">cos_ta =</span> <span class="fu">cos</span>(ta_), </span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>        <span class="at">log_sl =</span> <span class="fu">log</span>(sl_)) </span></code></pre></div>
 </div>
 </div>
 <div id="fitting-ssf" class="section level2">
@@ -471,86 +471,86 @@ function.</p>
 <p>Now all pieces are there to fit a SSF. We will use
 <code>fit_clogit</code>, which is a wrapper around
 <code>survival::clogit</code>.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>m0 <span class="ot">&lt;-</span> ssf1 <span class="sc">|&gt;</span> <span class="fu">fit_clogit</span>(case_ <span class="sc">~</span> forest <span class="sc">+</span> <span class="fu">strata</span>(step_id_))</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> ssf1 <span class="sc">|&gt;</span> <span class="fu">fit_clogit</span>(case_ <span class="sc">~</span> forest <span class="sc">+</span> forest<span class="sc">:</span>cos_ta <span class="sc">+</span> forest<span class="sc">:</span>log_sl <span class="sc">+</span> log_sl <span class="sc">*</span> cos_ta <span class="sc">+</span> <span class="fu">strata</span>(step_id_))</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> ssf1 <span class="sc">|&gt;</span> <span class="fu">fit_clogit</span>(case_ <span class="sc">~</span> forest <span class="sc">+</span> forest<span class="sc">:</span>cos_ta <span class="sc">+</span> forest<span class="sc">:</span>log_sl <span class="sc">+</span> log_sl <span class="sc">+</span> cos_ta <span class="sc">+</span> <span class="fu">strata</span>(step_id_))</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m0)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>m0 <span class="ot">&lt;-</span> ssf1 <span class="sc">|&gt;</span> <span class="fu">fit_clogit</span>(case_ <span class="sc">~</span> forest <span class="sc">+</span> <span class="fu">strata</span>(step_id_))</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> ssf1 <span class="sc">|&gt;</span> <span class="fu">fit_clogit</span>(case_ <span class="sc">~</span> forest <span class="sc">+</span> forest<span class="sc">:</span>cos_ta <span class="sc">+</span> forest<span class="sc">:</span>log_sl <span class="sc">+</span> log_sl <span class="sc">*</span> cos_ta <span class="sc">+</span> <span class="fu">strata</span>(step_id_))</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> ssf1 <span class="sc">|&gt;</span> <span class="fu">fit_clogit</span>(case_ <span class="sc">~</span> forest <span class="sc">+</span> forest<span class="sc">:</span>cos_ta <span class="sc">+</span> forest<span class="sc">:</span>log_sl <span class="sc">+</span> log_sl <span class="sc">+</span> cos_ta <span class="sc">+</span> <span class="fu">strata</span>(step_id_))</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="fu">summary</span>(m0)</span></code></pre></div>
 <pre><code>## Call:
-## coxph(formula = Surv(rep(1, 12144L), case_) ~ forest + strata(step_id_), 
+## coxph(formula = Surv(rep(1, 12096L), case_) ~ forest + strata(step_id_), 
 ##     data = data, method = &quot;exact&quot;)
 ## 
-##   n= 12144, number of events= 759 
+##   n= 12096, number of events= 756 
 ## 
 ##                     coef exp(coef) se(coef)      z Pr(&gt;|z|)    
-## forestnon-forest -0.5108    0.6000   0.1085 -4.708 2.51e-06 ***
+## forestnon-forest -0.5145    0.5978   0.1088 -4.727 2.28e-06 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ##                  exp(coef) exp(-coef) lower .95 upper .95
-## forestnon-forest       0.6      1.667    0.4851    0.7422
+## forestnon-forest    0.5978      1.673     0.483      0.74
 ## 
 ## Concordance= 0.529  (se = 0.007 )
-## Likelihood ratio test= 21.51  on 1 df,   p=4e-06
-## Wald test            = 22.16  on 1 df,   p=3e-06
-## Score (logrank) test = 22.26  on 1 df,   p=2e-06</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code></pre></div>
+## Likelihood ratio test= 21.65  on 1 df,   p=3e-06
+## Wald test            = 22.34  on 1 df,   p=2e-06
+## Score (logrank) test = 22.44  on 1 df,   p=2e-06</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code></pre></div>
 <pre><code>## Call:
-## coxph(formula = Surv(rep(1, 12144L), case_) ~ forest + forest:cos_ta + 
+## coxph(formula = Surv(rep(1, 12096L), case_) ~ forest + forest:cos_ta + 
 ##     forest:log_sl + log_sl * cos_ta + strata(step_id_), data = data, 
 ##     method = &quot;exact&quot;)
 ## 
-##   n= 12144, number of events= 759 
+##   n= 12096, number of events= 756 
 ## 
 ##                             coef exp(coef) se(coef)      z Pr(&gt;|z|)    
-## forestnon-forest         0.76794   2.15533  0.32705  2.348 0.018869 *  
-## log_sl                   0.16276   1.17675  0.04928  3.303 0.000957 ***
-## cos_ta                  -0.23534   0.79030  0.20481 -1.149 0.250534    
-## forestnon-forest:cos_ta -0.26713   0.76557  0.11822 -2.260 0.023844 *  
-## forestnon-forest:log_sl -0.24073   0.78605  0.05745 -4.191 2.78e-05 ***
-## log_sl:cos_ta            0.01519   1.01531  0.03424  0.444 0.657310    
+## forestnon-forest         0.83934   2.31483  0.32799  2.559 0.010497 *  
+## log_sl                   0.17416   1.19025  0.04958  3.513 0.000443 ***
+## cos_ta                  -0.20329   0.81604  0.20531 -0.990 0.322092    
+## forestnon-forest:cos_ta -0.31159   0.73228  0.11769 -2.648 0.008106 ** 
+## forestnon-forest:log_sl -0.25554   0.77450  0.05786 -4.416    1e-05 ***
+## log_sl:cos_ta            0.01656   1.01669  0.03450  0.480 0.631313    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ##                         exp(coef) exp(-coef) lower .95 upper .95
-## forestnon-forest           2.1553     0.4640    1.1353    4.0917
-## log_sl                     1.1768     0.8498    1.0684    1.2961
-## cos_ta                     0.7903     1.2653    0.5290    1.1807
-## forestnon-forest:cos_ta    0.7656     1.3062    0.6072    0.9652
-## forestnon-forest:log_sl    0.7861     1.2722    0.7023    0.8797
-## log_sl:cos_ta              1.0153     0.9849    0.9494    1.0858
+## forestnon-forest           2.3148     0.4320    1.2171    4.4026
+## log_sl                     1.1902     0.8402    1.0800    1.3117
+## cos_ta                     0.8160     1.2254    0.5457    1.2203
+## forestnon-forest:cos_ta    0.7323     1.3656    0.5814    0.9223
+## forestnon-forest:log_sl    0.7745     1.2912    0.6915    0.8675
+## log_sl:cos_ta              1.0167     0.9836    0.9502    1.0878
 ## 
-## Concordance= 0.605  (se = 0.012 )
-## Likelihood ratio test= 88.02  on 6 df,   p=&lt;2e-16
-## Wald test            = 86.24  on 6 df,   p=&lt;2e-16
-## Score (logrank) test = 88.42  on 6 df,   p=&lt;2e-16</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
+## Concordance= 0.609  (se = 0.013 )
+## Likelihood ratio test= 90.25  on 6 df,   p=&lt;2e-16
+## Wald test            = 88.38  on 6 df,   p=&lt;2e-16
+## Score (logrank) test = 90.65  on 6 df,   p=&lt;2e-16</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
 <pre><code>## Call:
-## coxph(formula = Surv(rep(1, 12144L), case_) ~ forest + forest:cos_ta + 
+## coxph(formula = Surv(rep(1, 12096L), case_) ~ forest + forest:cos_ta + 
 ##     forest:log_sl + log_sl + cos_ta + strata(step_id_), data = data, 
 ##     method = &quot;exact&quot;)
 ## 
-##   n= 12144, number of events= 759 
+##   n= 12096, number of events= 756 
 ## 
 ##                             coef exp(coef) se(coef)      z Pr(&gt;|z|)    
-## forestnon-forest         0.77568   2.17206  0.32638  2.377 0.017473 *  
-## log_sl                   0.16230   1.17622  0.04926  3.295 0.000984 ***
-## cos_ta                  -0.15543   0.85604  0.09746 -1.595 0.110758    
-## forestnon-forest:cos_ta -0.27050   0.76300  0.11798 -2.293 0.021862 *  
-## forestnon-forest:log_sl -0.24206   0.78501  0.05735 -4.221 2.43e-05 ***
+## forestnon-forest         0.84859   2.33635  0.32724  2.593 0.009510 ** 
+## log_sl                   0.17369   1.18969  0.04956  3.505 0.000457 ***
+## cos_ta                  -0.11644   0.89008  0.09693 -1.201 0.229614    
+## forestnon-forest:cos_ta -0.31497   0.72981  0.11750 -2.681 0.007348 ** 
+## forestnon-forest:log_sl -0.25707   0.77331  0.05776 -4.451 8.56e-06 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ##                         exp(coef) exp(-coef) lower .95 upper .95
-## forestnon-forest            2.172     0.4604    1.1457    4.1180
-## log_sl                      1.176     0.8502    1.0680    1.2954
-## cos_ta                      0.856     1.1682    0.7072    1.0362
-## forestnon-forest:cos_ta     0.763     1.3106    0.6055    0.9615
-## forestnon-forest:log_sl     0.785     1.2739    0.7015    0.8784
+## forestnon-forest           2.3363     0.4280    1.2302    4.4370
+## log_sl                     1.1897     0.8406    1.0796    1.3111
+## cos_ta                     0.8901     1.1235    0.7361    1.0763
+## forestnon-forest:cos_ta    0.7298     1.3702    0.5797    0.9188
+## forestnon-forest:log_sl    0.7733     1.2931    0.6905    0.8660
 ## 
-## Concordance= 0.603  (se = 0.012 )
-## Likelihood ratio test= 87.82  on 5 df,   p=&lt;2e-16
-## Wald test            = 85.59  on 5 df,   p=&lt;2e-16
-## Score (logrank) test = 87.55  on 5 df,   p=&lt;2e-16</code></pre>
+## Concordance= 0.609  (se = 0.013 )
+## Likelihood ratio test= 90.02  on 5 df,   p=&lt;2e-16
+## Wald test            = 87.6  on 5 df,   p=&lt;2e-16
+## Score (logrank) test = 89.63  on 5 df,   p=&lt;2e-16</code></pre>
 <div id="interpretation-of-coefficients" class="section level3">
 <h3>Interpretation of coefficients</h3>
 <p>See the discussion in Fieberg et al 2021.</p>
@@ -560,148 +560,145 @@ function.</p>
 <h2>A note on piping</h2>
 <p>All steps described above, could easily be wrapped into one piped
 workflow:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> deer <span class="sc">|&gt;</span> </span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">steps_by_burst</span>() <span class="sc">|&gt;</span> <span class="fu">random_steps</span>(<span class="at">n =</span> <span class="dv">15</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_covariates</span>(sh_forest) <span class="sc">|&gt;</span> </span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">forest =</span> <span class="fu">factor</span>(forest, <span class="at">levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">0</span>, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;forest&quot;</span>, <span class="st">&quot;non-forest&quot;</span>)), </span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">cos_ta =</span> <span class="fu">cos</span>(ta_), </span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">log_sl =</span> <span class="fu">log</span>(sl_)) <span class="sc">|&gt;</span> </span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_clogit</span>(case_ <span class="sc">~</span> forest <span class="sc">+</span> forest<span class="sc">:</span>cos_ta <span class="sc">+</span> forest<span class="sc">:</span>sl_ <span class="sc">+</span> sl_ <span class="sc">*</span> cos_ta <span class="sc">+</span> <span class="fu">strata</span>(step_id_))</span></code></pre></div>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> deer <span class="sc">|&gt;</span> </span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  <span class="fu">steps_by_burst</span>() <span class="sc">|&gt;</span> <span class="fu">random_steps</span>(<span class="at">n =</span> <span class="dv">15</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>  <span class="fu">extract_covariates</span>(sh_forest) <span class="sc">|&gt;</span> </span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">forest =</span> <span class="fu">factor</span>(forest, <span class="at">levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">0</span>, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;forest&quot;</span>, <span class="st">&quot;non-forest&quot;</span>)), </span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>         <span class="at">cos_ta =</span> <span class="fu">cos</span>(ta_), </span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a>         <span class="at">log_sl =</span> <span class="fu">log</span>(sl_)) <span class="sc">|&gt;</span> </span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a>  <span class="fu">fit_clogit</span>(case_ <span class="sc">~</span> forest <span class="sc">+</span> forest<span class="sc">:</span>cos_ta <span class="sc">+</span> forest<span class="sc">:</span>sl_ <span class="sc">+</span> sl_ <span class="sc">*</span> cos_ta <span class="sc">+</span> <span class="fu">strata</span>(step_id_))</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code></pre></div>
 <pre><code>## Call:
-## coxph(formula = Surv(rep(1, 12144L), case_) ~ forest + forest:cos_ta + 
+## coxph(formula = Surv(rep(1, 12096L), case_) ~ forest + forest:cos_ta + 
 ##     forest:sl_ + sl_ * cos_ta + strata(step_id_), data = data, 
 ##     method = &quot;exact&quot;)
 ## 
-##   n= 12144, number of events= 759 
+##   n= 12096, number of events= 756 
 ## 
 ##                               coef  exp(coef)   se(coef)      z Pr(&gt;|z|)    
-## forestnon-forest        -0.0330127  0.9675262  0.1408828 -0.234 0.814731    
-## sl_                      0.0008085  1.0008088  0.0001600  5.054 4.33e-07 ***
-## cos_ta                  -0.3528147  0.7027074  0.1115603 -3.163 0.001564 ** 
-## forestnon-forest:cos_ta -0.2475250  0.7807307  0.1180669 -2.096 0.036040 *  
-## forestnon-forest:sl_    -0.0011685  0.9988322  0.0002031 -5.753 8.76e-09 ***
-## sl_:cos_ta               0.0004514  1.0004515  0.0001336  3.379 0.000727 ***
+## forestnon-forest        -0.1036793  0.9015144  0.1407961 -0.736  0.46150    
+## sl_                      0.0006758  1.0006760  0.0001538  4.394 1.11e-05 ***
+## cos_ta                  -0.3355283  0.7149603  0.1098064 -3.056  0.00225 ** 
+## forestnon-forest:cos_ta -0.2134928  0.8077580  0.1183237 -1.804  0.07118 .  
+## forestnon-forest:sl_    -0.0009751  0.9990253  0.0001986 -4.909 9.14e-07 ***
+## sl_:cos_ta               0.0003849  1.0003850  0.0001271  3.027  0.00247 ** 
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ##                         exp(coef) exp(-coef) lower .95 upper .95
-## forestnon-forest           0.9675     1.0336    0.7341    1.2752
-## sl_                        1.0008     0.9992    1.0005    1.0011
-## cos_ta                     0.7027     1.4231    0.5647    0.8744
-## forestnon-forest:cos_ta    0.7807     1.2809    0.6194    0.9840
-## forestnon-forest:sl_       0.9988     1.0012    0.9984    0.9992
-## sl_:cos_ta                 1.0005     0.9995    1.0002    1.0007
+## forestnon-forest           0.9015     1.1092    0.6841    1.1880
+## sl_                        1.0007     0.9993    1.0004    1.0010
+## cos_ta                     0.7150     1.3987    0.5765    0.8866
+## forestnon-forest:cos_ta    0.8078     1.2380    0.6406    1.0186
+## forestnon-forest:sl_       0.9990     1.0010    0.9986    0.9994
+## sl_:cos_ta                 1.0004     0.9996    1.0001    1.0006
 ## 
-## Concordance= 0.612  (se = 0.013 )
-## Likelihood ratio test= 117.9  on 6 df,   p=&lt;2e-16
-## Wald test            = 121.7  on 6 df,   p=&lt;2e-16
-## Score (logrank) test = 127.9  on 6 df,   p=&lt;2e-16</code></pre>
+## Concordance= 0.603  (se = 0.013 )
+## Likelihood ratio test= 105.2  on 6 df,   p=&lt;2e-16
+## Wald test            = 107.8  on 6 df,   p=&lt;2e-16
+## Score (logrank) test = 116.5  on 6 df,   p=&lt;2e-16</code></pre>
 </div>
 <div id="session" class="section level2">
 <h2>Session</h2>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>sessioninfo<span class="sc">::</span><span class="fu">session_info</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>sessioninfo<span class="sc">::</span><span class="fu">session_info</span>()</span></code></pre></div>
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
 ##  setting  value
-##  version  R version 4.2.2 Patched (2022-11-10 r83330)
-##  os       Ubuntu 22.04.2 LTS
-##  system   x86_64, linux-gnu
+##  version  R version 4.3.2 (2023-10-31)
+##  os       macOS Sonoma 14.4
+##  system   aarch64, darwin20
 ##  ui       X11
 ##  language (EN)
 ##  collate  C
 ##  ctype    en_US.UTF-8
 ##  tz       Europe/Berlin
-##  date     2023-03-28
-##  pandoc   2.19.2 @ /usr/lib/rstudio/resources/app/bin/quarto/bin/tools/ (via rmarkdown)
+##  date     2024-04-01
+##  pandoc   3.1.11.1 @ /usr/local/bin/ (via rmarkdown)
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────
-##  package      * version  date (UTC) lib source
-##  amt          * 0.2.1.0  2023-03-28 [1] local
-##  backports      1.4.1    2021-12-13 [5] CRAN (R 4.2.0)
-##  boot           1.3-28.1 2022-11-22 [3] CRAN (R 4.2.2)
-##  bslib          0.4.2    2022-12-16 [3] CRAN (R 4.2.2)
-##  cachem         1.0.7    2023-02-24 [5] CRAN (R 4.2.2)
-##  checkmate      2.1.0    2022-04-21 [5] CRAN (R 4.2.0)
-##  circular       0.4-95   2022-04-26 [3] CRAN (R 4.2.2)
-##  class          7.3-21   2023-01-23 [6] CRAN (R 4.2.2)
-##  classInt       0.4-9    2023-02-28 [3] CRAN (R 4.2.2)
-##  cli            3.6.0    2023-01-09 [5] CRAN (R 4.2.2)
-##  codetools      0.2-19   2023-02-01 [6] CRAN (R 4.2.2)
-##  colorspace     2.1-0    2023-01-23 [5] CRAN (R 4.2.2)
-##  data.table     1.14.8   2023-02-17 [3] CRAN (R 4.2.2)
-##  DBI            1.1.3    2022-06-18 [5] CRAN (R 4.2.1)
-##  digest         0.6.31   2022-12-11 [3] CRAN (R 4.2.2)
-##  dplyr        * 1.1.0    2023-01-29 [5] CRAN (R 4.2.2)
-##  e1071          1.7-13   2023-02-01 [3] CRAN (R 4.2.2)
-##  evaluate       0.20     2023-01-17 [5] CRAN (R 4.2.2)
-##  fansi          1.0.4    2023-01-22 [5] CRAN (R 4.2.2)
-##  farver         2.1.1    2022-07-06 [5] CRAN (R 4.2.1)
-##  fastmap        1.1.1    2023-02-24 [5] CRAN (R 4.2.2)
-##  fitdistrplus   1.1-8    2022-03-10 [3] CRAN (R 4.2.2)
-##  generics       0.1.3    2022-07-05 [5] CRAN (R 4.2.1)
-##  ggforce        0.4.1    2022-10-04 [3] CRAN (R 4.2.2)
-##  ggplot2      * 3.4.1    2023-02-10 [3] CRAN (R 4.2.2)
-##  ggraph       * 2.1.0    2022-10-09 [3] CRAN (R 4.2.2)
-##  ggrepel        0.9.3    2023-02-03 [3] CRAN (R 4.2.2)
-##  glue           1.6.2    2022-02-24 [5] CRAN (R 4.2.0)
-##  graphlayouts   0.8.4    2022-11-24 [3] CRAN (R 4.2.2)
-##  gridExtra      2.3      2017-09-09 [3] CRAN (R 4.2.2)
-##  gtable         0.3.1    2022-09-01 [5] CRAN (R 4.2.1)
-##  highr          0.10     2022-12-22 [3] CRAN (R 4.2.2)
-##  htmltools      0.5.4    2022-12-07 [5] CRAN (R 4.2.2)
-##  igraph         1.4.0    2023-02-10 [3] CRAN (R 4.2.2)
-##  jquerylib      0.1.4    2021-04-26 [3] CRAN (R 4.2.2)
-##  jsonlite       1.8.4    2022-12-06 [3] CRAN (R 4.2.2)
-##  KernSmooth     2.23-20  2021-05-03 [6] CRAN (R 4.2.0)
-##  knitr        * 1.42     2023-01-25 [5] CRAN (R 4.2.2)
-##  labeling       0.4.2    2020-10-20 [5] CRAN (R 4.2.0)
-##  lattice        0.20-45  2021-09-22 [6] CRAN (R 4.2.0)
-##  lifecycle      1.0.3    2022-10-07 [5] CRAN (R 4.2.1)
-##  lubridate    * 1.9.2    2023-02-10 [3] CRAN (R 4.2.2)
-##  magrittr       2.0.3    2022-03-30 [5] CRAN (R 4.2.0)
-##  MASS           7.3-58.2 2023-01-23 [6] CRAN (R 4.2.2)
-##  Matrix         1.5-3    2022-11-11 [6] CRAN (R 4.2.2)
-##  munsell        0.5.0    2018-06-12 [3] CRAN (R 4.2.2)
-##  mvtnorm        1.1-3    2021-10-08 [3] CRAN (R 4.2.2)
-##  pillar         1.8.1    2022-08-19 [5] CRAN (R 4.2.1)
-##  pkgconfig      2.0.3    2019-09-22 [3] CRAN (R 4.2.2)
-##  polyclip       1.10-4   2022-10-20 [3] CRAN (R 4.2.2)
-##  proxy          0.4-27   2022-06-09 [3] CRAN (R 4.2.2)
-##  purrr          1.0.1    2023-01-10 [5] CRAN (R 4.2.2)
-##  R6             2.5.1    2021-08-19 [5] CRAN (R 4.2.0)
-##  rbibutils      2.2.13   2023-01-13 [3] CRAN (R 4.2.2)
-##  Rcpp           1.0.10   2023-01-22 [5] CRAN (R 4.2.2)
-##  Rdpack         2.4      2022-07-20 [3] CRAN (R 4.2.2)
-##  rlang          1.0.6    2022-09-24 [5] CRAN (R 4.2.1)
-##  rmarkdown      2.20     2023-01-19 [5] CRAN (R 4.2.2)
-##  rstudioapi     0.14     2022-08-22 [5] CRAN (R 4.2.1)
-##  sass           0.4.5    2023-01-24 [5] CRAN (R 4.2.2)
-##  scales         1.2.1    2022-08-20 [5] CRAN (R 4.2.1)
-##  sessioninfo    1.2.2    2021-12-06 [3] CRAN (R 4.2.2)
-##  sf             1.0-9    2022-11-08 [3] CRAN (R 4.2.2)
-##  survival       3.5-3    2023-02-12 [3] CRAN (R 4.2.2)
-##  terra          1.7-12   2023-02-21 [3] Github (rspatial/terra@b79b4b0)
-##  tibble         3.1.8    2022-07-22 [5] CRAN (R 4.2.2)
-##  tidygraph    * 1.2.3    2023-02-01 [3] CRAN (R 4.2.2)
-##  tidyr          1.3.0    2023-01-24 [5] CRAN (R 4.2.2)
-##  tidyselect     1.2.0    2022-10-10 [5] CRAN (R 4.2.1)
-##  timechange     0.2.0    2023-01-11 [5] CRAN (R 4.2.2)
-##  tweenr         2.0.2    2022-09-06 [3] CRAN (R 4.2.2)
-##  units          0.8-1    2022-12-10 [3] CRAN (R 4.2.2)
-##  utf8           1.2.3    2023-01-31 [5] CRAN (R 4.2.2)
-##  vctrs          0.5.2    2023-01-23 [5] CRAN (R 4.2.2)
-##  viridis        0.6.2    2021-10-13 [5] CRAN (R 4.2.0)
-##  viridisLite    0.4.1    2022-08-22 [5] CRAN (R 4.2.1)
-##  withr          2.5.0    2022-03-03 [5] CRAN (R 4.2.0)
-##  xfun           0.37     2023-01-31 [5] CRAN (R 4.2.2)
-##  yaml           2.3.7    2023-01-23 [5] CRAN (R 4.2.2)
+##  package      * version    date (UTC) lib source
+##  amt          * 0.2.2.0    2024-04-01 [1] local
+##  backports      1.4.1      2021-12-13 [3] CRAN (R 4.3.0)
+##  boot           1.3-28.1   2022-11-22 [3] CRAN (R 4.3.2)
+##  bslib          0.6.1      2023-11-28 [3] CRAN (R 4.3.1)
+##  cachem         1.0.8      2023-05-01 [3] CRAN (R 4.3.0)
+##  checkmate      2.3.1      2023-12-04 [3] CRAN (R 4.3.1)
+##  circular       0.5-0      2023-09-05 [3] CRAN (R 4.3.0)
+##  class          7.3-22     2023-05-03 [3] CRAN (R 4.3.2)
+##  classInt       0.4-10     2023-09-05 [3] CRAN (R 4.3.0)
+##  cli            3.6.2      2023-12-11 [3] CRAN (R 4.3.1)
+##  codetools      0.2-19     2023-02-01 [3] CRAN (R 4.3.2)
+##  colorspace     2.1-0      2023-01-23 [3] CRAN (R 4.3.0)
+##  data.table     1.15.2     2024-02-29 [3] CRAN (R 4.3.1)
+##  DBI            1.2.2      2024-02-16 [3] CRAN (R 4.3.1)
+##  digest         0.6.35     2024-03-11 [3] CRAN (R 4.3.1)
+##  dplyr        * 1.1.4      2023-11-17 [3] CRAN (R 4.3.1)
+##  e1071          1.7-14     2023-12-06 [3] CRAN (R 4.3.1)
+##  evaluate       0.23       2023-11-01 [3] CRAN (R 4.3.1)
+##  fansi          1.0.6      2023-12-08 [3] CRAN (R 4.3.1)
+##  farver         2.1.1      2022-07-06 [3] CRAN (R 4.3.0)
+##  fastmap        1.1.1      2023-02-24 [3] CRAN (R 4.3.0)
+##  fitdistrplus   1.1-11     2023-04-25 [3] CRAN (R 4.3.0)
+##  generics       0.1.3      2022-07-05 [3] CRAN (R 4.3.0)
+##  ggforce        0.4.1      2022-10-04 [3] CRAN (R 4.3.0)
+##  ggplot2      * 3.4.4      2023-10-12 [3] CRAN (R 4.3.1)
+##  ggraph       * 2.1.0      2022-10-09 [3] CRAN (R 4.3.0)
+##  ggrepel        0.9.5      2024-01-10 [3] CRAN (R 4.3.1)
+##  glue           1.7.0      2024-01-09 [3] CRAN (R 4.3.1)
+##  graphlayouts   1.1.0      2024-01-19 [3] CRAN (R 4.3.1)
+##  gridExtra      2.3        2017-09-09 [3] CRAN (R 4.3.0)
+##  gtable         0.3.4      2023-08-21 [3] CRAN (R 4.3.0)
+##  highr          0.10       2022-12-22 [3] CRAN (R 4.3.0)
+##  htmltools      0.5.7      2023-11-03 [3] CRAN (R 4.3.1)
+##  igraph         2.0.1.1    2024-01-30 [3] CRAN (R 4.3.1)
+##  jquerylib      0.1.4      2021-04-26 [3] CRAN (R 4.3.0)
+##  jsonlite       1.8.8      2023-12-04 [3] CRAN (R 4.3.1)
+##  KernSmooth     2.23-22    2023-07-10 [3] CRAN (R 4.3.2)
+##  knitr        * 1.45       2023-10-30 [3] CRAN (R 4.3.1)
+##  labeling       0.4.3      2023-08-29 [3] CRAN (R 4.3.0)
+##  lattice        0.22-5     2023-10-24 [3] CRAN (R 4.3.1)
+##  lifecycle      1.0.4      2023-11-07 [3] CRAN (R 4.3.1)
+##  lubridate    * 1.9.3      2023-09-27 [3] CRAN (R 4.3.1)
+##  magrittr       2.0.3      2022-03-30 [3] CRAN (R 4.3.0)
+##  MASS           7.3-60.0.1 2024-01-13 [3] CRAN (R 4.3.1)
+##  Matrix         1.6-5      2024-01-11 [3] CRAN (R 4.3.2)
+##  munsell        0.5.0      2018-06-12 [3] CRAN (R 4.3.0)
+##  mvtnorm        1.2-4      2023-11-27 [3] CRAN (R 4.3.1)
+##  pillar         1.9.0      2023-03-22 [3] CRAN (R 4.3.0)
+##  pkgconfig      2.0.3      2019-09-22 [3] CRAN (R 4.3.0)
+##  polyclip       1.10-6     2023-09-27 [3] CRAN (R 4.3.1)
+##  proxy          0.4-27     2022-06-09 [3] CRAN (R 4.3.0)
+##  purrr          1.0.2      2023-08-10 [3] CRAN (R 4.3.0)
+##  R6             2.5.1      2021-08-19 [3] CRAN (R 4.3.0)
+##  rbibutils      2.2.16     2023-10-25 [3] CRAN (R 4.3.1)
+##  Rcpp           1.0.12     2024-01-09 [3] CRAN (R 4.3.1)
+##  Rdpack         2.6        2023-11-08 [3] CRAN (R 4.3.1)
+##  rlang          1.1.3      2024-01-10 [3] CRAN (R 4.3.1)
+##  rmarkdown      2.25       2023-09-18 [3] CRAN (R 4.3.1)
+##  rstudioapi     0.15.0     2023-07-07 [3] CRAN (R 4.3.0)
+##  sass           0.4.8      2023-12-06 [3] CRAN (R 4.3.1)
+##  scales         1.3.0      2023-11-28 [3] CRAN (R 4.3.1)
+##  sessioninfo    1.2.2      2021-12-06 [3] CRAN (R 4.3.0)
+##  sf             1.0-16     2024-03-24 [3] CRAN (R 4.3.1)
+##  survival       3.5-7      2023-08-14 [3] CRAN (R 4.3.2)
+##  terra          1.7-71     2024-01-31 [3] CRAN (R 4.3.1)
+##  tibble         3.2.1      2023-03-20 [3] CRAN (R 4.3.0)
+##  tidygraph    * 1.3.1      2024-01-30 [3] CRAN (R 4.3.1)
+##  tidyr          1.3.1      2024-01-24 [3] CRAN (R 4.3.1)
+##  tidyselect     1.2.1      2024-03-11 [3] CRAN (R 4.3.1)
+##  timechange     0.3.0      2024-01-18 [3] CRAN (R 4.3.1)
+##  tweenr         2.0.2      2022-09-06 [3] CRAN (R 4.3.0)
+##  units          0.8-5      2023-11-28 [3] CRAN (R 4.3.1)
+##  utf8           1.2.4      2023-10-22 [3] CRAN (R 4.3.1)
+##  vctrs          0.6.5      2023-12-01 [3] CRAN (R 4.3.1)
+##  viridis        0.6.4      2023-07-22 [3] CRAN (R 4.3.0)
+##  viridisLite    0.4.2      2023-05-02 [3] CRAN (R 4.3.0)
+##  withr          3.0.0      2024-01-16 [3] CRAN (R 4.3.1)
+##  xfun           0.41       2023-11-01 [3] CRAN (R 4.3.1)
+##  yaml           2.3.8      2023-12-11 [3] CRAN (R 4.3.1)
 ## 
-##  [1] /tmp/RtmpEE1aXl/Rinst11aff69feb4c3
-##  [2] /tmp/RtmpTZF65G/temp_libpathf4f475febbc9
-##  [3] /home/jsigner/R/x86_64-pc-linux-gnu-library/4.2
-##  [4] /usr/local/lib/R/site-library
-##  [5] /usr/lib/R/site-library
-##  [6] /usr/lib/R/library
+##  [1] /private/var/folders/ln/h3zng0fs2pq7mhn_hzn0d8x00000gn/T/Rtmphl5CVm/Rinst6cb5562535ee
+##  [2] /private/var/folders/ln/h3zng0fs2pq7mhn_hzn0d8x00000gn/T/RtmpgKr8k0/temp_libpath6a0129d1adcf
+##  [3] /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/library
 ## 
 ## ──────────────────────────────────────────────────────────────────────────────</code></pre>
 </div>

@@ -1,7 +1,7 @@
 Type: Package
 Package: amt
 Title: Animal Movement Tools
-Version: 0.2.1.0
+Version: 0.2.2.0
 Authors@R: c(
     person("Johannes", "Signer", , "jsigner@gwdg.de", role = c("aut", "cre")),
     person("Brian", "Smith", role = "ctb"),
@@ -11,6 +11,7 @@ Authors@R: c(
     person("Josh", "O'Brien", role = "ctb"),
     person("Bernardo", "Niebuhr", role = "ctb"),
     person("Alec", "Robitaille", role = "ctb"),
+    person("Avgar", "Tal", role = "ctb"),
     person("Scott", "LaPoint", role = "dtc")
   )
 Description: Manage and analyze animal movement data. The functionality of
@@ -26,15 +27,15 @@ Imports: checkmate, circular, ctmm, data.table, dplyr (>= 0.7.0),
         MASS, methods, purrr, Rdpack, rlang, sf, sfheaders, stats,
         survival, terra, tibble, tidyr (>= 1.0.0), utils
 Suggests: adehabitatLT, broom, ggplot2, ggraph, geosphere, knitr,
-        leaflet, move, moveHMM, rmarkdown, sessioninfo, suncalc, sp,
-        tidygraph, tinytest
+        leaflet, moveHMM, rmarkdown, sessioninfo, suncalc, tidygraph,
+        tinytest, units
 VignetteBuilder: knitr
 RdMacros: Rdpack
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.0
 NeedsCompilation: no
-Packaged: 2023-03-28 08:00:06 UTC; jsigner
+Packaged: 2024-04-01 11:43:48 UTC; jsigner
 Author: Johannes Signer [aut, cre],
   Brian Smith [ctb],
   Bjoern Reineking [ctb],
@@ -43,7 +44,8 @@ Author: Johannes Signer [aut, cre],
   Josh O'Brien [ctb],
   Bernardo Niebuhr [ctb],
   Alec Robitaille [ctb],
+  Avgar Tal [ctb],
   Scott LaPoint [dtc]
 Maintainer: Johannes Signer <jsigner@gwdg.de>
 Repository: CRAN
-Date/Publication: 2023-03-28 08:20:02 UTC
+Date/Publication: 2024-04-01 12:10:06 UTC

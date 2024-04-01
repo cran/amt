@@ -1,4 +1,4 @@
-## ---- include=FALSE-----------------------------------------------------------
+## ----include=FALSE------------------------------------------------------------
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 ## -----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ hr_overlap(dat$kde, type = "vi", conditional = TRUE)
 ## -----------------------------------------------------------------------------
 hr_overlap(dat$kde, type = "vi", labels = dat$week)
 
-## ---- eval = FALSE------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  data("puechabon", package = "adehabitatLT")
 #  dat <- puechabonsp$relocs |> as.data.frame() |>
 #    make_track(X, Y, id = Name)
@@ -60,7 +60,7 @@ hr_overlap(dat$kde, type = "vi", labels = dat$week)
 #  dat1 <- dat |> nest(data = -id) |>
 #    mutate(kde = map(data, ~ hr_kde(., trast = trast, level = c(0.5, 0.9, 0.99))))
 
-## ---- fig.width=7, fig.height=7, eval = FALSE---------------------------------
+## ----fig.width=7, fig.height=7, eval = FALSE----------------------------------
 #  ov2 <- hr_overlap(dat1$kde, type = "hr", labels = dat1$id, which = "all",
 #                    conditional = TRUE) |>
 #    filter(overlap > 0)
