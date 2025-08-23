@@ -1,7 +1,7 @@
 Type: Package
 Package: amt
 Title: Animal Movement Tools
-Version: 0.2.2.0
+Version: 0.3.0.0
 Authors@R: c(
     person("Johannes", "Signer", , "jsigner@gwdg.de", role = c("aut", "cre")),
     person("Brian", "Smith", role = "ctb"),
@@ -11,7 +11,8 @@ Authors@R: c(
     person("Josh", "O'Brien", role = "ctb"),
     person("Bernardo", "Niebuhr", role = "ctb"),
     person("Alec", "Robitaille", role = "ctb"),
-    person("Avgar", "Tal", role = "ctb"),
+    person("Tal", "Avgar", role = "ctb"),
+    person("Gerben", "IJntema", role = "ctb"),
     person("Scott", "LaPoint", role = "dtc")
   )
 Description: Manage and analyze animal movement data. The functionality of
@@ -33,9 +34,9 @@ VignetteBuilder: knitr
 RdMacros: Rdpack
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.0
+RoxygenNote: 7.3.2
 NeedsCompilation: no
-Packaged: 2024-04-01 11:43:48 UTC; jsigner
+Packaged: 2025-08-23 18:20:20 UTC; jsigner
 Author: Johannes Signer [aut, cre],
   Brian Smith [ctb],
   Bjoern Reineking [ctb],
@@ -44,8 +45,9 @@ Author: Johannes Signer [aut, cre],
   Josh O'Brien [ctb],
   Bernardo Niebuhr [ctb],
   Alec Robitaille [ctb],
-  Avgar Tal [ctb],
+  Tal Avgar [ctb],
+  Gerben IJntema [ctb],
   Scott LaPoint [dtc]
 Maintainer: Johannes Signer <jsigner@gwdg.de>
 Repository: CRAN
-Date/Publication: 2024-04-01 12:10:06 UTC
+Date/Publication: 2025-08-23 18:50:02 UTC

@@ -1,3 +1,17 @@
+
+# amt 0.3.0
+
+## New features
+- `track_align()` added to the package. 
+
+## Fixes
+- `random_steps.bursted_track_xyt()` if only one burst is provided (reported by Gerben IJntema). 
+- Upgraded from raster to terra for hr_area(). 
+- Fixed issue #109
+- Solved issue #108
+- Fixed NA in tac()
+- Fixed error in steps_by_burst()/random_steps() if there is only 1 burst. 
+
 # amt 0.2.2
 ## Fixes
 - Fixed error within `random_steps.brusted_track_xyt()`, when `burst_id` did not start with 1. 

@@ -53,30 +53,30 @@ hr_overlap(dat$kde, type = "vi", conditional = TRUE)
 hr_overlap(dat$kde, type = "vi", labels = dat$week)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  data("puechabon", package = "adehabitatLT")
-#  dat <- puechabonsp$relocs |> as.data.frame() |>
-#    make_track(X, Y, id = Name)
-#  trast <- make_trast(dat, res = 50)
-#  dat1 <- dat |> nest(data = -id) |>
-#    mutate(kde = map(data, ~ hr_kde(., trast = trast, level = c(0.5, 0.9, 0.99))))
+# data("puechabon", package = "adehabitatLT")
+# dat <- puechabonsp$relocs |> as.data.frame() |>
+#   make_track(X, Y, id = Name)
+# trast <- make_trast(dat, res = 50)
+# dat1 <- dat |> nest(data = -id) |>
+#   mutate(kde = map(data, ~ hr_kde(., trast = trast, level = c(0.5, 0.9, 0.99))))
 
 ## ----fig.width=7, fig.height=7, eval = FALSE----------------------------------
-#  ov2 <- hr_overlap(dat1$kde, type = "hr", labels = dat1$id, which = "all",
-#                    conditional = TRUE) |>
-#    filter(overlap > 0)
-#  graph <- as_tbl_graph(ov2) |>
-#    mutate(Popularity = centrality_degree(mode = 'in'))
-#  
-#  ggraph(graph, layout = 'stress') +
-#    #geom_edge_fan(aes(col = overlap), show.legend = TRUE, arrow = arrow()) +
-#    geom_edge_arc(aes(col = overlap), arrow = arrow(length = unit(4, 'mm'), type = "closed"),
-#                  start_cap = circle(3, 'mm'),
-#                  end_cap = circle(3, 'mm')) +
-#    geom_node_point(size = 4) +
-#    geom_node_label(aes(label = name), repel = TRUE, alpha = 0.7) +
-#    facet_edges(~ levels, ncol = 2) +
-#    theme_light() +
-#    scale_edge_color_gradient(low = "blue", high = "red")
+# ov2 <- hr_overlap(dat1$kde, type = "hr", labels = dat1$id, which = "all",
+#                   conditional = TRUE) |>
+#   filter(overlap > 0)
+# graph <- as_tbl_graph(ov2) |>
+#   mutate(Popularity = centrality_degree(mode = 'in'))
+# 
+# ggraph(graph, layout = 'stress') +
+#   #geom_edge_fan(aes(col = overlap), show.legend = TRUE, arrow = arrow()) +
+#   geom_edge_arc(aes(col = overlap), arrow = arrow(length = unit(4, 'mm'), type = "closed"),
+#                 start_cap = circle(3, 'mm'),
+#                 end_cap = circle(3, 'mm')) +
+#   geom_node_point(size = 4) +
+#   geom_node_label(aes(label = name), repel = TRUE, alpha = 0.7) +
+#   facet_edges(~ levels, ncol = 2) +
+#   theme_light() +
+#   scale_edge_color_gradient(low = "blue", high = "red")
 
 ## -----------------------------------------------------------------------------
 poly <- amt::bbox(lupe, buffer = -500, sf = TRUE)

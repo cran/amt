@@ -120,14 +120,22 @@ random_steps.bursted_steps_xyt <- function(
   rand_ta = random_numbers(ta_distr, n = 1e5),
   include_observed = TRUE, ...) {
 
+
   bursts <- split(x, x$burst_)
 
   if (any(len.ok <- sapply(bursts, nrow) < 3)) {
     warning("Some bursts contain < 3 steps and will be removed")
     bursts <- bursts[!len.ok]
+    if (length(bursts) == 0) {
+      stop("No burts left; all bursts were removed, because the had < 3 steps.")
+    }
   }
 
-  start_ids <- c(1, head(cumsum(rle(unlist(sapply(bursts, "[[", "burst_")))$lengths), -1) + 1)
+  start_ids <- if (length(bursts) == 1) {
+    1
+  } else {
+    c(1, head(cumsum(rle(unlist(lapply(bursts, "[[", "burst_")))$lengths), -1) + 1)
+  }
 
   out <- lapply(seq_along(bursts), function(i) {
     q <- bursts[[i]]
@@ -139,6 +147,7 @@ random_steps.bursted_steps_xyt <- function(
                    start_id = start_ids[i], ...)
     }
   })
+
 
   out <- out[!sapply(out, is.null)]
 

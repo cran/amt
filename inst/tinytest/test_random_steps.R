@@ -110,7 +110,7 @@ mini_deer <- deer[1:4, ]
 expect_equal(mini_deer |> steps() |> random_steps() |> nrow(), 22)
 expect_equal(mini_deer |> steps() |> random_steps() |> remove_incomplete_strata() |> nrow(), 22)
 expect_equal(mini_deer |> steps() |> random_steps() |> remove_incomplete_strata(col = "sl_") |> nrow(), 22)
-
+expect_true(mini_deer |> steps_by_burst() |> nrow() == 3)
 
 expect_equal(mini_deer |> steps() |> random_steps() |> remove_incomplete_strata(col = "sl_") |> nrow(), 22)
 
@@ -121,3 +121,14 @@ expect_error(mini_deer |> steps() |> random_steps() |> remove_incomplete_strata(
 mini_deer <- deer[5:20, ]
 expect_true(mini_deer |> steps() |> random_steps(n_control = 1) |>
               pull(step_id_) |> unique() |> length() == nrow(mini_deer) - 2)
+
+
+# More checks
+expect_true(deer |> filter(burst_ %in% c(10, 13)) |> steps_by_burst() |>
+  random_steps() |> is("data.frame"))
+
+expect_error(deer |> filter(burst_ %in% c(18, 21)) |> steps_by_burst() |>
+  random_steps())
+
+expect_true(deer |> filter(burst_ == 10) |> steps_by_burst() |>
+  random_steps() |> is("data.frame"))
